@@ -1,0 +1,13 @@
+package com.personal.management.country.filter.process;
+
+import com.personal.management.country.entities.Country;
+import com.personal.management.country.filter.inputs.FilterCountryInput;
+import com.personal.shared.process.FunctionalProcess;
+
+public class FilterCountryProcess extends FunctionalProcess<FilterCountryInput, Country> {
+
+    public FilterCountryProcess() {
+        super("filter_countries");
+    }
+
+}

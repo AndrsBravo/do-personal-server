@@ -1,0 +1,31 @@
+package com.personal.management.orghierarchy.delete.routes;
+
+import com.personal.management.orghierarchy.delete.process.DeleteOrgHierarchyProcessExecutor;
+import com.personal.management.orghierarchy.entities.OrgHierarchy;
+
+import io.helidon.http.Status;
+import io.helidon.webserver.http.ServerRequest;
+import io.helidon.webserver.http.ServerResponse;
+
+public class DeleteOrgHierarchyHttpHandler {
+
+    public void Delete(ServerRequest request, ServerResponse response) {
+        var id = request.path().pathParameters().get("id");
+
+        //System.out.println("El id a eliminar " + id);
+        var orgHierarchy = new OrgHierarchy(id);
+
+        var deleteOrgHierarchy = DeleteOrgHierarchyProcessExecutor.builder()
+                .init(orgHierarchy)
+                .execute();
+
+        switch (deleteOrgHierarchy.state()) {
+            case COMPLETED ->
+                response.status(Status.OK_200).send(deleteOrgHierarchy.getInitObject());
+
+            default ->
+                response.status(Status.ACCEPTED_202).send(deleteOrgHierarchy.getInitObject());
+        }
+    }
+
+}

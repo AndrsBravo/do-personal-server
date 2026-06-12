@@ -1,0 +1,37 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: do-personal-server
+  labels:
+    app: do-personal-server
+spec:
+  type: ClusterIP
+  selector:
+    app: do-personal-server
+  ports:
+    - name: tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: do-personal-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: do-personal-server
+  template:
+    metadata:
+      labels:
+        app: do-personal-server
+        version: v1
+    spec:
+      containers:
+      - name: do-personal-server
+        image: do-personal-server
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080

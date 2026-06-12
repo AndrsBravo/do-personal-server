@@ -1,0 +1,19 @@
+package com.personal.business.temporalfrequency.delete.process;
+
+import com.personal.business.temporalfrequency.delete.process.rules.DeleteTemporalFrequencyRule;
+import com.personal.business.temporalfrequency.entities.TemporalFrequency;
+import com.personal.shared.process.SupplierProcessExecutor;
+
+public class DeleteTemporalFrequencyProcessExecutor extends SupplierProcessExecutor<DeleteTemporalFrequencyProcess, TemporalFrequency> {
+
+    public DeleteTemporalFrequencyProcessExecutor() {
+        super(new DeleteTemporalFrequencyProcess(),
+                DeleteTemporalFrequencyRule::new
+        );
+    }
+
+    public static DeleteTemporalFrequencyProcessExecutor builder() {
+        return new DeleteTemporalFrequencyProcessExecutor();
+    }
+
+}

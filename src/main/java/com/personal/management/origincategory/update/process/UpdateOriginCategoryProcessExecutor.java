@@ -1,0 +1,21 @@
+package com.personal.management.origincategory.update.process;
+
+import com.personal.management.origincategory.entities.OriginCategory;
+import com.personal.management.origincategory.update.process.rules.UpdateFieldsParamsOriginCategoryRule;
+import com.personal.management.origincategory.update.process.rules.UpdateOriginCategoryRule;
+import com.personal.shared.process.SupplierProcessExecutor;
+
+public class UpdateOriginCategoryProcessExecutor extends SupplierProcessExecutor<UpdateOriginCategoryProcess, OriginCategory> {
+
+    public UpdateOriginCategoryProcessExecutor() {
+        super(new UpdateOriginCategoryProcess(),
+                UpdateFieldsParamsOriginCategoryRule::new,
+                UpdateOriginCategoryRule::new
+        );
+    }
+
+    public static UpdateOriginCategoryProcessExecutor builder() {
+        return new UpdateOriginCategoryProcessExecutor();
+    }
+
+}

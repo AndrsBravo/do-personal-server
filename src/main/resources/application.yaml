@@ -1,0 +1,24 @@
+server:
+  port: 8080
+  host: 0.0.0.0
+
+hikari:
+  properties: /hikari.properties
+
+system:
+  db:
+    master: system_master
+    management: management_db
+    client: client_master
+  migration:
+    system: db/migration/system
+    management: db/migration/management
+    client: db/migration/client
+
+db:
+  source: jdbc
+  connection:
+    url: "jdbc:sqlserver://localhost:1433;databaseName=%s;encrypt=true;trustServerCertificate=true;"
+    username: sa
+    password: MPi123456789
+    poolName: pool_ms_sql  
