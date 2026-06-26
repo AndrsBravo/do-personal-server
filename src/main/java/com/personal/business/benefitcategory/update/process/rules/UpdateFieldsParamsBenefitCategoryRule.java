@@ -16,7 +16,7 @@ public class UpdateFieldsParamsBenefitCategoryRule implements IProcessRule<Updat
         var benefitCategory = process.getInitObject();
 
         query.Field("id", benefitCategory.getId());
-        query.Where().AndEqu("id");
+        query.Where().Equ("id");
 
         if (benefitCategory.getCategory() != null) {
             query.Set("bc_category", benefitCategory.getCategory());

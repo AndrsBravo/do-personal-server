@@ -38,7 +38,7 @@ public class DeleteHierarchyBenefitFeedService implements IDeleteService<Hierarc
                     .execute();
 
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al eliminar el tipo de usuario " + e.getMessage());
+
             return HierarchyBenefitFeedResultFactory.DeleteFail();
         }
 

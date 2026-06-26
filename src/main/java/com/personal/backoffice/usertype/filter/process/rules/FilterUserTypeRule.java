@@ -14,14 +14,9 @@ public class FilterUserTypeRule implements IProcessRule<FilterUserTypeProcess> {
         var query = process.Query();
         var userTypeFilter = process.getInitObject();
 
-        if (userTypeFilter.getAll() != null) {
-            query.Field("id", "");
-            query.Where().AndNotEmpty("id");
-        }
-
         if (userTypeFilter.getId() != null) {
             query.Field("id", userTypeFilter.getId());
-            query.Where().AndEqu("id");
+            query.Where().Field("id", userTypeFilter.getId());
         }
 
         if (userTypeFilter.getType() != null) {

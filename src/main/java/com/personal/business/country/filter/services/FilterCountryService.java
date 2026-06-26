@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import com.personal.backoffice.country.entities.Country;
 import com.personal.backoffice.user.entities.User;
 import com.personal.business.country.factories.CountryResultFactory;
+import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
 import com.personal.shared.services.ServiceResult;
@@ -30,7 +31,7 @@ public class FilterCountryService implements IFilterService<Country> {
         }
 
         var queryString = query.Select("countries",
-                "id", "oc_code", "oc_name", "oc_updated_at", "oc_created_at", "oc_created_by")
+                "id", "co_code", "co_name", "co_updated_at", "co_created_at", "co_created_by")
                 .Get();
 
         //System.out.println(queryString);
@@ -38,16 +39,15 @@ public class FilterCountryService implements IFilterService<Country> {
                 .createQuery(queryString)
                 .params(query.getParams())
                 .execute()
-                .map((dbRow) -> {
-                    var u = new Country();
-                    u.setId(dbRow.column("id").getString());
-                    u.setCode(dbRow.column("oc_code").getString());
-                    u.setName(dbRow.column("oc_name").getString());
-                    u.setCreatedAt(dbRow.column("oc_created_at").get(LocalDateTime.class));
-                    u.setUpdatedAt(dbRow.column("oc_updated_at").get(LocalDateTime.class));
-                    u.setCreatedBy(new User(dbRow.column("oc_created_by").getString()));
-                    return u;
-                })
+                .map((dbRow) -> EntityBuilder.Of(Country::new)
+                .With(Country::setId, dbRow.column("id").getString())
+                .With(Country::setCode, dbRow.column("co_code").getString())
+                .With(Country::setName, dbRow.column("co_name").getString())
+                .With(Country::setCreatedAt, dbRow.column("co_created_at").get(LocalDateTime.class))
+                .With(Country::setUpdatedAt, dbRow.column("co_updated_at").get(LocalDateTime.class))
+                .With(Country::setCreatedBy, new User(dbRow.column("co_created_by").getString()))
+                .Get()
+                )
                 .collect(Collectors.toList());
 
         if (result.isEmpty()) {

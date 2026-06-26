@@ -38,7 +38,7 @@ public class DeleteUserRoleService implements IDeleteService<UserRole> {
                     .execute();
 
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al eliminar el tipo de usuario " + e.getMessage());
+
             return UserRoleResultFactory.DeleteFail();
         }
 

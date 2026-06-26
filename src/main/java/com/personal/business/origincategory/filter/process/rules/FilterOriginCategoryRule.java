@@ -15,19 +15,14 @@ public class FilterOriginCategoryRule implements IProcessRule<FilterOriginCatego
         var query = process.Query();
         var originCategory = process.getInitObject();
 
-        if (originCategory.getAll() != null) {
-            query.Field("id", "");
-            query.Where().AndNotEmpty("id");
-        }
-
         if (originCategory.getId() != null) {
             query.Field("id", originCategory.getId());
-            query.Where().AndEqu("id");
+            query.Where().Field("id", originCategory.getId());
         }
 
         if (originCategory.getType() != null) {
-            query.Field("oc_origin", originCategory.getType());
-            query.Where().AndEqu("oc_origin");
+            query.Field("co_origin", originCategory.getType());
+            query.Where().AndEqu("co_origin");
         }
 
         var filterOriginCategory = OriginCategoryServiceFactory.FilterOriginCategory(originCategory.getBusiness().getDbName());

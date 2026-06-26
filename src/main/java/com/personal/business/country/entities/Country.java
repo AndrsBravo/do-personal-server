@@ -1,8 +1,8 @@
 package com.personal.business.country.entities;
 
-import com.personal.shared.entities.BusinessEntity;
+import com.personal.shared.entities.ShortEntity;
 
-public class Country extends BusinessEntity {
+public class Country extends ShortEntity {
 
     private String name;
     private String code;

@@ -38,7 +38,7 @@ public class CreateTemporalFrequencyService implements ICreateService<TemporalFr
                     .params(query.getParams())
                     .execute();
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al crear el tipo de usuario " + e.getMessage());
+
             return TemporalFrequencyResultFactory.CreateFail();
         }
 

@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import com.personal.backoffice.user.entities.User;
 import com.personal.business.structure.entities.Structure;
 import com.personal.business.structure.factories.StructureResultFactory;
+import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
 import com.personal.shared.services.ServiceResult;
@@ -38,17 +39,16 @@ public class FilterStructureService implements IFilterService<Structure> {
                 .createQuery(queryString)
                 .params(query.getParams())
                 .execute()
-                .map((dbRow) -> {
-                    var u = new Structure();
-                    u.setId(dbRow.column("id").getString());
-                    u.setStructure(dbRow.column("bss_structure").getString());
-                    u.setTitle(dbRow.column("bss_title").getString());
-                    u.setDescription(dbRow.column("bss_description").getString());
-                    u.setCreatedAt(dbRow.column("created_at").get(LocalDateTime.class));
-                    u.setUpdatedAt(dbRow.column("updated_at").get(LocalDateTime.class));
-                    u.setCreatedBy(new User(dbRow.column("created_by").getString()));
-                    return u;
-                })
+                .map((dbRow) -> EntityBuilder.Of(Structure::new)
+                .With(Structure::setId, dbRow.column("id").getString())
+                .With(Structure::setStructure, dbRow.column("bss_structure").getString())
+                .With(Structure::setTitle, dbRow.column("bss_title").getString())
+                .With(Structure::setDescription, dbRow.column("bss_description").getString())
+                .With(Structure::setCreatedAt, dbRow.column("created_at").get(LocalDateTime.class))
+                .With(Structure::setUpdatedAt, dbRow.column("updated_at").get(LocalDateTime.class))
+                .With(Structure::setCreatedBy, new User(dbRow.column("created_by").getString()))
+                .Get()
+                )
                 .collect(Collectors.toList());
 
         if (result.isEmpty()) {

@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import com.personal.backoffice.user.entities.User;
 import com.personal.business.benefitcategory.entities.BenefitCategory;
 import com.personal.business.benefitcategory.factories.BenefitCategoryResultFactory;
+import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
 import com.personal.shared.services.ServiceResult;
@@ -38,17 +39,16 @@ public class FilterBenefitCategoryService implements IFilterService<BenefitCateg
                 .createQuery(queryString)
                 .params(query.getParams())
                 .execute()
-                .map((dbRow) -> {
-                    var u = new BenefitCategory();
-                    u.setId(dbRow.column("id").getString());
-                    u.setCategory(dbRow.column("bc_category").getString());
-                    u.setTitle(dbRow.column("bc_title").getString());
-                    u.setDescription(dbRow.column("bc_description").getString());
-                    u.setCreatedAt(dbRow.column("created_at").get(LocalDateTime.class));
-                    u.setUpdatedAt(dbRow.column("updated_at").get(LocalDateTime.class));
-                    u.setCreatedBy(new User(dbRow.column("created_by").getString()));
-                    return u;
-                })
+                .map((dbRow) -> EntityBuilder.Of(BenefitCategory::new)
+                .With(BenefitCategory::setId, dbRow.column("id").getString())
+                .With(BenefitCategory::setCategory, dbRow.column("bc_category").getString())
+                .With(BenefitCategory::setTitle, dbRow.column("bc_title").getString())
+                .With(BenefitCategory::setDescription, dbRow.column("bc_description").getString())
+                .With(BenefitCategory::setCreatedAt, dbRow.column("created_at").get(LocalDateTime.class))
+                .With(BenefitCategory::setUpdatedAt, dbRow.column("updated_at").get(LocalDateTime.class))
+                .With(BenefitCategory::setCreatedBy, new User(dbRow.column("created_by").getString()))
+                .Get()
+                )
                 .collect(Collectors.toList());
 
         if (result.isEmpty()) {

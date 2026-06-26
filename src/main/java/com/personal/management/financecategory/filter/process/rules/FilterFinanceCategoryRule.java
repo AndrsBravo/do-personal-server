@@ -15,14 +15,9 @@ public class FilterFinanceCategoryRule implements IProcessRule<FilterFinanceCate
 
         var financeCategoryFilter = process.getInitObject();
 
-        if (financeCategoryFilter.getAll() != null) {
-            query.Field("id", "");
-            query.Where().AndNotEmpty("id");
-        }
-
         if (financeCategoryFilter.getId() != null) {
             query.Field("id", financeCategoryFilter.getId());
-            query.Where().AndEqu("id");
+            query.Where().Field("id", financeCategoryFilter.getId());
         }
 
         if (financeCategoryFilter.getType() != null) {

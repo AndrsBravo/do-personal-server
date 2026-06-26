@@ -1,19 +1,17 @@
 package com.personal.shared.inputs;
 
-public class FilterInput extends Input {
+import com.personal.shared.query.field.FieldFilter;
 
-    private String all;
+public class FilterInput {
 
-    public FilterInput() {
-        super();
+    private FieldFilter<String> id;
+
+    public FieldFilter<String> getId() {
+        return id;
     }
 
-    public void setAll(String all) {
-        this.all = all;
-    }
-
-    public String getAll() {
-        return all;
+    public void setId(FieldFilter<String> id) {
+        this.id = id;
     }
 
 }

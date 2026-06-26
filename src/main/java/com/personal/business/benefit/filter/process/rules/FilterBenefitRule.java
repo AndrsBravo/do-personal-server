@@ -15,14 +15,9 @@ public class FilterBenefitRule implements IProcessRule<FilterBenefitProcess> {
 
         var benefitFilterInput = process.getInitObject();
 
-        if (benefitFilterInput.getAll() != null) {
-            query.Field("id", "");
-            query.Where().AndNotEmpty("id");
-        }
-
         if (benefitFilterInput.getId() != null) {
             query.Field("id", benefitFilterInput.getId());
-            query.Where().AndEqu("id");
+            query.Where().Field("id", benefitFilterInput.getId());
         }
 
         if (benefitFilterInput.getType() != null) {

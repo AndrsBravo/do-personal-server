@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import com.personal.business.benefit.entities.Benefit;
 import com.personal.business.temporalfrequency.entities.TemporalFrequency;
 import com.personal.management.benefitrate.entities.BenefitRate;
-import com.personal.management.country.entities.Country;
 import com.personal.management.shared.inputs.CountryInputBase;
 
 public class BenefitRateInput extends CountryInputBase {
@@ -34,7 +33,7 @@ public class BenefitRateInput extends CountryInputBase {
         benefitRate.setStartedAt(started_at);
         benefitRate.setEndedAt(ended_at);
         benefitRate.setCreatedBy(sessionUser);
-        benefitRate.setCountry(new Country(this.getCountryId()));
+        benefitRate.setCountry(this.getCountry());
         return benefitRate;
     }
 }

@@ -1,12 +1,13 @@
 package com.personal.business.orghierarchy.create.inputs;
 
 import com.personal.business.orghierarchy.entities.OrgHierarchy;
-import com.personal.shared.inputs.Input;
+import com.personal.shared.inputs.BusinessInputBase;
 
-public class OrgHierarchyInput extends Input {
+public class OrgHierarchyInput extends BusinessInputBase {
 
+    private short level;
     private String title;
-    private String entity;
+    private String hierarchy;
     private String description;
 
     public OrgHierarchyInput() {
@@ -21,15 +22,21 @@ public class OrgHierarchyInput extends Input {
         this.description = description;
     }
 
-    public void setHierarchy(String relation) {
-        this.entity = relation;
+    public void setHierarchy(String hierarchy) {
+        this.hierarchy = hierarchy;
+    }
+
+    public void setLevel(short level) {
+        this.level = level;
     }
 
     public OrgHierarchy getOrgHierarchy() {
         var orgHierarchy = this.id == null || this.id.isEmpty() ? new OrgHierarchy() : new OrgHierarchy(this.id);
         orgHierarchy.setTitle(title);
-        orgHierarchy.setHierarchy(entity);
+        orgHierarchy.setLevel(level);
+        orgHierarchy.setHierarchy(hierarchy);
         orgHierarchy.setDescription(description);
+        orgHierarchy.setBusiness(getBusiness());
         orgHierarchy.setCreatedBy(sessionUser);
         return orgHierarchy;
     }

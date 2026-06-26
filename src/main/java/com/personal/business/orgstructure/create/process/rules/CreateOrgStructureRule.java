@@ -17,12 +17,12 @@ public class CreateOrgStructureRule implements IProcessRule<CreateOrgStructurePr
 
         if (result.getNotification() != null) {
 
-            process.addLog(pLogger.ERROR("Crear nuevo Tipo de Usuario", result.getNotification().message()));
+            process.addLog(pLogger.ERROR("Crear nueva Estructura de Organización", result.getNotification().message()));
             process.stopWithErrors();
             return;
         }
 
-        process.addLog(pLogger.INFO("Crear nuevo Tipo de Usuario", "Tipo de Usuario creado con éxito"));
+        process.addLog(pLogger.INFO("Crear nueva Estructura de Organización", "La Estructura de Organización fue creada con éxito"));
 
     }
 

@@ -3,7 +3,7 @@ package com.personal.backoffice.country.api.routers;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
-import com.personal.backoffice.api.BaseRouterTest;
+import com.personal.shared.api.BaseRouterTest;
 
 import io.helidon.http.Status;
 import io.helidon.webserver.testing.junit5.DirectClient;
@@ -40,7 +40,7 @@ public class CountryRouterTest extends BaseRouterTest {
 
         System.out.println("Response: " + response.entity());
         System.out.println(response.status().code());
-        assertEquals(response.status(), Status.CREATED_201);
+        assertEquals(Status.CREATED_201, response.status());
     }
 
     @Test

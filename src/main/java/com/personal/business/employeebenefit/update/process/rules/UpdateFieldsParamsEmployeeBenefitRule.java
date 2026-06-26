@@ -16,7 +16,7 @@ public class UpdateFieldsParamsEmployeeBenefitRule implements IProcessRule<Updat
         var employeeBenefit = process.getInitObject();
 
         query.Field("id", employeeBenefit.getId());
-        query.Where().AndEqu("id");
+        query.Where().Equ("id");
 
         if (employeeBenefit.getBenefit() != null) {
             query.Set("business_benefits_id", employeeBenefit.getBenefit().getId());

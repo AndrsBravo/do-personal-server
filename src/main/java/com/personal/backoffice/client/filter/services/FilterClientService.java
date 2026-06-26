@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import com.personal.backoffice.client.entities.Client;
 import com.personal.backoffice.client.factories.ClientResultFactory;
 import com.personal.backoffice.user.entities.User;
+import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.entities.TypeEntityBase;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
@@ -39,15 +40,15 @@ public class FilterClientService implements IFilterService<Client> {
                 .createQuery(queryString)
                 .params(query.getParams())
                 .execute()
-                .map((dbRow) -> {
-                    var u = new Client();
-                    u.setId(dbRow.column("id").getString());
-                    u.setClientType(new TypeEntityBase(dbRow.column("c_types_id").getString()));
-                    u.setCreatedAt(dbRow.column("c_created_at").get(LocalDateTime.class));
-                    u.setUpdatedAt(dbRow.column("c_updated_at").get(LocalDateTime.class));
-                    u.setCreatedBy(new User(dbRow.column("c_created_by").getString()));
-                    return u;
-                })
+                .map((dbRow)
+                        -> EntityBuilder.Of(Client::new)
+                        .With(Client::setId, dbRow.column("id").getString())
+                        .With(Client::setClientType, new TypeEntityBase(dbRow.column("c_types_id").getString()))
+                        .With(Client::setCreatedAt, dbRow.column("c_created_at").get(LocalDateTime.class))
+                        .With(Client::setUpdatedAt, dbRow.column("c_updated_at").get(LocalDateTime.class))
+                        .With(Client::setCreatedBy, new User(dbRow.column("c_created_by").getString()))
+                        .Get()
+                )
                 .collect(Collectors.toList());
 
         if (result.isEmpty()) {

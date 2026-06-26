@@ -11,6 +11,7 @@ import com.personal.backoffice.user.entities.User;
 import com.personal.backoffice.user.entities.UserRelation;
 import com.personal.backoffice.user.entities.UserRole;
 import com.personal.backoffice.user.factories.UserResultFactory;
+import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
 import com.personal.shared.services.ServiceResult;
@@ -41,18 +42,18 @@ public class FilterAssociatedUserClientService implements IFilterService<Associa
                 .createQuery(queryString)
                 .params(query.getParams())
                 .execute()
-                .map((dbRow) -> {
-                    var u = new AssociateUserClient();
-                    u.setId(dbRow.column("id").getString());
-                    u.setClient(new Client(dbRow.column("client_id").getString()));
-                    u.setUser(new User(dbRow.column("users_id").getString()));
-                    u.setUserRole(new UserRole(dbRow.column("user_role_id").getString()));
-                    u.setUserRelation(new UserRelation(dbRow.column("user_relation_id").getString()));
-                    u.setCreatedAt(dbRow.column("created_at").get(LocalDateTime.class));
-                    u.setUpdatedAt(dbRow.column("updated_at").get(LocalDateTime.class));
-                    u.setCreatedBy(new User(dbRow.column("created_by").getString()));
-                    return u;
-                })
+                .map((dbRow)
+                        -> EntityBuilder.Of(AssociateUserClient::new)
+                        .With(AssociateUserClient::setId, dbRow.column("id").getString())
+                        .With(AssociateUserClient::setClient, new Client(dbRow.column("client_id").getString()))
+                        .With(AssociateUserClient::setUser, new User(dbRow.column("users_id").getString()))
+                        .With(AssociateUserClient::setUserRole, new UserRole(dbRow.column("user_role_id").getString()))
+                        .With(AssociateUserClient::setUserRelation, new UserRelation(dbRow.column("user_relation_id").getString()))
+                        .With(AssociateUserClient::setCreatedAt, dbRow.column("created_at").get(LocalDateTime.class))
+                        .With(AssociateUserClient::setUpdatedAt, dbRow.column("updated_at").get(LocalDateTime.class))
+                        .With(AssociateUserClient::setCreatedBy, new User(dbRow.column("created_by").getString()))
+                        .Get()
+                )
                 .collect(Collectors.toList());
 
         if (result.isEmpty()) {

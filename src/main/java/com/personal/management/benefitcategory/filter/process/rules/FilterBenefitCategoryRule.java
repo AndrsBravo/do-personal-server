@@ -13,14 +13,10 @@ public class FilterBenefitCategoryRule implements IProcessRule<FilterBenefitCate
         var pLogger = LogFactory.builder(FilterBenefitCategoryProcess.class, FilterBenefitCategoryRule.class);
         var query = process.Query();
         var benefitCategoryFilter = process.getInitObject();
-        if (benefitCategoryFilter.getAll() != null) {
-            query.Field("id", "");
-            query.Where().AndNotEmpty("id");
-        }
 
         if (benefitCategoryFilter.getId() != null) {
             query.Field("id", benefitCategoryFilter.getId());
-            query.Where().AndEqu("id");
+            query.Where().Field("id", benefitCategoryFilter.getId());
         }
 
         if (benefitCategoryFilter.getType() != null) {

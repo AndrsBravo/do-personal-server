@@ -1,7 +1,7 @@
 package com.personal.backoffice.country.create.process.rules;
 
 import com.personal.backoffice.country.create.process.CreateCountryProcess;
-import com.personal.backoffice.country.create.process.CreateCountryProcessExecutor;
+import com.personal.management.country.create.process.CreateCountryProcessExecutor;
 import com.personal.shared.process.IProcessRule;
 import com.personal.shared.process.logs.LogFactory;
 
@@ -18,8 +18,10 @@ public class CreateManagementCountryRule implements IProcessRule<CreateCountryPr
 
         switch (createCountry.state()) {
 
-            case COMPLETED ->
+            case COMPLETED -> {
                 process.addLog(pLogger.INFO("Crear nuevo País", "País creado con éxito"));
+
+            }
             case STOPPED, STOP_WITH_ERROR -> {
                 process.addLog(createCountry.getCurrentLog());
                 process.stopWithErrors();

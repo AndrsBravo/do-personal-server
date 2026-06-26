@@ -5,8 +5,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.personal.backoffice.user.entities.User;
-import com.personal.backoffice.user.factories.UserBuilder;
 import com.personal.backoffice.user.factories.UserResultFactory;
+import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
@@ -37,13 +37,13 @@ public class FilterUserService implements IFilterService<User> {
                 .createQuery(userQuery)
                 .params(query.getParams())
                 .execute()
-                .map(
-                        (dbRow) -> UserBuilder.builder().withId(dbRow.column("id").getString())
-                                .withEmail(dbRow.column("us_email").getString())
-                                .withUserName(dbRow.column("user_name").getString())
-                                .withNames(dbRow.column("us_name").getString())
-                                .withLastNames(dbRow.column("us_last_name").getString())
-                                .build()
+                .map((dbRow) -> EntityBuilder.Of(User::new)
+                .With(User::setId, dbRow.column("id").getString())
+                .With(User::setEmail, dbRow.column("us_email").getString())
+                .With(User::setUserName, dbRow.column("user_name").getString())
+                .With(User::setNames, dbRow.column("us_name").getString())
+                .With(User::setLastNames, dbRow.column("us_last_name").getString())
+                .Get()
                 )
                 .collect(Collectors.toList());
 

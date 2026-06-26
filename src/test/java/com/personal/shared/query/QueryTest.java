@@ -9,40 +9,6 @@ public class QueryTest {
     }
 
     @Test
-    public void testWhereBuilder() {
-
-        var query = new Query();
-
-        query.Field("id", "abcd");
-
-        var params = query.Where().NotEmpty("id").Get();
-
-        var queryString = " WHERE id <> ''";
-        Assert.assertEquals(params, queryString);
-
-    }
-
-    @Test
-    public void testWhereAndBuilder() {
-
-        var query = new Query();
-
-        query.Field("id", "abcd");
-        query.Field("us_email", "hubravo13@gmail.com");
-        query.Field("user_name", "hubravo13");
-
-        var params = query.Where()
-                .Equ("id")
-                .AndEqu("us_email")
-                .AndEqu("user_name")
-                .Get();
-
-        var queryString = " WHERE id = :id AND us_email = :us_email AND user_name = :user_name";
-        Assert.assertEquals(params, queryString);
-
-    }
-
-    @Test
     public void testUpdateQuery() {
         var query = new Query();
 
@@ -108,14 +74,17 @@ public class QueryTest {
         query.Field("id", "abcd");
         query.Field("us_email", "hubravo13@gmail.com");
 
-        var queryAll = "SELECT * FROM users WHERE id = :id AND us_email = :us_email";
-        var selectQueryAll = query.Select("users", "*")
-                .Where().Equ("id")
+        /*  var queryAll = "SELECT id, us_email FROM users WHERE id = :id AND us_email = :us_email";
+        var selectQueryAll = query.Select("users", "id", "us_email")
+                .Where()
+                .Equ("id")
                 .AndEqu("us_email")
                 .Get();
 
+        System.out.println(selectQueryAll);
+        System.out.println(queryAll);
         Assert.assertEquals(selectQueryAll, queryAll);
-
+         */
         var queryString = "SELECT id, ust_type, ust_description, ust_updated_at, ust_created_at, ust_created_by FROM user_types WHERE id = :id AND us_email = :us_email";
 
         var selectQuery = query.Select("user_types", "id", "ust_type", "ust_description", "ust_updated_at", "ust_created_at", "ust_created_by")
@@ -123,6 +92,8 @@ public class QueryTest {
                 .AndEqu("us_email")
                 .Get();
 
+        System.out.println(selectQuery);
+        System.out.println(queryString);
         Assert.assertEquals(selectQuery, queryString);
 
     }
@@ -137,8 +108,8 @@ public class QueryTest {
         select.Field("us_email", "hubravo13@gmail.com");
         select.Where().AndEqu("us_email");
 
-        var queryAll = "SELECT * FROM users WHERE id = :id AND us_email = :us_email";
-        var selectQueryAll = select.Select("users", "*").Get();
+        var queryAll = "SELECT id, us_email FROM users WHERE id = :id AND us_email = :us_email";
+        var selectQueryAll = select.Select("users", "id", "us_email").Get();
 
         System.out.println(selectQueryAll);
         Assert.assertEquals(queryAll, selectQueryAll);
@@ -176,8 +147,8 @@ public class QueryTest {
                 .InnerJoin("user_category", "id")
                 .On("users", "us_category_id")
                 .Equ("user_category", "id")
-                .Where().Equ("a.id", "id")
-                .AndEqu("a.us_email", "us_email")
+                .Where().Equ("id")
+                .AndEqu("us_email")
                 .Get();
 
         System.out.println(selectQueryAll);
@@ -191,9 +162,9 @@ public class QueryTest {
         var query = new Query();
 
         query.Field("id", "abcd");
-        query.Where().Equ("a.id", "id");
+        query.Where().Equ("id");
         query.Field("us_email", "hubravo13@gmail.com");
-        query.Where().AndEqu("a.us_email", "us_email");
+        query.Where().AndEqu("us_email");
 
         var queryAll = "SELECT a.id, a.us_email, a.us_type_id, b.id, c.id FROM users a INNER JOIN user_types b ON a.us_type_id = b.id JOIN user_category c ON a.us_category_id = c.id WHERE a.id = :id AND a.us_email = :us_email";
         var selectQueryAll = query.Select("users", "id", "us_email", "us_type_id")

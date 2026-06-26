@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.personal.backoffice.business.entities.Business;
 import com.personal.backoffice.user.entities.User;
 import com.personal.business.orghierarchy.entities.OrgHierarchy;
 import com.personal.business.orghierarchy.factories.OrgHierarchyResultFactory;
+import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
 import com.personal.shared.services.ServiceResult;
@@ -30,7 +32,7 @@ public class FilterOrgHierarchyService implements IFilterService<OrgHierarchy> {
         }
 
         var queryString = query.Select("organization_hierarchies",
-                "id", "orgh_hierarchy", "orgh_title", "orgh_description", "updated_at", "created_at", "created_by")
+                "id", "business_id", "orgh_hierarchy", "orgh_title", "orgh_description", "orgh_level", "updated_at", "created_at", "created_by")
                 .Get();
 
         //System.out.println(queryString);
@@ -38,17 +40,18 @@ public class FilterOrgHierarchyService implements IFilterService<OrgHierarchy> {
                 .createQuery(queryString)
                 .params(query.getParams())
                 .execute()
-                .map((dbRow) -> {
-                    var u = new OrgHierarchy();
-                    u.setId(dbRow.column("id").getString());
-                    u.setHierarchy(dbRow.column("orgh_hierarchy").getString());
-                    u.setTitle(dbRow.column("orgh_title").getString());
-                    u.setDescription(dbRow.column("orgh_description").getString());
-                    u.setCreatedAt(dbRow.column("created_at").get(LocalDateTime.class));
-                    u.setUpdatedAt(dbRow.column("updated_at").get(LocalDateTime.class));
-                    u.setCreatedBy(new User(dbRow.column("created_by").getString()));
-                    return u;
-                })
+                .map((dbRow) -> EntityBuilder.Of(OrgHierarchy::new)
+                .With(OrgHierarchy::setId, dbRow.column("id").getString())
+                .With(OrgHierarchy::setLevel, dbRow.column("orgh_level").get(Short.class))
+                .With(OrgHierarchy::setHierarchy, dbRow.column("orgh_hierarchy").getString())
+                .With(OrgHierarchy::setTitle, dbRow.column("orgh_title").getString())
+                .With(OrgHierarchy::setDescription, dbRow.column("orgh_description").getString())
+                .With(OrgHierarchy::setBusiness, new Business(dbRow.column("business_id").getString()))
+                .With(OrgHierarchy::setCreatedAt, dbRow.column("created_at").get(LocalDateTime.class))
+                .With(OrgHierarchy::setUpdatedAt, dbRow.column("updated_at").get(LocalDateTime.class))
+                .With(OrgHierarchy::setCreatedBy, new User(dbRow.column("created_by").getString()))
+                .Get()
+                )
                 .collect(Collectors.toList());
 
         if (result.isEmpty()) {

@@ -125,11 +125,11 @@ Los usuarios se relacionan con las entidades, creándolas o compartiéndolas.
 | Gerencia Area              | Gerencia     | 7     |
 | Departamentos              | Departamento | 8     |
 | Sección/Area               | Sección      | 9     |
-| sub-Sección/Sub-Area       | Sub          | 10    |
+| sub-Sección/Sub-Area       | Sub-sección  | 10    |
 
 ## Estructura Jerárquica hierarchy
 
-| Nombre de la estructura   | Cargo        | Nivel |
+| Nombre de la jerarquía    | Jerarquía    | Nivel |
 | ------------------------- | ------------ | ----- |
 | Miembro de la Junta Acc   | Miembro      | 1     |
 | Miembro de la Junta Dir   | Miembro      | 2     |

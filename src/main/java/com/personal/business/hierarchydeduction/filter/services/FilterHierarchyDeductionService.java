@@ -11,6 +11,7 @@ import com.personal.business.deduction.entities.Deduction;
 import com.personal.business.hierarchy.entities.Hierarchy;
 import com.personal.business.hierarchydeduction.entities.HierarchyDeduction;
 import com.personal.business.hierarchydeduction.factories.HierarchyDeductionResultFactory;
+import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
 import com.personal.shared.services.ServiceResult;
@@ -41,17 +42,16 @@ public class FilterHierarchyDeductionService implements IFilterService<Hierarchy
                 .createQuery(queryString)
                 .params(query.getParams())
                 .execute()
-                .map((dbRow) -> {
-                    var hierarchyDeduction = new HierarchyDeduction();
-                    hierarchyDeduction.setId(dbRow.column("id").getString());
-                    hierarchyDeduction.setBusiness(new Business(dbRow.column("business_id").getString()));
-                    hierarchyDeduction.setDeduction(new Deduction(dbRow.column("business_deductions_id").getString()));
-                    hierarchyDeduction.setHierarchy(new Hierarchy(dbRow.column("business_hierarchy_id").getString()));
-                    hierarchyDeduction.setCreatedAt(dbRow.column("created_at").get(LocalDateTime.class));
-                    hierarchyDeduction.setUpdatedAt(dbRow.column("updated_at").get(LocalDateTime.class));
-                    hierarchyDeduction.setCreatedBy(new User(dbRow.column("created_by").getString()));
-                    return hierarchyDeduction;
-                })
+                .map((dbRow) -> EntityBuilder.Of(HierarchyDeduction::new)
+                .With(HierarchyDeduction::setId, dbRow.column("id").getString())
+                .With(HierarchyDeduction::setBusiness, new Business(dbRow.column("business_id").getString()))
+                .With(HierarchyDeduction::setDeduction, new Deduction(dbRow.column("business_deductions_id").getString()))
+                .With(HierarchyDeduction::setHierarchy, new Hierarchy(dbRow.column("business_hierarchy_id").getString()))
+                .With(HierarchyDeduction::setCreatedAt, dbRow.column("created_at").get(LocalDateTime.class))
+                .With(HierarchyDeduction::setUpdatedAt, dbRow.column("updated_at").get(LocalDateTime.class))
+                .With(HierarchyDeduction::setCreatedBy, new User(dbRow.column("created_by").getString()))
+                .Get()
+                )
                 .collect(Collectors.toList());
 
         if (result.isEmpty()) {

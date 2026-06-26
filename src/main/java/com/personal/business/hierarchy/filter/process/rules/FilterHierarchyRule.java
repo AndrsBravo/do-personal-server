@@ -15,14 +15,9 @@ public class FilterHierarchyRule implements IProcessRule<FilterHierarchyProcess>
         var query = process.Query();
         var hierarchyFilter = process.getInitObject();
 
-        if (hierarchyFilter.getAll() != null) {
-            query.Field("id", "");
-            query.Where().AndNotEmpty("id");
-        }
-
         if (hierarchyFilter.getId() != null) {
             query.Field("id", hierarchyFilter.getId());
-            query.Where().AndEqu("id");
+            query.Where().Field("id", hierarchyFilter.getId());
         }
 
         if (hierarchyFilter.getType() != null) {

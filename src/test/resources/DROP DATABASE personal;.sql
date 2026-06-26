@@ -1,16 +1,14 @@
---USE master;
---DROP DATABASE db_d9db346ec006;
+USE master;
+DROP DATABASE db_3a9780a8d440;
 --DROP DATABASE system_master;
 --DROP DATABASE management_db;
 --USE system_master;
---GO 
---USE system_master;
 --USE management_db;
 --USE client_master;
-USE db_cc35c4db2c82;
-SELECT *
-FROM users;
--- GO
+--SELECT *
+--FROM organization_structures;
+--SELECT *
+--FROM users;
 --SELECT *
 --FROM user_types;
 --SELECT *
@@ -25,8 +23,10 @@ FROM users;
 --FROM user_has_clients;
 --DROP DATABASE d52ce619a8ec_db;
 --SELECT *
---FROM sys.databases --WHERE name <> '';
---USE db_780de1f09fe5;
+--FROM sys.databases
+--WHERE name <> '';
+--USE db_0528594fe389;
 --SELECT *
---FROM sys.tables --WHERE name <> '';
+--FROM sys.tables
+--WHERE name <> '';
 GO

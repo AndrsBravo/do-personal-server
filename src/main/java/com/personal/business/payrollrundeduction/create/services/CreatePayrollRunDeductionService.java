@@ -38,7 +38,7 @@ public class CreatePayrollRunDeductionService implements ICreateService<PayrollR
                     .params(query.getParams())
                     .execute();
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al crear el tipo de usuario " + e.getMessage());
+
             return PayrollRunDeductionResultFactory.CreateFail();
         }
 

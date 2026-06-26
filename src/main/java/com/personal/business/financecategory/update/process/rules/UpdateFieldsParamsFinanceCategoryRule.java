@@ -16,7 +16,7 @@ public class UpdateFieldsParamsFinanceCategoryRule implements IProcessRule<Updat
         var financeCategory = process.getInitObject();
 
         query.Field("id", financeCategory.getId());
-        query.Where().AndEqu("id");
+        query.Where().Equ("id");
 
         if (financeCategory.getCategory() != null) {
             query.Set("fc_category", financeCategory.getCategory());

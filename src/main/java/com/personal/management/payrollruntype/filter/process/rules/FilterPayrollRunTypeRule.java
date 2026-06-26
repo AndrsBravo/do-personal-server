@@ -13,14 +13,10 @@ public class FilterPayrollRunTypeRule implements IProcessRule<FilterPayrollRunTy
         var pLogger = LogFactory.builder(FilterPayrollRunTypeProcess.class, FilterPayrollRunTypeRule.class);
         var query = process.Query();
         var payrollRunTypeFilter = process.getInitObject();
-        if (payrollRunTypeFilter.getAll() != null) {
-            query.Field("id", "");
-            query.Where().AndNotEmpty("id");
-        }
 
         if (payrollRunTypeFilter.getId() != null) {
             query.Field("id", payrollRunTypeFilter.getId());
-            query.Where().AndEqu("id");
+            query.Where().Field("id", payrollRunTypeFilter.getId());
         }
 
         if (payrollRunTypeFilter.getType() != null) {

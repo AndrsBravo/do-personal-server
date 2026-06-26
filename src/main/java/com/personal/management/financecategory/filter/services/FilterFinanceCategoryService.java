@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import com.personal.backoffice.user.entities.User;
 import com.personal.management.financecategory.entities.FinanceCategory;
 import com.personal.management.financecategory.factories.FinanceCategoryResultFactory;
+import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
 import com.personal.shared.services.ServiceResult;
@@ -38,17 +39,15 @@ public class FilterFinanceCategoryService implements IFilterService<FinanceCateg
                 .createQuery(queryString)
                 .params(query.getParams())
                 .execute()
-                .map((dbRow) -> {
-                    var u = new FinanceCategory();
-                    u.setId(dbRow.column("id").getString());
-                    u.setCategory(dbRow.column("fc_category").getString());
-                    u.setTitle(dbRow.column("fc_title").getString());
-                    u.setDescription(dbRow.column("fc_description").getString());
-                    u.setCreatedAt(dbRow.column("created_at").get(LocalDateTime.class));
-                    u.setUpdatedAt(dbRow.column("updated_at").get(LocalDateTime.class));
-                    u.setCreatedBy(new User(dbRow.column("created_by").getString()));
-                    return u;
-                })
+                .map((dbRow) -> EntityBuilder.Of(FinanceCategory::new)
+                .With(FinanceCategory::setId, dbRow.column("id").getString())
+                .With(FinanceCategory::setCategory, dbRow.column("fc_category").getString())
+                .With(FinanceCategory::setTitle, dbRow.column("fc_title").getString())
+                .With(FinanceCategory::setDescription, dbRow.column("fc_description").getString())
+                .With(FinanceCategory::setCreatedAt, dbRow.column("created_at").get(LocalDateTime.class))
+                .With(FinanceCategory::setUpdatedAt, dbRow.column("updated_at").get(LocalDateTime.class))
+                .With(FinanceCategory::setCreatedBy, new User(dbRow.column("created_by").getString()))
+                .Get())
                 .collect(Collectors.toList());
 
         if (result.isEmpty()) {

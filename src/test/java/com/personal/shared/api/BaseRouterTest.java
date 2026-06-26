@@ -1,4 +1,4 @@
-package com.personal.backoffice.api;
+package com.personal.shared.api;
 
 import java.util.Map;
 

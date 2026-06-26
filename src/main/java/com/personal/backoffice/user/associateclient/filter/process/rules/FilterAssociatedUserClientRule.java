@@ -14,14 +14,9 @@ public class FilterAssociatedUserClientRule implements IProcessRule<FilterAssoci
         var query = process.Query();
         var associatedUserClientFilter = process.getInitObject();
 
-        if (associatedUserClientFilter.getAll() != null) {
-            query.Field("id", "");
-            query.Where().AndNotEmpty("id");
-        }
-
         if (associatedUserClientFilter.getId() != null) {
             query.Field("id", associatedUserClientFilter.getId());
-            query.Where().AndEqu("id");
+            query.Where().Field("id", associatedUserClientFilter.getId());
         }
 
         if (associatedUserClientFilter.getUserId() != null) {

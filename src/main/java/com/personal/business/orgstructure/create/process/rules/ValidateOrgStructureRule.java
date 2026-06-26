@@ -14,14 +14,16 @@ public class ValidateOrgStructureRule implements IProcessRule<CreateOrgStructure
 
         var orgStructure = process.getInitObject();
         query.Field("id", orgStructure.getId());
+        query.Field("business_id", orgStructure.getBusiness().getId());
         query.Field("orgs_title", orgStructure.getTitle());
         query.Field("orgs_structure", orgStructure.getStructure());
+        query.Field("orgs_level", Short.toString(orgStructure.getLevel()));
         query.Field("orgs_description", orgStructure.getDescription());
         query.Field("created_at", orgStructure.getCreatedAt().toString());
         query.Field("updated_at", orgStructure.getUpdatedAt().toString());
         query.Field("created_by", orgStructure.getCreatedBy().getId());
 
-        process.addLog(pLogger.INFO("Crear nueva relación de Usuario", "Relación de Usuario creada con éxito"));
+        process.addLog(pLogger.INFO("Validar nueva Estructura de Organización", "La Estructura de Organización es valida"));
 
     }
 

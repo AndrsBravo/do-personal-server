@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import com.personal.backoffice.user.entities.User;
 import com.personal.business.deduction.entities.Deduction;
 import com.personal.business.deduction.factories.DeductionResultFactory;
+import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
 import com.personal.shared.services.ServiceResult;
@@ -38,17 +39,16 @@ public class FilterDeductionService implements IFilterService<Deduction> {
                 .createQuery(queryString)
                 .params(query.getParams())
                 .execute()
-                .map((dbRow) -> {
-                    var u = new Deduction();
-                    u.setId(dbRow.column("id").getString());
-                    u.setDeduction(dbRow.column("bd_deduction").getString());
-                    u.setTitle(dbRow.column("bd_title").getString());
-                    u.setDescription(dbRow.column("bd_description").getString());
-                    u.setCreatedAt(dbRow.column("created_at").get(LocalDateTime.class));
-                    u.setUpdatedAt(dbRow.column("updated_at").get(LocalDateTime.class));
-                    u.setCreatedBy(new User(dbRow.column("created_by").getString()));
-                    return u;
-                })
+                .map((dbRow) -> EntityBuilder.Of(Deduction::new)
+                .With(Deduction::setId, dbRow.column("id").getString())
+                .With(Deduction::setDeduction, dbRow.column("bd_deduction").getString())
+                .With(Deduction::setTitle, dbRow.column("bd_title").getString())
+                .With(Deduction::setDescription, dbRow.column("bd_description").getString())
+                .With(Deduction::setCreatedAt, dbRow.column("created_at").get(LocalDateTime.class))
+                .With(Deduction::setUpdatedAt, dbRow.column("updated_at").get(LocalDateTime.class))
+                .With(Deduction::setCreatedBy, new User(dbRow.column("created_by").getString()))
+                .Get()
+                )
                 .collect(Collectors.toList());
 
         if (result.isEmpty()) {

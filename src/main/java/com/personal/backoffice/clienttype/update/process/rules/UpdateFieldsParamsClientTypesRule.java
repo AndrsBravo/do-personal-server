@@ -16,7 +16,7 @@ public class UpdateFieldsParamsClientTypesRule implements IProcessRule<UpdateCli
         var clientType = process.getInitObject();
 
         query.Field("id", clientType.getId());
-        query.Where().AndEqu("id");
+        query.Where().Equ("id");
 
         if (clientType.getType() != null) {
             query.Set("ct_type", clientType.getType());

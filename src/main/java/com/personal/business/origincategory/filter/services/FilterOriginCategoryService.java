@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import com.personal.backoffice.user.entities.User;
 import com.personal.business.origincategory.entities.OriginCategory;
 import com.personal.business.origincategory.factories.OriginCategoryResultFactory;
+import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
 import com.personal.shared.services.ServiceResult;
@@ -30,7 +31,7 @@ public class FilterOriginCategoryService implements IFilterService<OriginCategor
         }
 
         var queryString = query.Select("origin_categories",
-                "id", "oc_origin", "oc_title", "oc_description", "updated_at", "created_at", "created_by")
+                "id", "co_origin", "co_title", "co_description", "updated_at", "created_at", "created_by")
                 .Get();
 
         //System.out.println(queryString);
@@ -38,17 +39,16 @@ public class FilterOriginCategoryService implements IFilterService<OriginCategor
                 .createQuery(queryString)
                 .params(query.getParams())
                 .execute()
-                .map((dbRow) -> {
-                    var u = new OriginCategory();
-                    u.setId(dbRow.column("id").getString());
-                    u.setOrigin(dbRow.column("oc_origin").getString());
-                    u.setTitle(dbRow.column("oc_title").getString());
-                    u.setDescription(dbRow.column("oc_description").getString());
-                    u.setCreatedAt(dbRow.column("created_at").get(LocalDateTime.class));
-                    u.setUpdatedAt(dbRow.column("updated_at").get(LocalDateTime.class));
-                    u.setCreatedBy(new User(dbRow.column("created_by").getString()));
-                    return u;
-                })
+                .map((dbRow) -> EntityBuilder.Of(OriginCategory::new)
+                .With(OriginCategory::setId, dbRow.column("id").getString())
+                .With(OriginCategory::setOrigin, dbRow.column("co_origin").getString())
+                .With(OriginCategory::setTitle, dbRow.column("co_title").getString())
+                .With(OriginCategory::setDescription, dbRow.column("co_description").getString())
+                .With(OriginCategory::setCreatedAt, dbRow.column("created_at").get(LocalDateTime.class))
+                .With(OriginCategory::setUpdatedAt, dbRow.column("updated_at").get(LocalDateTime.class))
+                .With(OriginCategory::setCreatedBy, new User(dbRow.column("created_by").getString()))
+                .Get()
+                )
                 .collect(Collectors.toList());
 
         if (result.isEmpty()) {

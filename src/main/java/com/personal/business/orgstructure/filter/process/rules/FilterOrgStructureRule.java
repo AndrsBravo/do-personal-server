@@ -14,18 +14,14 @@ public class FilterOrgStructureRule implements IProcessRule<FilterOrgStructurePr
 
         var query = process.Query();
         var orgStructureFilter = process.getInitObject();
-        if (orgStructureFilter.getAll() != null) {
-            query.Field("id", "");
-            query.Where().AndNotEmpty("id");
-        }
 
         if (orgStructureFilter.getId() != null) {
             query.Field("id", orgStructureFilter.getId());
-            query.Where().AndEqu("id");
+            query.Where().Field("id", orgStructureFilter.getId());
         }
 
-        if (orgStructureFilter.getType() != null) {
-            query.Field("orgs_structure", orgStructureFilter.getType());
+        if (orgStructureFilter.getStructure() != null) {
+            query.Field("orgs_structure", orgStructureFilter.getStructure());
             query.Where().AndEqu("orgs_structure");
         }
 

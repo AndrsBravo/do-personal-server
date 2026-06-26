@@ -16,7 +16,7 @@ public class UpdateFieldsParamsHierarchyBenefitRule implements IProcessRule<Upda
         var hierarchyBenefit = process.getInitObject();
 
         query.Field("id", hierarchyBenefit.getId());
-        query.Where().AndEqu("id");
+        query.Where().Equ("id");
 
         if (hierarchyBenefit.getBenefit() != null) {
             query.Set("business_benefits_id", hierarchyBenefit.getBenefit().getId());

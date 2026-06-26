@@ -16,7 +16,7 @@ public class UpdateFieldsParamsEmployeeScaleRule implements IProcessRule<UpdateE
         var employeeScale = process.getInitObject();
 
         query.Field("id", employeeScale.getId());
-        query.Where().AndEqu("id");
+        query.Where().Equ("id");
 
         if (employeeScale.getBusiness() != null) {
             query.Set("business_id", employeeScale.getBusiness().getId());

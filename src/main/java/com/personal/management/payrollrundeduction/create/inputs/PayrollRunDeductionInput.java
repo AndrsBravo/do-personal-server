@@ -1,6 +1,5 @@
 package com.personal.management.payrollrundeduction.create.inputs;
 
-import com.personal.management.country.entities.Country;
 import com.personal.management.payrollrundeduction.entities.PayrollRunDeduction;
 import com.personal.management.shared.inputs.CountryInputBase;
 import com.personal.shared.core.entities.SharedDeduction;
@@ -27,7 +26,7 @@ public class PayrollRunDeductionInput extends CountryInputBase {
         var payrollRunDeduction = this.id == null || this.id.isEmpty() ? new PayrollRunDeduction() : new PayrollRunDeduction(this.id);
         payrollRunDeduction.setDeduction(new SharedDeduction(deductionId));
         payrollRunDeduction.setPayrollRun(new SharedPayrollRun(payrollRunId));
-        payrollRunDeduction.setCountry(new Country(this.getCountryId()));
+        payrollRunDeduction.setCountry(this.getCountry());
         payrollRunDeduction.setCreatedBy(sessionUser);
         return payrollRunDeduction;
     }

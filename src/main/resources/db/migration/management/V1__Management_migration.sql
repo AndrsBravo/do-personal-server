@@ -35,16 +35,16 @@ GO -- Table dbo.countries
         WHERE name = 'countries'
             AND schema_id = SCHEMA_ID('dbo')
     ) BEGIN CREATE TABLE dbo.countries (
-        id VARCHAR(12) NOT NULL,
-        oc_created_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
-        oc_updated_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
-        oc_created_by VARCHAR(12) NOT NULL,
+        id VARCHAR(8) NOT NULL,
+        co_created_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
+        co_updated_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
+        co_created_by VARCHAR(12) NOT NULL,
         CONSTRAINT PK_countries PRIMARY KEY (id),
         CONSTRAINT UQ_countries_id UNIQUE (id),
-        CONSTRAINT UQ_countries_created_by UNIQUE (oc_created_by),
-        CONSTRAINT FK_countries_oc_created_by FOREIGN KEY (oc_created_by) REFERENCES dbo.users (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+        CONSTRAINT UQ_countries_created_by UNIQUE (co_created_by),
+        CONSTRAINT FK_countries_co_created_by FOREIGN KEY (co_created_by) REFERENCES dbo.users (id) ON DELETE NO ACTION ON UPDATE NO ACTION
     );
-CREATE INDEX IX_countries_created_by ON dbo.countries (oc_created_by ASC);
+CREATE INDEX IX_countries_created_by ON dbo.countries (co_created_by ASC);
 END
 GO -- Table dbo.temporal_frequencies
     IF NOT EXISTS (
@@ -53,19 +53,18 @@ GO -- Table dbo.temporal_frequencies
         WHERE name = 'temporal_frequencies'
             AND schema_id = SCHEMA_ID('dbo')
     ) BEGIN CREATE TABLE dbo.temporal_frequencies (
-        id VARCHAR(12) NOT NULL,
+        id VARCHAR(8) NOT NULL,
         tf_title VARCHAR(100) NOT NULL,
-        tf_frequency VARCHAR(16) NOT NULL,
+        tf_frequency VARCHAR(8) NOT NULL,
         tf_description VARCHAR(250) NULL,
-        country_id VARCHAR(12) NOT NULL,
+        country_id VARCHAR(8) NOT NULL,
         created_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
         updated_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
         created_by VARCHAR(12) NOT NULL,
         CONSTRAINT PK_temporal_frequencies PRIMARY KEY (id),
         CONSTRAINT UQ_temporal_frequencies_id UNIQUE (id),
         CONSTRAINT FK_temporal_frequencies_created_by FOREIGN KEY (created_by) REFERENCES dbo.users (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
-        CONSTRAINT FK_temporal_frequencies_country FOREIGN KEY (country_id) REFERENCES dbo.countries (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
-        CONSTRAINT FK_temporal_frequencies_equivalent FOREIGN KEY (tf_equivalent_id) REFERENCES dbo.temporal_frequencies (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+        CONSTRAINT FK_temporal_frequencies_country FOREIGN KEY (country_id) REFERENCES dbo.countries (id) ON DELETE NO ACTION ON UPDATE NO ACTION
     );
 CREATE INDEX IX_temporal_frequencies_created_by ON dbo.temporal_frequencies (created_by ASC);
 CREATE INDEX IX_temporal_frequencies_country ON dbo.temporal_frequencies (country_id ASC);
@@ -77,11 +76,10 @@ GO -- Table dbo.organization_structures
         WHERE name = 'organization_structures'
             AND schema_id = SCHEMA_ID('dbo')
     ) BEGIN CREATE TABLE dbo.organization_structures (
-        id VARCHAR(12) NOT NULL,
-        country_id VARCHAR(12) NOT NULL,
+        id VARCHAR(8) NOT NULL,
+        country_id VARCHAR(8) NOT NULL,
         orgs_structure VARCHAR(16) NOT NULL,
         orgs_title VARCHAR(100) NOT NULL,
-        orgs_charge VARCHAR(120) NOT NULL,
         orgs_description VARCHAR(250) NULL,
         orgs_level TINYINT NOT NULL,
         created_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
@@ -102,8 +100,8 @@ GO -- Table dbo.organization_hierarchies
         WHERE name = 'organization_hierarchies'
             AND schema_id = SCHEMA_ID('dbo')
     ) BEGIN CREATE TABLE dbo.organization_hierarchies (
-        id VARCHAR(12) NOT NULL,
-        country_id VARCHAR(12) NOT NULL,
+        id VARCHAR(8) NOT NULL,
+        country_id VARCHAR(8) NOT NULL,
         orgh_hierarchy VARCHAR(16) NOT NULL,
         orgh_title VARCHAR(100) NOT NULL,
         orgh_description VARCHAR(250) NOT NULL,
@@ -126,10 +124,10 @@ GO -- Table dbo.organization_relations
         WHERE name = 'organization_relations'
             AND schema_id = SCHEMA_ID('dbo')
     ) BEGIN CREATE TABLE dbo.organization_relations (
-        id VARCHAR(12) NOT NULL,
-        country_id VARCHAR(12) NOT NULL,
-        organization_structure VARCHAR(12) NOT NULL,
-        organization_hierarchy VARCHAR(12) NOT NULL,
+        id VARCHAR(8) NOT NULL,
+        country_id VARCHAR(8) NOT NULL,
+        organization_structure VARCHAR(8) NOT NULL,
+        organization_hierarchy VARCHAR(8) NOT NULL,
         created_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
         updated_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
         created_by VARCHAR(12) NOT NULL,
@@ -152,10 +150,10 @@ GO -- Table dbo.finance_categories
         WHERE name = 'finance_categories'
             AND schema_id = SCHEMA_ID('dbo')
     ) BEGIN CREATE TABLE dbo.finance_categories (
-        id VARCHAR(12) NOT NULL,
-        country_id VARCHAR(12) NOT NULL,
+        id VARCHAR(8) NOT NULL,
+        country_id VARCHAR(8) NOT NULL,
         fc_benefit_or_deduction CHAR(1) NOT NULL,
-        fc_category VARCHAR(16) NOT NULL,
+        fc_category VARCHAR(8) NOT NULL,
         fc_title VARCHAR(100) NOT NULL,
         fc_description VARCHAR(200) NULL,
         created_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
@@ -176,11 +174,11 @@ GO -- Table dbo.origin_categories
         WHERE name = 'origin_categories'
             AND schema_id = SCHEMA_ID('dbo')
     ) BEGIN CREATE TABLE dbo.origin_categories (
-        id VARCHAR(12) NOT NULL,
-        country_id VARCHAR(12) NOT NULL,
-        oc_origin VARCHAR(16) NOT NULL,
-        oc_title VARCHAR(100) NOT NULL,
-        oc_description VARCHAR(200) NULL,
+        id VARCHAR(8) NOT NULL,
+        country_id VARCHAR(8) NOT NULL,
+        co_origin VARCHAR(8) NOT NULL,
+        co_title VARCHAR(100) NOT NULL,
+        co_description VARCHAR(200) NULL,
         created_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
         updated_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
         created_by VARCHAR(12) NOT NULL,
@@ -199,25 +197,25 @@ GO -- Table dbo.benefit_categories
         WHERE name = 'benefit_categories'
             AND schema_id = SCHEMA_ID('dbo')
     ) BEGIN CREATE TABLE dbo.benefit_categories (
-        id VARCHAR(12) NOT NULL,
-        country_id VARCHAR(12) NOT NULL,
+        id VARCHAR(8) NOT NULL,
+        country_id VARCHAR(8) NOT NULL,
         bc_category VARCHAR(150) NOT NULL,
         bc_title VARCHAR(150) NOT NULL,
         bc_description VARCHAR(250) NULL,
-        bc_finance_type_id VARCHAR(12) NOT NULL,
-        bc_origin_id VARCHAR(12) NOT NULL,
+        bc_finance_category_id VARCHAR(8) NOT NULL,
+        bc_origin_id VARCHAR(8) NOT NULL,
         created_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
         updated_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
         created_by VARCHAR(12) NOT NULL,
         CONSTRAINT PK_benefit_categories PRIMARY KEY (id),
         CONSTRAINT UQ_benefit_categories_id UNIQUE (id),
         CONSTRAINT FK_benefit_categories_created_by FOREIGN KEY (created_by) REFERENCES dbo.users (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
-        CONSTRAINT FK_benefit_categories_finance_type FOREIGN KEY (bc_finance_type_id) REFERENCES dbo.finance_categories (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+        CONSTRAINT FK_benefit_categories_finance_type FOREIGN KEY (bc_finance_category_id) REFERENCES dbo.finance_categories (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
         CONSTRAINT FK_benefit_categories_origin FOREIGN KEY (bc_origin_id) REFERENCES dbo.origin_categories (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
         CONSTRAINT FK_benefit_categories_country FOREIGN KEY (country_id) REFERENCES dbo.countries (id) ON DELETE NO ACTION ON UPDATE NO ACTION
     );
 CREATE INDEX IX_benefit_categories_created_by ON dbo.benefit_categories (created_by ASC);
-CREATE INDEX IX_benefit_categories_finance ON dbo.benefit_categories (bc_finance_type_id ASC);
+CREATE INDEX IX_benefit_categories_finance ON dbo.benefit_categories (bc_finance_category_id ASC);
 CREATE INDEX IX_benefit_categories_origin ON dbo.benefit_categories (bc_origin_id ASC);
 CREATE INDEX IX_benefit_categories_country ON dbo.benefit_categories (country_id ASC);
 END
@@ -228,10 +226,10 @@ GO -- Table dbo.business_benefits
         WHERE name = 'business_benefits'
             AND schema_id = SCHEMA_ID('dbo')
     ) BEGIN CREATE TABLE dbo.business_benefits (
-        id VARCHAR(12) NOT NULL,
-        country_id VARCHAR(12) NOT NULL,
-        benefit_categories_id VARCHAR(12) NOT NULL,
-        bb_benefit VARCHAR(16) NOT NULL,
+        id VARCHAR(8) NOT NULL,
+        country_id VARCHAR(8) NOT NULL,
+        benefit_category_id VARCHAR(8) NOT NULL,
+        bb_benefit VARCHAR(8) NOT NULL,
         bb_title VARCHAR(150) NOT NULL,
         bb_description VARCHAR(250) NULL,
         created_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
@@ -241,11 +239,11 @@ GO -- Table dbo.business_benefits
         CONSTRAINT UQ_business_benefits_id UNIQUE (id),
         CONSTRAINT FK_business_benefits_created_by FOREIGN KEY (created_by) REFERENCES dbo.users (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
         CONSTRAINT FK_business_benefits_countries FOREIGN KEY (country_id) REFERENCES dbo.countries (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
-        CONSTRAINT FK_business_benefits_categories FOREIGN KEY (benefit_categories_id) REFERENCES dbo.benefit_categories (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+        CONSTRAINT FK_business_benefits_categories FOREIGN KEY (benefit_category_id) REFERENCES dbo.benefit_categories (id) ON DELETE NO ACTION ON UPDATE NO ACTION
     );
 CREATE INDEX IX_business_benefits_created_by ON dbo.business_benefits (created_by ASC);
 CREATE INDEX IX_business_benefits_countries ON dbo.business_benefits (country_id ASC);
-CREATE INDEX IX_business_benefits_categories ON dbo.business_benefits (benefit_categories_id ASC);
+CREATE INDEX IX_business_benefits_categories ON dbo.business_benefits (benefit_category_id ASC);
 END
 GO -- Table dbo.business_benefits_rates
     IF NOT EXISTS (
@@ -254,10 +252,10 @@ GO -- Table dbo.business_benefits_rates
         WHERE name = 'business_benefits_rates'
             AND schema_id = SCHEMA_ID('dbo')
     ) BEGIN CREATE TABLE dbo.business_benefits_rates (
-        id VARCHAR(12) NOT NULL,
-        country_id VARCHAR(12) NOT NULL,
-        business_benefit_id VARCHAR(12) NOT NULL,
-        temporal_frequency_id VARCHAR(12) NOT NULL,
+        id VARCHAR(8) NOT NULL,
+        country_id VARCHAR(8) NOT NULL,
+        business_benefit_id VARCHAR(8) NOT NULL,
+        temporal_frequency_id VARCHAR(8) NOT NULL,
         bbr_amount MONEY NOT NULL,
         bbr_base_amount MONEY NOT NULL,
         bbr_rate FLOAT NOT NULL,
@@ -286,24 +284,24 @@ GO -- Table dbo.deductions_categories
         WHERE name = 'deductions_categories'
             AND schema_id = SCHEMA_ID('dbo')
     ) BEGIN CREATE TABLE dbo.deductions_categories (
-        id VARCHAR(12) NOT NULL,
-        country_id VARCHAR(12) NOT NULL,
+        id VARCHAR(8) NOT NULL,
+        country_id VARCHAR(8) NOT NULL,
         dc_title VARCHAR(150) NOT NULL,
         dc_description VARCHAR(250) NULL,
-        dc_finance_type_id VARCHAR(12) NOT NULL,
-        dc_origin_id VARCHAR(12) NOT NULL,
+        dc_finance_category_id VARCHAR(8) NOT NULL,
+        dc_origin_id VARCHAR(8) NOT NULL,
         created_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
         updated_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
         created_by VARCHAR(12) NOT NULL,
         CONSTRAINT PK_deductions_categories PRIMARY KEY (id),
         CONSTRAINT UQ_deductions_categories_id UNIQUE (id),
         CONSTRAINT FK_deductions_categories_created_by FOREIGN KEY (created_by) REFERENCES dbo.users (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
-        CONSTRAINT FK_deductions_categories_finance_type FOREIGN KEY (dc_finance_type_id) REFERENCES dbo.finance_categories (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+        CONSTRAINT FK_deductions_categories_finance_type FOREIGN KEY (dc_finance_category_id) REFERENCES dbo.finance_categories (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
         CONSTRAINT FK_deductions_categories_origin FOREIGN KEY (dc_origin_id) REFERENCES dbo.origin_categories (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
         CONSTRAINT FK_deductions_categories_country FOREIGN KEY (country_id) REFERENCES dbo.countries (id) ON DELETE NO ACTION ON UPDATE NO ACTION
     );
 CREATE INDEX IX_deductions_categories_created_by ON dbo.deductions_categories (created_by ASC);
-CREATE INDEX IX_deductions_categories_finance ON dbo.deductions_categories (dc_finance_type_id ASC);
+CREATE INDEX IX_deductions_categories_finance ON dbo.deductions_categories (dc_finance_category_id ASC);
 CREATE INDEX IX_deductions_categories_origin ON dbo.deductions_categories (dc_origin_id ASC);
 CREATE INDEX IX_deductions_categories_country ON dbo.deductions_categories (country_id ASC);
 END
@@ -314,27 +312,27 @@ GO -- Table dbo.business_deductions
         WHERE name = 'business_deductions'
             AND schema_id = SCHEMA_ID('dbo')
     ) BEGIN CREATE TABLE dbo.business_deductions (
-        id VARCHAR(12) NOT NULL,
-        bd_deduction VARCHAR(16) NOT NULL,
+        id VARCHAR(8) NOT NULL,
+        bd_deduction VARCHAR(8) NOT NULL,
         bd_title VARCHAR(100) NOT NULL,
         bd_description VARCHAR(250) NULL,
-        country_id VARCHAR(12) NOT NULL,
-        finance_categories_id VARCHAR(12) NOT NULL,
-        origin_categories_id VARCHAR(12) NOT NULL,
+        country_id VARCHAR(8) NOT NULL,
+        finance_category_id VARCHAR(8) NOT NULL,
+        origin_category_id VARCHAR(8) NOT NULL,
         created_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
         updated_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
         created_by VARCHAR(12) NOT NULL,
         CONSTRAINT PK_business_deductions PRIMARY KEY (id),
         CONSTRAINT UQ_business_deductions_id UNIQUE (id),
         CONSTRAINT FK_business_deductions_created_by FOREIGN KEY (created_by) REFERENCES dbo.users (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
-        CONSTRAINT FK_business_deductions_finance_type FOREIGN KEY (finance_categories_id) REFERENCES dbo.finance_categories (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+        CONSTRAINT FK_business_deductions_finance_type FOREIGN KEY (finance_category_id) REFERENCES dbo.finance_categories (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
         CONSTRAINT FK_business_deductions_countries FOREIGN KEY (country_id) REFERENCES dbo.countries (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
-        CONSTRAINT FK_business_deductions_origin FOREIGN KEY (origin_categories_id) REFERENCES dbo.origin_categories (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+        CONSTRAINT FK_business_deductions_origin FOREIGN KEY (origin_category_id) REFERENCES dbo.origin_categories (id) ON DELETE NO ACTION ON UPDATE NO ACTION
     );
 CREATE INDEX IX_business_deductions_created_by ON dbo.business_deductions (created_by ASC);
-CREATE INDEX IX_business_deductions_finance ON dbo.business_deductions (finance_categories_id ASC);
+CREATE INDEX IX_business_deductions_finance ON dbo.business_deductions (finance_category_id ASC);
 CREATE INDEX IX_business_deductions_countries ON dbo.business_deductions (country_id ASC);
-CREATE INDEX IX_business_deductions_origin ON dbo.business_deductions (origin_categories_id ASC);
+CREATE INDEX IX_business_deductions_origin ON dbo.business_deductions (origin_category_id ASC);
 END
 GO -- Table dbo.business_deductions_rates
     IF NOT EXISTS (
@@ -343,10 +341,10 @@ GO -- Table dbo.business_deductions_rates
         WHERE name = 'business_deductions_rates'
             AND schema_id = SCHEMA_ID('dbo')
     ) BEGIN CREATE TABLE dbo.business_deductions_rates (
-        id VARCHAR(12) NOT NULL,
-        country_id VARCHAR(12) NOT NULL,
-        business_deduction_id VARCHAR(12) NOT NULL,
-        temporal_frequency_id VARCHAR(12) NOT NULL,
+        id VARCHAR(8) NOT NULL,
+        country_id VARCHAR(8) NOT NULL,
+        business_deduction_id VARCHAR(8) NOT NULL,
+        temporal_frequency_id VARCHAR(8) NOT NULL,
         bdr_amount MONEY NOT NULL,
         bdr_base_amount MONEY NOT NULL,
         bdr_rate FLOAT NOT NULL,
@@ -375,10 +373,10 @@ GO -- Table dbo.benefits_deductions_base
         WHERE name = 'benefits_deductions_base'
             AND schema_id = SCHEMA_ID('dbo')
     ) BEGIN CREATE TABLE dbo.benefits_deductions_base (
-        id VARCHAR(12) NOT NULL,
-        country_id VARCHAR(12) NOT NULL,
-        business_benefit_id VARCHAR(12) NOT NULL,
-        business_deduction_id VARCHAR(12) NOT NULL,
+        id VARCHAR(8) NOT NULL,
+        country_id VARCHAR(8) NOT NULL,
+        business_benefit_id VARCHAR(8) NOT NULL,
+        business_deduction_id VARCHAR(8) NOT NULL,
         bdb_started_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
         bdb_ended_at DATETIME2 NOT NULL,
         created_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
@@ -407,8 +405,8 @@ GO -- Table dbo.payrolls
         pr_title VARCHAR(100) NOT NULL,
         pr_payroll VARCHAR(16) NOT NULL,
         pr_description VARCHAR(250) NULL,
-        country_id VARCHAR(12) NOT NULL,
-        temporal_frequency_id VARCHAR(12) NOT NULL,
+        country_id VARCHAR(8) NOT NULL,
+        temporal_frequency_id VARCHAR(8) NOT NULL,
         created_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
         updated_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
         created_by VARCHAR(12) NOT NULL,
@@ -430,9 +428,9 @@ GO -- Table dbo.payroll_benefits
             AND schema_id = SCHEMA_ID('dbo')
     ) BEGIN CREATE TABLE dbo.payroll_benefits (
         id VARCHAR(12) NOT NULL,
-        country_id VARCHAR(12) NOT NULL,
+        country_id VARCHAR(8) NOT NULL,
         payrolls_id VARCHAR(12) NOT NULL,
-        business_benefits_id VARCHAR(12) NOT NULL,
+        business_benefit_id VARCHAR(8) NOT NULL,
         created_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
         updated_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
         created_by VARCHAR(12) NOT NULL,
@@ -441,12 +439,12 @@ GO -- Table dbo.payroll_benefits
         CONSTRAINT FK_payroll_benefits_created_by FOREIGN KEY (created_by) REFERENCES dbo.users (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
         CONSTRAINT FK_payroll_benefits_countries FOREIGN KEY (country_id) REFERENCES dbo.countries (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
         CONSTRAINT FK_payroll_benefits_payrolls FOREIGN KEY (payrolls_id) REFERENCES dbo.payrolls (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
-        CONSTRAINT FK_payroll_benefits_benefits FOREIGN KEY (business_benefits_id) REFERENCES dbo.business_benefits (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+        CONSTRAINT FK_payroll_benefits_benefits FOREIGN KEY (business_benefit_id) REFERENCES dbo.business_benefits (id) ON DELETE NO ACTION ON UPDATE NO ACTION
     );
 CREATE INDEX IX_payroll_benefits_created_by ON dbo.payroll_benefits (created_by ASC);
 CREATE INDEX IX_payroll_benefits_countries ON dbo.payroll_benefits (country_id ASC);
 CREATE INDEX IX_payroll_benefits_payrolls ON dbo.payroll_benefits (payrolls_id ASC);
-CREATE INDEX IX_payroll_benefits_benefits ON dbo.payroll_benefits (business_benefits_id ASC);
+CREATE INDEX IX_payroll_benefits_benefits ON dbo.payroll_benefits (business_benefit_id ASC);
 END
 GO -- Table dbo.payroll_deductions
     IF NOT EXISTS (
@@ -456,9 +454,9 @@ GO -- Table dbo.payroll_deductions
             AND schema_id = SCHEMA_ID('dbo')
     ) BEGIN CREATE TABLE dbo.payroll_deductions (
         id VARCHAR(12) NOT NULL,
-        country_id VARCHAR(12) NOT NULL,
+        country_id VARCHAR(8) NOT NULL,
         payrolls_id VARCHAR(12) NOT NULL,
-        business_deductions_id VARCHAR(12) NOT NULL,
+        business_deduction_id VARCHAR(8) NOT NULL,
         created_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
         updated_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
         created_by VARCHAR(12) NOT NULL,
@@ -467,12 +465,12 @@ GO -- Table dbo.payroll_deductions
         CONSTRAINT FK_payroll_deductions_created_by FOREIGN KEY (created_by) REFERENCES dbo.users (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
         CONSTRAINT FK_payroll_deductions_countries FOREIGN KEY (country_id) REFERENCES dbo.countries (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
         CONSTRAINT FK_payroll_deductions_payrolls FOREIGN KEY (payrolls_id) REFERENCES dbo.payrolls (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
-        CONSTRAINT FK_payroll_deductions_deductions FOREIGN KEY (business_deductions_id) REFERENCES dbo.business_deductions (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+        CONSTRAINT FK_payroll_deductions_deductions FOREIGN KEY (business_deduction_id) REFERENCES dbo.business_deductions (id) ON DELETE NO ACTION ON UPDATE NO ACTION
     );
 CREATE INDEX IX_payroll_deductions_created_by ON dbo.payroll_deductions (created_by ASC);
 CREATE INDEX IX_payroll_deductions_countries ON dbo.payroll_deductions (country_id ASC);
 CREATE INDEX IX_payroll_deductions_payrolls ON dbo.payroll_deductions (payrolls_id ASC);
-CREATE INDEX IX_payroll_deductions_deductions ON dbo.payroll_deductions (business_deductions_id ASC);
+CREATE INDEX IX_payroll_deductions_deductions ON dbo.payroll_deductions (business_deduction_id ASC);
 END
 GO -- Table dbo.payroll_runs_types
     IF NOT EXISTS (
@@ -482,8 +480,8 @@ GO -- Table dbo.payroll_runs_types
             AND schema_id = SCHEMA_ID('dbo')
     ) BEGIN CREATE TABLE dbo.payroll_runs_types (
         id VARCHAR(12) NOT NULL,
-        country_id VARCHAR(12) NOT NULL,
-        prt_type VARCHAR(16) NOT NULL,
+        country_id VARCHAR(8) NOT NULL,
+        prt_type VARCHAR(8) NOT NULL,
         prt_title VARCHAR(100) NOT NULL,
         prt_description VARCHAR(250) NULL,
         created_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
@@ -505,7 +503,7 @@ GO -- Table dbo.payroll_runs
             AND schema_id = SCHEMA_ID('dbo')
     ) BEGIN CREATE TABLE dbo.payroll_runs (
         id VARCHAR(12) NOT NULL,
-        country_id VARCHAR(12) NOT NULL,
+        country_id VARCHAR(8) NOT NULL,
         payrolls_id VARCHAR(12) NOT NULL,
         payroll_runs_type_id VARCHAR(12) NOT NULL,
         prr_title VARCHAR(100) NOT NULL,
@@ -531,7 +529,7 @@ GO -- Table dbo.payroll_runs_benefits
             AND schema_id = SCHEMA_ID('dbo')
     ) BEGIN CREATE TABLE dbo.payroll_runs_benefits (
         id VARCHAR(12) NOT NULL,
-        country_id VARCHAR(12) NOT NULL,
+        country_id VARCHAR(8) NOT NULL,
         payroll_runs_id VARCHAR(12) NOT NULL,
         payroll_benefits_id VARCHAR(12) NOT NULL,
         created_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
@@ -542,7 +540,7 @@ GO -- Table dbo.payroll_runs_benefits
         CONSTRAINT FK_payroll_runs_benefits_created_by FOREIGN KEY (created_by) REFERENCES dbo.users (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
         CONSTRAINT FK_payroll_runs_benefits_countries FOREIGN KEY (country_id) REFERENCES dbo.countries (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
         CONSTRAINT FK_payroll_runs_benefits_payroll_runs FOREIGN KEY (payroll_runs_id) REFERENCES dbo.payroll_runs (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
-        CONSTRAINT FK_payroll_runs_benefits_payroll_benefits FOREIGN KEY (payroll_benefits_id) REFERENCES dbo.payroll_benefits (business_benefits_id) ON DELETE NO ACTION ON UPDATE NO ACTION
+        CONSTRAINT FK_payroll_runs_benefits_payroll_benefits FOREIGN KEY (payroll_benefits_id) REFERENCES dbo.payroll_benefits (id) ON DELETE NO ACTION ON UPDATE NO ACTION
     );
 CREATE INDEX IX_payroll_runs_benefits_created_by ON dbo.payroll_runs_benefits (created_by ASC);
 CREATE INDEX IX_payroll_runs_benefits_countries ON dbo.payroll_runs_benefits (country_id ASC);
@@ -557,7 +555,7 @@ GO -- Table dbo.payroll_runs_deductions
             AND schema_id = SCHEMA_ID('dbo')
     ) BEGIN CREATE TABLE dbo.payroll_runs_deductions (
         id VARCHAR(12) NOT NULL,
-        country_id VARCHAR(12) NOT NULL,
+        country_id VARCHAR(8) NOT NULL,
         payroll_runs_id VARCHAR(12) NOT NULL,
         payroll_deductions_id VARCHAR(12) NOT NULL,
         created_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
@@ -566,7 +564,7 @@ GO -- Table dbo.payroll_runs_deductions
         CONSTRAINT PK_payroll_runs_deductions PRIMARY KEY (id),
         CONSTRAINT FK_payroll_runs_deductions_created_by FOREIGN KEY (created_by) REFERENCES dbo.users (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
         CONSTRAINT FK_payroll_runs_deductions_countries FOREIGN KEY (country_id) REFERENCES dbo.countries (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
-        CONSTRAINT FK_payroll_runs_deductions_payroll_deductions FOREIGN KEY (payroll_deductions_id) REFERENCES dbo.payroll_deductions (business_deductions_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+        CONSTRAINT FK_payroll_runs_deductions_payroll_deductions FOREIGN KEY (payroll_deductions_id) REFERENCES dbo.payroll_deductions (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
         CONSTRAINT FK_payroll_runs_deductions_payroll_runs FOREIGN KEY (payroll_runs_id) REFERENCES dbo.payroll_runs (id) ON DELETE NO ACTION ON UPDATE NO ACTION
     );
 CREATE INDEX IX_payroll_runs_deductions_created_by ON dbo.payroll_runs_deductions (created_by ASC);

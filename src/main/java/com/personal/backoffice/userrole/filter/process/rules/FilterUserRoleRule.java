@@ -14,14 +14,9 @@ public class FilterUserRoleRule implements IProcessRule<FilterUserRoleProcess> {
         var query = process.Query();
         var userRoleFilter = process.getInitObject();
 
-        if (userRoleFilter.getAll() != null) {
-            query.Field("id", "");
-            query.Where().AndNotEmpty("id");
-        }
-
         if (userRoleFilter.getId() != null) {
             query.Field("id", userRoleFilter.getId());
-            query.Where().AndEqu("id");
+            query.Where().Field("id", userRoleFilter.getId());
         }
 
         var filterUserRole = UserRoleServiceFactory.FilterUserRoles();

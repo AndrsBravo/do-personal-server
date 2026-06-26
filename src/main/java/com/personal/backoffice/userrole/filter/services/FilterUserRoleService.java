@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import com.personal.backoffice.user.entities.User;
 import com.personal.backoffice.userrole.entities.UserRole;
 import com.personal.backoffice.userrole.factories.UserRoleResultFactory;
+import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
 import com.personal.shared.services.ServiceResult;
@@ -38,14 +39,13 @@ public class FilterUserRoleService implements IFilterService<UserRole> {
                 .createQuery(queryString)
                 .params(query.getParams())
                 .execute()
-                .map((dbRow) -> {
-                    var u = new UserRole();
-                    u.setId(dbRow.column("id").getString());
-                    u.setCreatedAt(dbRow.column("url_created_at").get(LocalDateTime.class));
-                    u.setUpdatedAt(dbRow.column("url_updated_at").get(LocalDateTime.class));
-                    u.setCreatedBy(new User(dbRow.column("url_created_by").getString()));
-                    return u;
-                })
+                .map((dbRow) -> EntityBuilder.Of(UserRole::new)
+                .With(UserRole::setId, dbRow.column("id").getString())
+                .With(UserRole::setCreatedAt, dbRow.column("url_created_at").get(LocalDateTime.class))
+                .With(UserRole::setUpdatedAt, dbRow.column("url_updated_at").get(LocalDateTime.class))
+                .With(UserRole::setCreatedBy, new User(dbRow.column("url_created_by").getString()))
+                .Get()
+                )
                 .collect(Collectors.toList());
 
         if (result.isEmpty()) {

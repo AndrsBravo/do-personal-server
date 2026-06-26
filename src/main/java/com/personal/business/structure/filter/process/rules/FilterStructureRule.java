@@ -15,14 +15,9 @@ public class FilterStructureRule implements IProcessRule<FilterStructureProcess>
 
         var structureFilterInput = process.getInitObject();
 
-        if (structureFilterInput.getAll() != null) {
-            query.Field("id", "");
-            query.Where().AndNotEmpty("id");
-        }
-
         if (structureFilterInput.getId() != null) {
             query.Field("id", structureFilterInput.getId());
-            query.Where().AndEqu("id");
+            query.Where().Field("id", structureFilterInput.getId());
         }
 
         if (structureFilterInput.getType() != null) {

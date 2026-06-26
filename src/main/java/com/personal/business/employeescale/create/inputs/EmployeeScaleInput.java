@@ -31,7 +31,7 @@ public class EmployeeScaleInput extends BusinessInputBase {
         employeeScale.setEmployee(new Employee(employeeId));
         employeeScale.setHierarchy(new Hierarchy(hierarchyId));
         employeeScale.setStartedAt(started_at);
-        employeeScale.setEndedAt(ended_at);;
+        employeeScale.setEndedAt(ended_at);
         employeeScale.setBusiness(this.getBusiness());
         employeeScale.setCreatedBy(sessionUser);
         return employeeScale;

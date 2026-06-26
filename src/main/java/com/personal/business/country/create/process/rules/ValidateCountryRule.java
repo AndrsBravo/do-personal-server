@@ -14,11 +14,11 @@ public class ValidateCountryRule implements IProcessRule<CreateCountryProcess> {
 
         var country = process.getInitObject();
         query.Field("id", country.getId());
-        //  query.Field("oc_code", country.getCode());
-        //  query.Field("oc_name", country.getName());
-        query.Field("oc_created_at", country.getCreatedAt().toString());
-        query.Field("oc_updated_at", country.getUpdatedAt().toString());
-        query.Field("oc_created_by", country.getCreatedBy().getId());
+        //  query.Field("co_code", country.getCode());
+        //  query.Field("co_name", country.getName());
+        query.Field("co_created_at", country.getCreatedAt().toString());
+        query.Field("co_updated_at", country.getUpdatedAt().toString());
+        query.Field("co_created_by", country.getCreatedBy().getId());
 
         process.addLog(pLogger.INFO("Crear nuevo País en Management", "País creado con éxito"));
 

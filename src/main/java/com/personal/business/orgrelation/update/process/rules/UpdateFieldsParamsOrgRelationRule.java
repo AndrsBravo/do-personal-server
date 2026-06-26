@@ -16,7 +16,7 @@ public class UpdateFieldsParamsOrgRelationRule implements IProcessRule<UpdateOrg
         var orgRelation = process.getInitObject();
 
         query.Field("id", orgRelation.getId());
-        query.Where().AndEqu("id");
+        query.Where().Equ("id");
 
         if (orgRelation.getStructure() != null) {
             query.Set("organization_structure", orgRelation.getStructure().getId());

@@ -13,14 +13,10 @@ public class FilterBenefitDeductionRelationRule implements IProcessRule<FilterBe
         var pLogger = LogFactory.builder(FilterBenefitDeductionRelationProcess.class, FilterBenefitDeductionRelationRule.class);
         var query = process.Query();
         var benefitDeductionRelationFilter = process.getInitObject();
-        if (benefitDeductionRelationFilter.getAll() != null) {
-            query.Field("id", "");
-            query.Where().AndNotEmpty("id");
-        }
 
         if (benefitDeductionRelationFilter.getId() != null) {
             query.Field("id", benefitDeductionRelationFilter.getId());
-            query.Where().AndEqu("id");
+            query.Where().Field("id", benefitDeductionRelationFilter.getId());
         }
 
         if (benefitDeductionRelationFilter.getBenefitId() != null) {

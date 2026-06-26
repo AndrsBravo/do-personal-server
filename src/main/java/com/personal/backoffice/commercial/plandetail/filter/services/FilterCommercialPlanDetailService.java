@@ -10,6 +10,7 @@ import com.personal.backoffice.commercial.plan.entities.CommercialPlan;
 import com.personal.backoffice.commercial.plandetail.entities.CommercialPlanDetail;
 import com.personal.backoffice.commercial.plandetail.factories.CommercialPlanDetailResultFactory;
 import com.personal.backoffice.user.entities.User;
+import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
 import com.personal.shared.services.ServiceResult;
@@ -40,17 +41,17 @@ public class FilterCommercialPlanDetailService implements IFilterService<Commerc
                 .createQuery(queryString)
                 .params(query.getParams())
                 .execute()
-                .map((dbRow) -> {
-                    var u = new CommercialPlanDetail();
-                    u.setId(dbRow.column("id").getString());
-                    u.setPlan(new CommercialPlan(dbRow.column("commercial_plan_id").getString()));
-                    u.setEntity(new CommercialEntity(dbRow.column("commercial_entities_id").getString()));
-                    u.setQuantity(Integer.valueOf(dbRow.column("cpd_quantity").getString()));
-                    u.setCreatedAt(dbRow.column("cpd_created_at").get(LocalDateTime.class));
-                    u.setUpdatedAt(dbRow.column("cpd_updated_at").get(LocalDateTime.class));
-                    u.setCreatedBy(new User(dbRow.column("cpd_created_by").getString()));
-                    return u;
-                })
+                .map((dbRow)
+                        -> EntityBuilder.Of(CommercialPlanDetail::new)
+                        .With(CommercialPlanDetail::setId, dbRow.column("id").getString())
+                        .With(CommercialPlanDetail::setPlan, new CommercialPlan(dbRow.column("commercial_plan_id").getString()))
+                        .With(CommercialPlanDetail::setEntity, new CommercialEntity(dbRow.column("commercial_entities_id").getString()))
+                        .With(CommercialPlanDetail::setQuantity, Integer.valueOf(dbRow.column("cpd_quantity").getString()))
+                        .With(CommercialPlanDetail::setCreatedAt, dbRow.column("cpd_created_at").get(LocalDateTime.class))
+                        .With(CommercialPlanDetail::setUpdatedAt, dbRow.column("cpd_updated_at").get(LocalDateTime.class))
+                        .With(CommercialPlanDetail::setCreatedBy, new User(dbRow.column("cpd_created_by").getString()))
+                        .Get()
+                )
                 .collect(Collectors.toList());
 
         if (result.isEmpty()) {

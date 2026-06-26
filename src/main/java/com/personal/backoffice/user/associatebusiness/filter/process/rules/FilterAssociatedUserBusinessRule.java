@@ -14,14 +14,9 @@ public class FilterAssociatedUserBusinessRule implements IProcessRule<FilterAsso
         var query = process.Query();
         var associatedUserBusinessFilter = process.getInitObject();
 
-        if (associatedUserBusinessFilter.getAll() != null) {
-            query.Field("id", "");
-            query.Where().AndNotEmpty("id");
-        }
-
         if (associatedUserBusinessFilter.getId() != null) {
             query.Field("id", associatedUserBusinessFilter.getId());
-            query.Where().AndEqu("id");
+            query.Where().Field("id", associatedUserBusinessFilter.getId());
         }
 
         if (associatedUserBusinessFilter.getUserId() != null) {

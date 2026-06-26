@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import com.personal.backoffice.user.entities.User;
 import com.personal.backoffice.usertype.factories.UserTypeResultFactory;
+import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.entities.TypeEntityBase;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
@@ -38,16 +39,16 @@ public class FilterUserTypeService implements IFilterService<TypeEntityBase> {
                 .createQuery(queryString)
                 .params(query.getParams())
                 .execute()
-                .map((dbRow) -> {
-                    var u = new TypeEntityBase();
-                    u.setId(dbRow.column("id").getString());
-                    u.setType(dbRow.column("ust_type").getString());
-                    u.setDescription(dbRow.column("ust_description").getString());
-                    u.setCreatedAt(dbRow.column("ust_created_at").get(LocalDateTime.class));
-                    u.setUpdatedAt(dbRow.column("ust_updated_at").get(LocalDateTime.class));
-                    u.setCreatedBy(new User(dbRow.column("ust_created_by").getString()));
-                    return u;
-                })
+                .map((dbRow)
+                        -> EntityBuilder.Of(TypeEntityBase::new)
+                        .With(TypeEntityBase::setId, dbRow.column("id").getString())
+                        .With(TypeEntityBase::setType, dbRow.column("ust_type").getString())
+                        .With(TypeEntityBase::setDescription, dbRow.column("ust_description").getString())
+                        .With(TypeEntityBase::setCreatedAt, dbRow.column("ust_created_at").get(LocalDateTime.class))
+                        .With(TypeEntityBase::setUpdatedAt, dbRow.column("ust_updated_at").get(LocalDateTime.class))
+                        .With(TypeEntityBase::setCreatedBy, new User(dbRow.column("ust_created_by").getString()))
+                        .Get()
+                )
                 .collect(Collectors.toList());
 
         if (result.isEmpty()) {

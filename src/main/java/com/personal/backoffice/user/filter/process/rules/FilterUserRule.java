@@ -11,9 +11,11 @@ public class FilterUserRule implements IProcessRule<FilterUserProcess> {
     public void apply(FilterUserProcess process) {
         var pLogger = LogFactory.builder(FilterUserProcess.class, FilterUserRule.class);
         var query = process.Query();
-        if (query.getParams().get("id") == null) {
-            query.Field("id", "");
-            query.Where().OrNotEmpty("id");
+
+        var userFilterInput = process.getInitObject();
+        if (userFilterInput.getId() != null) {
+            query.Field("id", userFilterInput.getId());
+            query.Where().Field("id", userFilterInput.getId());
         }
 
         if (query.isEmpty()) {

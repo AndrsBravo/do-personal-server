@@ -14,9 +14,9 @@ public class ValidateOriginCategoryRule implements IProcessRule<CreateOriginCate
 
         var originCategory = process.getInitObject();
         query.Field("id", originCategory.getId());
-        query.Field("oc_title", originCategory.getTitle());
-        query.Field("oc_origin", originCategory.getOrigin());
-        query.Field("oc_description", originCategory.getDescription());
+        query.Field("co_title", originCategory.getTitle());
+        query.Field("co_origin", originCategory.getOrigin());
+        query.Field("co_description", originCategory.getDescription());
         query.Field("created_at", originCategory.getCreatedAt().toString());
         query.Field("updated_at", originCategory.getUpdatedAt().toString());
         query.Field("created_by", originCategory.getCreatedBy().getId());

@@ -17,7 +17,7 @@ public class UserIdFilterRule implements IProcessRule<FilterUserProcess> {
             return;
         }
         query.Field("id", user.getId());
-        query.Where().AndEqu("id");
+        query.Where().Field("id", user.getId());
 
         process.addLog(pLogger.INFO("Filter User", "Filtering by id: " + user.getId()));
     }

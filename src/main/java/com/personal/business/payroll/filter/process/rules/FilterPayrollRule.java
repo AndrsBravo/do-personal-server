@@ -15,14 +15,9 @@ public class FilterPayrollRule implements IProcessRule<FilterPayrollProcess> {
 
         var payrollFilterInput = process.getInitObject();
 
-        if (payrollFilterInput.getAll() != null) {
-            query.Field("id", "");
-            query.Where().AndNotEmpty("id");
-        }
-
         if (payrollFilterInput.getId() != null) {
             query.Field("id", payrollFilterInput.getId());
-            query.Where().AndEqu("id");
+            query.Where().Field("id", payrollFilterInput.getId());
         }
 
         if (payrollFilterInput.getType() != null) {

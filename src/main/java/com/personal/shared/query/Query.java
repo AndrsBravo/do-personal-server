@@ -5,14 +5,25 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.personal.shared.query.delete.DeleteBuilder;
+import com.personal.shared.query.delete.DeleteObject;
+import com.personal.shared.query.field.Field;
+import com.personal.shared.query.insert.InsertIntoBuilder;
+import com.personal.shared.query.select.SelectBuilder;
+import com.personal.shared.query.select.SelectObject;
+import com.personal.shared.query.update.UpdateBuilder;
+import com.personal.shared.query.update.UpdateObject;
+import com.personal.shared.query.where.WhereBuilder;
+import com.personal.shared.query.where.WhereBuilderResult;
+
 public class Query {
 
-    private WhereBuilder where;
+    private WhereBuilderResult where;
     private UpdateBuilder updateBuilder;
     private DeleteBuilder deleteBuilder;
     private final StringBuilder keyPair;
-    private final Map<String, String> fields;
     private final Set<String> setFields;
+    private final Map<String, String> fields;
 
     public Query() {
         this.fields = new HashMap<>();
@@ -20,49 +31,61 @@ public class Query {
         this.keyPair = new StringBuilder();
     }
 
+    public void Field(String key, String value) {
+        this.fields.put(key, value);
+        this.keyPair.append(key).append(":").append(value).append(";");
+    }
+
+    public <E> void Field(String key, Field<E> value) {
+        this.fields.put(key, value.getValue().toString());
+        this.keyPair.append(key).append(":").append(value).append(";");
+    }
+
+    public void Set(String key, String value) {
+        this.Field(key, value);
+        this.setFields.add(key);
+    }
+
     public WhereBuilder Where() {
         if (this.where == null) {
-            this.where = new WhereBuilder(this.fields);
+            this.where = new WhereBuilderResult();
         }
 
         return where;
     }
 
+    public InsertIntoBuilder InsertInto(String tableName) {
+        return new InsertIntoBuilder(this.fields, tableName);
+    }
+
+    public SelectBuilder Select(String tableName, String... fieldsNames) {
+
+        //Llamar el Where para que se cree si no esta creado.
+        this.Where();
+        var queryObject = new SelectObject(this.fields, this.where);
+        queryObject.Table(tableName, fieldsNames);
+
+        SelectBuilder select = new SelectBuilder(queryObject);
+
+        return select;
+    }
+
     public UpdateBuilder Update(String tableName) {
-        if (this.updateBuilder == null) {
-            this.updateBuilder = new UpdateBuilder(tableName, this.fields);
-        }
-        if (!setFields.isEmpty()) {
-            this.setFields.forEach(this.updateBuilder::Set);
-        }
-        if (this.where != null) {
-            this.updateBuilder.setWhere(this.where);
-        }
+        this.Where();
+        this.updateBuilder = new UpdateBuilder(new UpdateObject(this.fields, this.where, tableName, setFields));
+
         return this.updateBuilder;
     }
 
     public DeleteBuilder Delete(String tableName) {
-        if (this.deleteBuilder == null) {
-            this.deleteBuilder = new DeleteBuilder(tableName, this.fields);
-        }
-        if (this.where != null) {
-            this.deleteBuilder.setWhere(this.where);
-        }
+        this.Where();
+        this.deleteBuilder = new DeleteBuilder(new DeleteObject(this.fields, this.where, tableName));
+
         return this.deleteBuilder;
     }
 
     public boolean isEmpty() {
         return this.fields.isEmpty();
-    }
-
-    public void Set(String key, String value) {
-        Field(key, value);
-        this.setFields.add(key);
-    }
-
-    public void Field(String key, String value) {
-        this.fields.put(key, value);
-        this.keyPair.append(key).append(":").append(value).append(";");
     }
 
     public Map<String, String> getParams() {
@@ -71,27 +94,6 @@ public class Query {
 
     public String getKeyPair() {
         return keyPair.toString();
-    }
-
-    public InsertIntoBuilder InsertInto(String user_types) {
-        return new InsertIntoBuilder(this.fields, user_types);
-    }
-
-    public SelectBuilder Select(String tableName, String... fieldsNames) {
-
-        SelectBuilder select = null;
-
-        if (fieldsNames.length > 0) {
-            select = new SelectBuilder(tableName, this.fields, fieldsNames);
-        }
-
-        if (select == null) {
-            select = new SelectBuilder(tableName, this.fields, "*");
-        }
-        if (where != null) {
-            select.setWhere(where);
-        }
-        return select;
     }
 
 }

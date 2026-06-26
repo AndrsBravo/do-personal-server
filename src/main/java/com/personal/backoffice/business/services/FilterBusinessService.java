@@ -9,6 +9,7 @@ import com.personal.backoffice.business.entities.Business;
 import com.personal.backoffice.business.factories.BusinessResultFactory;
 import com.personal.backoffice.client.entities.Client;
 import com.personal.backoffice.user.entities.User;
+import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
 import com.personal.shared.services.ServiceResult;
@@ -39,17 +40,17 @@ public class FilterBusinessService implements IFilterService<Business> {
                 .createQuery(queryString)
                 .params(query.getParams())
                 .execute()
-                .map((dbRow) -> {
-                    var business = new Business();
-                    business.setId(dbRow.column("id").getString());
-                    business.setName(dbRow.column("bss_name").getString());
-                    business.setDbName(dbRow.column("bss_db_name").getString());
-                    business.setClient(new Client(dbRow.column("client_id").getString()));
-                    business.setCreatedAt(dbRow.column("bss_created_at").get(LocalDateTime.class));
-                    business.setUpdatedAt(dbRow.column("bss_updated_at").get(LocalDateTime.class));
-                    business.setCreatedBy(new User(dbRow.column("bss_created_by").getString()));
-                    return business;
-                })
+                .map((dbRow)
+                        -> EntityBuilder.Of(Business::new)
+                        .With(Business::setId, dbRow.column("id").getString())
+                        .With(Business::setName, dbRow.column("bss_name").getString())
+                        .With(Business::setDbName, dbRow.column("bss_db_name").getString())
+                        .With(Business::setClient, EntityBuilder.Of(Client::new).With(Client::setId, dbRow.column("client_id").getString()).Get())
+                        .With(Business::setCreatedAt, dbRow.column("bss_created_at").get(LocalDateTime.class))
+                        .With(Business::setUpdatedAt, dbRow.column("bss_updated_at").get(LocalDateTime.class))
+                        .With(Business::setCreatedBy, new User(dbRow.column("bss_created_by").getString()))
+                        .Get()
+                )
                 .collect(Collectors.toList());
 
         if (result.isEmpty()) {

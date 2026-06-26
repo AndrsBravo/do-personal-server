@@ -10,7 +10,7 @@ import com.personal.backoffice.user.entities.User;
 import com.personal.business.payroll.entities.Payroll;
 import com.personal.business.payrollrunresult.entities.PayrollRunResult;
 import com.personal.business.payrollrunresult.factories.PayrollRunResultResultFactory;
-import com.personal.shared.entities.TypeEntityBase;
+import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
 import com.personal.shared.services.ServiceResult;
@@ -41,21 +41,20 @@ public class FilterPayrollRunResultService implements IFilterService<PayrollRunR
                 .createQuery(queryString)
                 .params(query.getParams())
                 .execute()
-                .map((dbRow) -> {
-                    var payrollRunResult = new PayrollRunResult();
-                    payrollRunResult.setId(dbRow.column("id").getString());
-                    payrollRunResult.setPayroll(new Payroll(dbRow.column("payrolls_id").getString()));
-                    payrollRunResult.setBusiness(new Business(dbRow.column("business_id").getString()));
-                    payrollRunResult.setTitle(dbRow.column("prcr_title").getString());
-                    payrollRunResult.setReference(dbRow.column("ref_id").getString());
-                    payrollRunResult.setReferenceTitle(dbRow.column("ref_title").getString());
-                    payrollRunResult.setQuantity(dbRow.column("prcr_quantity").get(Double.class));
-                    payrollRunResult.setDescription(dbRow.column("prcr_description").getString());
-                    payrollRunResult.setCreatedAt(dbRow.column("created_at").get(LocalDateTime.class));
-                    payrollRunResult.setUpdatedAt(dbRow.column("updated_at").get(LocalDateTime.class));
-                    payrollRunResult.setCreatedBy(new User(dbRow.column("created_by").getString()));
-                    return payrollRunResult;
-                })
+                .map((dbRow) -> EntityBuilder.Of(PayrollRunResult::new)
+                .With(PayrollRunResult::setId, dbRow.column("id").getString())
+                .With(PayrollRunResult::setPayroll, new Payroll(dbRow.column("payrolls_id").getString()))
+                .With(PayrollRunResult::setBusiness, new Business(dbRow.column("business_id").getString()))
+                .With(PayrollRunResult::setTitle, dbRow.column("prcr_title").getString())
+                .With(PayrollRunResult::setReference, dbRow.column("ref_id").getString())
+                .With(PayrollRunResult::setReferenceTitle, dbRow.column("ref_title").getString())
+                .With(PayrollRunResult::setQuantity, dbRow.column("prcr_quantity").get(Double.class))
+                .With(PayrollRunResult::setDescription, dbRow.column("prcr_description").getString())
+                .With(PayrollRunResult::setCreatedAt, dbRow.column("created_at").get(LocalDateTime.class))
+                .With(PayrollRunResult::setUpdatedAt, dbRow.column("updated_at").get(LocalDateTime.class))
+                .With(PayrollRunResult::setCreatedBy, new User(dbRow.column("created_by").getString()))
+                .Get()
+                )
                 .collect(Collectors.toList());
 
         if (result.isEmpty()) {

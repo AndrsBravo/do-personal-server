@@ -5,7 +5,7 @@ GO -- Table dbo.user_types
         FROM sys.tables
         WHERE name = 'user_types'
     ) BEGIN CREATE TABLE dbo.user_types (
-        id VARCHAR(12) NOT NULL,
+        id VARCHAR(8) NOT NULL,
         ust_type VARCHAR(16) NOT NULL,
         ust_title VARCHAR(16) NOT NULL,
         ust_description VARCHAR(100) NOT NULL,
@@ -24,7 +24,7 @@ GO -- Table dbo.users
             AND schema_id = SCHEMA_ID('dbo')
     ) BEGIN CREATE TABLE dbo.users (
         id VARCHAR(12) NOT NULL,
-        user_types_id VARCHAR(12) NOT NULL,
+        user_types_id VARCHAR(8) NOT NULL,
         us_email VARCHAR(60) NOT NULL,
         user_name VARCHAR(16) NOT NULL,
         us_name VARCHAR(45) NOT NULL,
@@ -62,7 +62,7 @@ END
 GO IF NOT EXISTS (
         SELECT *
         FROM user_types
-        WHERE id = 'H06A10L07A12'
+        WHERE id = '06100712'
     ) BEGIN
 INSERT INTO user_types (
         id,
@@ -72,7 +72,7 @@ INSERT INTO user_types (
         ust_created_by
     )
 VALUES (
-        'H06A10L07A12',
+        '06100712',
         'system_default',
         'System Default',
         'System default administrator with full access',
@@ -95,7 +95,7 @@ INSERT INTO users (
     )
 VALUES (
         'H13A11L26A31',
-        'H06A10L07A12',
+        '06100712',
         'hubravo13@gmail.com',
         'systemdefault',
         'system',
@@ -121,7 +121,7 @@ GO -- Table dbo.client_types
         WHERE name = 'client_types'
             AND schema_id = SCHEMA_ID('dbo')
     ) BEGIN CREATE TABLE dbo.client_types (
-        id VARCHAR(12) NOT NULL,
+        id VARCHAR(8) NOT NULL,
         ct_type VARCHAR(16) NOT NULL,
         ct_title VARCHAR(100) NOT NULL,
         ct_description VARCHAR(250) NOT NULL,
@@ -141,20 +141,20 @@ GO -- Table dbo.countries
         WHERE name = 'countries'
             AND schema_id = SCHEMA_ID('dbo')
     ) BEGIN CREATE TABLE dbo.countries (
-        id VARCHAR(12) NOT NULL,
-        oc_code VARCHAR(12) NOT NULL,
-        oc_name VARCHAR(150) NOT NULL,
-        oc_created_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
-        oc_updated_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
-        oc_created_by VARCHAR(12) NOT NULL,
+        id VARCHAR(8) NOT NULL,
+        co_code VARCHAR(12) NOT NULL,
+        co_name VARCHAR(150) NOT NULL,
+        co_created_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
+        co_updated_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
+        co_created_by VARCHAR(12) NOT NULL,
         CONSTRAINT PK_countries PRIMARY KEY (id),
         CONSTRAINT UQ_countries_id UNIQUE (id),
-        CONSTRAINT UQ_countries_code UNIQUE (oc_code),
-        CONSTRAINT UQ_countries_name UNIQUE (oc_name),
-        CONSTRAINT UQ_countries_created_by UNIQUE (oc_created_by),
-        CONSTRAINT fk_countries_oc_created_by FOREIGN KEY (oc_created_by) REFERENCES dbo.users (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+        CONSTRAINT UQ_countries_code UNIQUE (co_code),
+        CONSTRAINT UQ_countries_name UNIQUE (co_name),
+        CONSTRAINT UQ_countries_created_by UNIQUE (co_created_by),
+        CONSTRAINT fk_countries_co_created_by FOREIGN KEY (co_created_by) REFERENCES dbo.users (id) ON DELETE NO ACTION ON UPDATE NO ACTION
     );
-CREATE INDEX IX_countries_created_by ON dbo.countries (oc_created_by ASC);
+CREATE INDEX IX_countries_created_by ON dbo.countries (co_created_by ASC);
 END
 GO -- Table dbo.clients
     IF NOT EXISTS (
@@ -164,11 +164,11 @@ GO -- Table dbo.clients
             AND schema_id = SCHEMA_ID('dbo')
     ) BEGIN CREATE TABLE dbo.clients (
         id VARCHAR(12) NOT NULL,
-        country_id VARCHAR(12) NOT NULL,
+        country_id VARCHAR(8) NOT NULL,
         c_created_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
         c_updated_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
         c_created_by VARCHAR(12) NOT NULL,
-        c_types_id VARCHAR(12) NOT NULL,
+        c_types_id VARCHAR(8) NOT NULL,
         CONSTRAINT PK_clients PRIMARY KEY (id),
         CONSTRAINT UQ_clients_id UNIQUE (id),
         CONSTRAINT UQ_clients_types_id UNIQUE (c_types_id),
@@ -189,7 +189,7 @@ GO -- Table dbo.business
     ) BEGIN CREATE TABLE dbo.business (
         id VARCHAR(12) NOT NULL,
         client_id VARCHAR(12) NOT NULL,
-        country_id VARCHAR(12) NOT NULL,
+        country_id VARCHAR(8) NOT NULL,
         bss_name VARCHAR(100) NOT NULL,
         bss_db_name VARCHAR(16) NOT NULL,
         bss_created_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
@@ -212,7 +212,8 @@ GO -- Table dbo.commercial_plan
         WHERE name = 'commercial_plan'
             AND schema_id = SCHEMA_ID('dbo')
     ) BEGIN CREATE TABLE dbo.commercial_plan (
-        id VARCHAR(12) NOT NULL,
+        id VARCHAR(8) NOT NULL,
+        country_id VARCHAR(8) NOT NULL,
         cp_plan VARCHAR(16) NOT NULL,
         cp_title VARCHAR(60) NOT NULL,
         cp_description VARCHAR(250) NULL,
@@ -221,8 +222,10 @@ GO -- Table dbo.commercial_plan
         cp_created_by VARCHAR(12) NOT NULL,
         CONSTRAINT PK_commercial_plan PRIMARY KEY (id),
         CONSTRAINT UQ_commercial_plan_id UNIQUE (id),
+        CONSTRAINT FK_commercial_plan_country FOREIGN KEY (country_id) REFERENCES dbo.countries (id) ON DELETE NO ACTION ON UPDATE NO ACTION,
         CONSTRAINT FK_commercial_plan_created_by FOREIGN KEY (cp_created_by) REFERENCES dbo.users (id) ON DELETE NO ACTION ON UPDATE NO ACTION
     );
+CREATE INDEX IX_commercial_plan_country ON dbo.commercial_plan (country_id ASC);
 CREATE INDEX IX_commercial_plan_created_by ON dbo.commercial_plan (cp_created_by ASC);
 END
 GO -- Table dbo.commercial_entities
@@ -253,7 +256,7 @@ GO -- Table dbo.commercial_plan_details
             AND schema_id = SCHEMA_ID('dbo')
     ) BEGIN CREATE TABLE dbo.commercial_plan_details (
         id VARCHAR(12) NOT NULL,
-        commercial_plan_id VARCHAR(12) NOT NULL,
+        commercial_plan_id VARCHAR(8) NOT NULL,
         commercial_entities_id VARCHAR(12) NOT NULL,
         cpd_quantity INT NOT NULL,
         cpd_created_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
@@ -370,7 +373,7 @@ GO -- Table dbo.client_commercial_plan
     ) BEGIN CREATE TABLE dbo.client_commercial_plan (
         id VARCHAR(12) NOT NULL,
         client_id VARCHAR(12) NOT NULL,
-        commercial_plan_id VARCHAR(12) NOT NULL,
+        commercial_plan_id VARCHAR(8) NOT NULL,
         created_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
         updated_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),
         created_by VARCHAR(12) NOT NULL,
@@ -393,7 +396,7 @@ GO -- Table dbo.client_commercial_plan_details
     ) BEGIN CREATE TABLE dbo.client_commercial_plan_details (
         id VARCHAR(12) NOT NULL,
         client_id VARCHAR(12) NOT NULL,
-        commercial_plan_id VARCHAR(12) NOT NULL,
+        commercial_plan_id VARCHAR(8) NOT NULL,
         commercial_entities_id VARCHAR(12) NOT NULL,
         ccpd_quantity INT NOT NULL,
         created_at DATETIME2 NOT NULL DEFAULT SYSDATETIME(),

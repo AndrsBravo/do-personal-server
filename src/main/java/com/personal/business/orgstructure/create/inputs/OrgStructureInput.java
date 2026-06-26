@@ -1,12 +1,13 @@
 package com.personal.business.orgstructure.create.inputs;
 
 import com.personal.business.orgstructure.entities.OrgStructure;
-import com.personal.shared.inputs.Input;
+import com.personal.shared.inputs.BusinessInputBase;
 
-public class OrgStructureInput extends Input {
+public class OrgStructureInput extends BusinessInputBase {
 
+    private short level;
     private String title;
-    private String entity;
+    private String structure;
     private String description;
 
     public OrgStructureInput() {
@@ -21,16 +22,22 @@ public class OrgStructureInput extends Input {
         this.description = description;
     }
 
-    public void setStructure(String relation) {
-        this.entity = relation;
+    public void setStructure(String structure) {
+        this.structure = structure;
+    }
+
+    public void setLevel(short level) {
+        this.level = level;
     }
 
     public OrgStructure getOrgStructure() {
         var orgStructure = this.id == null || this.id.isEmpty() ? new OrgStructure() : new OrgStructure(this.id);
         orgStructure.setTitle(title);
-        orgStructure.setStructure(entity);
+        orgStructure.setLevel(level);
+        orgStructure.setStructure(structure);
         orgStructure.setDescription(description);
         orgStructure.setCreatedBy(sessionUser);
+        orgStructure.setBusiness(this.getBusiness());
         return orgStructure;
     }
 }

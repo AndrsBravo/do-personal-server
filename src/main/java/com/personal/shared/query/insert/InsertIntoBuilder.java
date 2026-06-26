@@ -1,11 +1,11 @@
-package com.personal.shared.query;
+package com.personal.shared.query.insert;
 
 import java.util.Map;
 
 public class InsertIntoBuilder {
 
-    private final Map<String, String> fields;
     private final String tableName;
+    private final Map<String, String> fields;
     private StringBuilder insertQueryBuilder;
 
     public InsertIntoBuilder(Map<String, String> fields, String tableName) {

@@ -11,6 +11,7 @@ import com.personal.business.benefit.entities.Benefit;
 import com.personal.business.employee.entities.Employee;
 import com.personal.business.employeebenefit.entities.EmployeeBenefit;
 import com.personal.business.employeebenefit.factories.EmployeeBenefitResultFactory;
+import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
 import com.personal.shared.services.ServiceResult;
@@ -41,17 +42,16 @@ public class FilterEmployeeBenefitService implements IFilterService<EmployeeBene
                 .createQuery(queryString)
                 .params(query.getParams())
                 .execute()
-                .map((dbRow) -> {
-                    var employeeBenefit = new EmployeeBenefit();
-                    employeeBenefit.setId(dbRow.column("id").getString());
-                    employeeBenefit.setBusiness(new Business(dbRow.column("business_id").getString()));
-                    employeeBenefit.setBenefit(new Benefit(dbRow.column("business_benefits_id").getString()));
-                    employeeBenefit.setEmployee(new Employee(dbRow.column("employees_id").getString()));
-                    employeeBenefit.setCreatedAt(dbRow.column("created_at").get(LocalDateTime.class));
-                    employeeBenefit.setUpdatedAt(dbRow.column("updated_at").get(LocalDateTime.class));
-                    employeeBenefit.setCreatedBy(new User(dbRow.column("created_by").getString()));
-                    return employeeBenefit;
-                })
+                .map((dbRow) -> EntityBuilder.Of(EmployeeBenefit::new)
+                .With(EmployeeBenefit::setId, dbRow.column("id").getString())
+                .With(EmployeeBenefit::setBusiness, new Business(dbRow.column("business_id").getString()))
+                .With(EmployeeBenefit::setBenefit, new Benefit(dbRow.column("business_benefits_id").getString()))
+                .With(EmployeeBenefit::setEmployee, new Employee(dbRow.column("employees_id").getString()))
+                .With(EmployeeBenefit::setCreatedAt, dbRow.column("created_at").get(LocalDateTime.class))
+                .With(EmployeeBenefit::setUpdatedAt, dbRow.column("updated_at").get(LocalDateTime.class))
+                .With(EmployeeBenefit::setCreatedBy, new User(dbRow.column("created_by").getString()))
+                .Get()
+                )
                 .collect(Collectors.toList());
 
         if (result.isEmpty()) {

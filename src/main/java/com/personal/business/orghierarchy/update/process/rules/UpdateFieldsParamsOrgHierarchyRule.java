@@ -16,7 +16,7 @@ public class UpdateFieldsParamsOrgHierarchyRule implements IProcessRule<UpdateOr
         var orgHierarchy = process.getInitObject();
 
         query.Field("id", orgHierarchy.getId());
-        query.Where().AndEqu("id");
+        query.Where().Equ("id");
 
         if (orgHierarchy.getHierarchy() != null) {
             query.Set("orgh_hierarchy", orgHierarchy.getHierarchy());

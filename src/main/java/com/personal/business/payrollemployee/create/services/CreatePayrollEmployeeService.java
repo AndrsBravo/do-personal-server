@@ -38,7 +38,7 @@ public class CreatePayrollEmployeeService implements ICreateService<PayrollEmplo
                     .params(query.getParams())
                     .execute();
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al crear el tipo de usuario " + e.getMessage());
+
             return PayrollEmployeeResultFactory.CreateFail();
         }
 

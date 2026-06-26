@@ -38,7 +38,7 @@ public class CreateCommercialPlanDetailService implements ICreateService<Commerc
                     .execute();
 
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al crear el tipo de usuario " + e.getMessage());
+
             return CommercialPlanDetailResultFactory.CreateFail();
         }
 

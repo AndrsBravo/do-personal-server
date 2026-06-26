@@ -12,6 +12,7 @@ import com.personal.business.employee.entities.Employee;
 import com.personal.business.employeedeductionfeed.entities.EmployeeDeductionFeed;
 import com.personal.business.employeedeductionfeed.factories.EmployeeDeductionFeedResultFactory;
 import com.personal.business.temporalfrequency.entities.TemporalFrequency;
+import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
 import com.personal.shared.services.ServiceResult;
@@ -42,21 +43,20 @@ public class FilterEmployeeDeductionFeedService implements IFilterService<Employ
                 .createQuery(queryString)
                 .params(query.getParams())
                 .execute()
-                .map((dbRow) -> {
-                    var employeeDeductionFeed = new EmployeeDeductionFeed();
-                    employeeDeductionFeed.setId(dbRow.column("id").getString());
-                    employeeDeductionFeed.setBusiness(new Business(dbRow.column("business_id").getString()));
-                    employeeDeductionFeed.setDeduction(new Deduction(dbRow.column("business_deductions_id").getString()));
-                    employeeDeductionFeed.setEmployee(new Employee(dbRow.column("employee_deduction_id").getString()));
-                    employeeDeductionFeed.setTemporalFrequency(new TemporalFrequency(dbRow.column("temporal_frequency_id").getString()));
-                    employeeDeductionFeed.setAmount(dbRow.column("ebf_amount").get(Double.class));
-                    employeeDeductionFeed.setStartedAt(dbRow.column("ebf_started_at").get(LocalDateTime.class));
-                    employeeDeductionFeed.setEndedAt(dbRow.column("ebf_ended_at").get(LocalDateTime.class));
-                    employeeDeductionFeed.setCreatedAt(dbRow.column("created_at").get(LocalDateTime.class));
-                    employeeDeductionFeed.setUpdatedAt(dbRow.column("updated_at").get(LocalDateTime.class));
-                    employeeDeductionFeed.setCreatedBy(new User(dbRow.column("created_by").getString()));
-                    return employeeDeductionFeed;
-                })
+                .map((dbRow) -> EntityBuilder.Of(EmployeeDeductionFeed::new)
+                .With(EmployeeDeductionFeed::setId, dbRow.column("id").getString())
+                .With(EmployeeDeductionFeed::setBusiness, new Business(dbRow.column("business_id").getString()))
+                .With(EmployeeDeductionFeed::setDeduction, new Deduction(dbRow.column("business_deductions_id").getString()))
+                .With(EmployeeDeductionFeed::setEmployee, new Employee(dbRow.column("employee_deduction_id").getString()))
+                .With(EmployeeDeductionFeed::setTemporalFrequency, new TemporalFrequency(dbRow.column("temporal_frequency_id").getString()))
+                .With(EmployeeDeductionFeed::setAmount, dbRow.column("ebf_amount").get(Double.class))
+                .With(EmployeeDeductionFeed::setStartedAt, dbRow.column("ebf_started_at").get(LocalDateTime.class))
+                .With(EmployeeDeductionFeed::setEndedAt, dbRow.column("ebf_ended_at").get(LocalDateTime.class))
+                .With(EmployeeDeductionFeed::setCreatedAt, dbRow.column("created_at").get(LocalDateTime.class))
+                .With(EmployeeDeductionFeed::setUpdatedAt, dbRow.column("updated_at").get(LocalDateTime.class))
+                .With(EmployeeDeductionFeed::setCreatedBy, new User(dbRow.column("created_by").getString()))
+                .Get()
+                )
                 .collect(Collectors.toList());
 
         if (result.isEmpty()) {

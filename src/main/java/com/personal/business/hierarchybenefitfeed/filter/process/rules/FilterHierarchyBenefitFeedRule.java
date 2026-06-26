@@ -13,14 +13,10 @@ public class FilterHierarchyBenefitFeedRule implements IProcessRule<FilterHierar
         var pLogger = LogFactory.builder(FilterHierarchyBenefitFeedProcess.class, FilterHierarchyBenefitFeedRule.class);
         var query = process.Query();
         var hierarchyBenefitFeedFilter = process.getInitObject();
-        if (hierarchyBenefitFeedFilter.getAll() != null) {
-            query.Field("id", "");
-            query.Where().AndNotEmpty("id");
-        }
 
         if (hierarchyBenefitFeedFilter.getId() != null) {
             query.Field("id", hierarchyBenefitFeedFilter.getId());
-            query.Where().AndEqu("id");
+            query.Where().Field("id", hierarchyBenefitFeedFilter.getId());
         }
 
         if (hierarchyBenefitFeedFilter.getBenefitId() != null) {

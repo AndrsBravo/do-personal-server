@@ -11,6 +11,7 @@ import com.personal.management.payrollbenefit.entities.PayrollBenefit;
 import com.personal.management.payrollbenefit.factories.PayrollBenefitResultFactory;
 import com.personal.shared.core.entities.SharedBenefit;
 import com.personal.shared.core.entities.SharedPayroll;
+import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
 import com.personal.shared.services.ServiceResult;
@@ -41,17 +42,15 @@ public class FilterPayrollBenefitService implements IFilterService<PayrollBenefi
                 .createQuery(queryString)
                 .params(query.getParams())
                 .execute()
-                .map((dbRow) -> {
-                    var payrollBenefit = new PayrollBenefit();
-                    payrollBenefit.setId(dbRow.column("id").getString());
-                    payrollBenefit.setCountry(new Country(dbRow.column("country_id").getString()));
-                    payrollBenefit.setBenefit(new SharedBenefit(dbRow.column("business_benefits_id").getString()));
-                    payrollBenefit.setPayroll(new SharedPayroll(dbRow.column("payrolls_id").getString()));
-                    payrollBenefit.setCreatedAt(dbRow.column("created_at").get(LocalDateTime.class));
-                    payrollBenefit.setUpdatedAt(dbRow.column("updated_at").get(LocalDateTime.class));
-                    payrollBenefit.setCreatedBy(new User(dbRow.column("created_by").getString()));
-                    return payrollBenefit;
-                })
+                .map((dbRow) -> EntityBuilder.Of(PayrollBenefit::new)
+                .With(PayrollBenefit::setId, dbRow.column("id").getString())
+                .With(PayrollBenefit::setCountry, new Country(dbRow.column("country_id").getString()))
+                .With(PayrollBenefit::setBenefit, new SharedBenefit(dbRow.column("business_benefits_id").getString()))
+                .With(PayrollBenefit::setPayroll, new SharedPayroll(dbRow.column("payrolls_id").getString()))
+                .With(PayrollBenefit::setCreatedAt, dbRow.column("created_at").get(LocalDateTime.class))
+                .With(PayrollBenefit::setUpdatedAt, dbRow.column("updated_at").get(LocalDateTime.class))
+                .With(PayrollBenefit::setCreatedBy, new User(dbRow.column("created_by").getString()))
+                .Get())
                 .collect(Collectors.toList());
 
         if (result.isEmpty()) {

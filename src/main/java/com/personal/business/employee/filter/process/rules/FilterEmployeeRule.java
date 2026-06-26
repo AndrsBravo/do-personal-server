@@ -15,14 +15,9 @@ public class FilterEmployeeRule implements IProcessRule<FilterEmployeeProcess> {
 
         var employeeFilterInput = process.getInitObject();
 
-        if (employeeFilterInput.getAll() != null) {
-            query.Field("id", "");
-            query.Where().AndNotEmpty("id");
-        }
-
         if (employeeFilterInput.getId() != null) {
             query.Field("id", employeeFilterInput.getId());
-            query.Where().AndEqu("id");
+            query.Where().Field("id", employeeFilterInput.getId());
         }
 
         if (employeeFilterInput.getBusiness() != null) {

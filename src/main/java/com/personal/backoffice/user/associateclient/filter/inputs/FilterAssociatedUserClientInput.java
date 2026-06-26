@@ -1,10 +1,5 @@
 package com.personal.backoffice.user.associateclient.filter.inputs;
 
-import com.personal.backoffice.client.entities.Client;
-import com.personal.backoffice.user.associateclient.entities.AssociateUserClient;
-import com.personal.backoffice.user.entities.User;
-import com.personal.backoffice.user.entities.UserRelation;
-import com.personal.backoffice.user.entities.UserRole;
 import com.personal.shared.inputs.FilterInput;
 
 public class FilterAssociatedUserClientInput extends FilterInput {
@@ -50,13 +45,4 @@ public class FilterAssociatedUserClientInput extends FilterInput {
         return userRelationId;
     }
 
-    public AssociateUserClient toAssociateUserClient() {
-        var associateUserClient = this.id == null ? new AssociateUserClient() : new AssociateUserClient(this.getId());
-        associateUserClient.setClient(new Client(this.getClientId()));
-        associateUserClient.setUser(new User(this.getUserId()));
-        associateUserClient.setUserRole(new UserRole(this.getUserRoleId()));
-        associateUserClient.setUserRelation(new UserRelation(this.getUserRelationId()));
-        associateUserClient.setCreatedBy(this.sessionUser);
-        return associateUserClient;
-    }
 }

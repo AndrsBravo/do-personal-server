@@ -14,14 +14,9 @@ public class FilterUserRelationRule implements IProcessRule<FilterUserRelationPr
         var query = process.Query();
         var userRelationFilter = process.getInitObject();
 
-        if (userRelationFilter.getAll() != null) {
-            query.Field("id", "");
-            query.Where().AndNotEmpty("id");
-        }
-
         if (userRelationFilter.getId() != null) {
             query.Field("id", userRelationFilter.getId());
-            query.Where().AndEqu("id");
+            query.Where().Field("id", userRelationFilter.getId());
         }
 
         if (userRelationFilter.getType() != null) {

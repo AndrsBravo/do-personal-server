@@ -13,18 +13,14 @@ public class FilterEmployeeDeductionRule implements IProcessRule<FilterEmployeeD
         var pLogger = LogFactory.builder(FilterEmployeeDeductionProcess.class, FilterEmployeeDeductionRule.class);
         var query = process.Query();
         var employeeDeductionFilter = process.getInitObject();
-        if (employeeDeductionFilter.getAll() != null) {
-            query.Field("id", "");
-            query.Where().AndNotEmpty("id");
-        }
 
         if (employeeDeductionFilter.getId() != null) {
             query.Field("id", employeeDeductionFilter.getId());
-            query.Where().AndEqu("id");
+            query.Where().Field("id", employeeDeductionFilter.getId());
         }
         if (employeeDeductionFilter.getBusiness() != null) {
             query.Field("business_id", employeeDeductionFilter.getBusiness().getId());
-            query.Where().AndEqu("id");
+            query.Where().AndEqu("business_id");
         }
 
         if (employeeDeductionFilter.getDeductionId() != null) {

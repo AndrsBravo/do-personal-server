@@ -16,7 +16,7 @@ public class UpdateFieldsParamsEmployeeDeductionFeedRule implements IProcessRule
         var employeeDeductionFeed = process.getInitObject();
 
         query.Field("id", employeeDeductionFeed.getId());
-        query.Where().AndEqu("id");
+        query.Where().Equ("id");
 
         if (employeeDeductionFeed.getBusiness() != null) {
             query.Set("business_id", employeeDeductionFeed.getBusiness().getId());

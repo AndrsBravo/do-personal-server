@@ -17,12 +17,12 @@ public class CreateOrgHierarchyRule implements IProcessRule<CreateOrgHierarchyPr
 
         if (result.getNotification() != null) {
 
-            process.addLog(pLogger.ERROR("Crear nuevo Tipo de Usuario", result.getNotification().message()));
+            process.addLog(pLogger.ERROR("Crear nueva Jerarquía", result.getNotification().message()));
             process.stopWithErrors();
             return;
         }
 
-        process.addLog(pLogger.INFO("Crear nuevo Tipo de Usuario", "Tipo de Usuario creado con éxito"));
+        process.addLog(pLogger.INFO("Crear nueva Jerarquía", "La Jerarquía ha sido creada con éxito"));
 
     }
 

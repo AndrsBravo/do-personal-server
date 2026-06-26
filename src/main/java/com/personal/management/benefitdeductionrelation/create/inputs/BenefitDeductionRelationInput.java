@@ -1,7 +1,6 @@
 package com.personal.management.benefitdeductionrelation.create.inputs;
 
 import com.personal.management.benefitdeductionrelation.entities.BenefitDeductionRelation;
-import com.personal.management.country.entities.Country;
 import com.personal.management.shared.inputs.CountryInputBase;
 import com.personal.shared.core.entities.SharedBenefit;
 import com.personal.shared.core.entities.SharedDeduction;
@@ -27,7 +26,7 @@ public class BenefitDeductionRelationInput extends CountryInputBase {
         var benefitDeductionRelation = this.id == null || this.id.isEmpty() ? new BenefitDeductionRelation() : new BenefitDeductionRelation(this.id);
         benefitDeductionRelation.setBenefit(new SharedBenefit(benefitId));
         benefitDeductionRelation.setDeduction(new SharedDeduction(deductionId));
-        benefitDeductionRelation.setCountry(new Country(this.getCountryId()));
+        benefitDeductionRelation.setCountry(this.getCountry());
         benefitDeductionRelation.setCreatedBy(sessionUser);
         return benefitDeductionRelation;
     }

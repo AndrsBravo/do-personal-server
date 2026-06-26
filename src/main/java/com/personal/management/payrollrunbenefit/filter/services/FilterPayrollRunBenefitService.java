@@ -11,6 +11,7 @@ import com.personal.management.payrollrunbenefit.entities.PayrollRunBenefit;
 import com.personal.management.payrollrunbenefit.factories.PayrollRunBenefitResultFactory;
 import com.personal.shared.core.entities.SharedBenefit;
 import com.personal.shared.core.entities.SharedPayrollRun;
+import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
 import com.personal.shared.services.ServiceResult;
@@ -41,17 +42,15 @@ public class FilterPayrollRunBenefitService implements IFilterService<PayrollRun
                 .createQuery(queryString)
                 .params(query.getParams())
                 .execute()
-                .map((dbRow) -> {
-                    var payrollRunBenefit = new PayrollRunBenefit();
-                    payrollRunBenefit.setId(dbRow.column("id").getString());
-                    payrollRunBenefit.setCountry(new Country(dbRow.column("country_id").getString()));
-                    payrollRunBenefit.setBenefit(new SharedBenefit(dbRow.column("payroll_benefits_id").getString()));
-                    payrollRunBenefit.setPayrollRun(new SharedPayrollRun(dbRow.column("payroll_runs_id").getString()));
-                    payrollRunBenefit.setCreatedAt(dbRow.column("created_at").get(LocalDateTime.class));
-                    payrollRunBenefit.setUpdatedAt(dbRow.column("updated_at").get(LocalDateTime.class));
-                    payrollRunBenefit.setCreatedBy(new User(dbRow.column("created_by").getString()));
-                    return payrollRunBenefit;
-                })
+                .map((dbRow) -> EntityBuilder.Of(PayrollRunBenefit::new)
+                .With(PayrollRunBenefit::setId, dbRow.column("id").getString())
+                .With(PayrollRunBenefit::setCountry, new Country(dbRow.column("country_id").getString()))
+                .With(PayrollRunBenefit::setBenefit, new SharedBenefit(dbRow.column("payroll_benefits_id").getString()))
+                .With(PayrollRunBenefit::setPayrollRun, new SharedPayrollRun(dbRow.column("payroll_runs_id").getString()))
+                .With(PayrollRunBenefit::setCreatedAt, dbRow.column("created_at").get(LocalDateTime.class))
+                .With(PayrollRunBenefit::setUpdatedAt, dbRow.column("updated_at").get(LocalDateTime.class))
+                .With(PayrollRunBenefit::setCreatedBy, new User(dbRow.column("created_by").getString()))
+                .Get())
                 .collect(Collectors.toList());
 
         if (result.isEmpty()) {

@@ -3,7 +3,7 @@ package com.personal.backoffice.client.api.routers;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
-import com.personal.backoffice.api.BaseRouterTest;
+import com.personal.shared.api.BaseRouterTest;
 
 import io.helidon.http.Status;
 import io.helidon.webserver.testing.junit5.DirectClient;
@@ -32,8 +32,8 @@ public class ClientRouterTest extends BaseRouterTest {
     public void testCreateClients() {
 
         var input = JSON_FACTORY.createObjectBuilder()
-                .add("clientTypeId", "506e666c")
-                .add("countryId", "eabc6db6ea54")
+                .add("clientTypeId", "3c86df88")
+                .add("countryId", "41b6ee30")
                 .build();
 
         var response = client.post("/v1/backoffice/clients").submit(input, JsonObject.class);

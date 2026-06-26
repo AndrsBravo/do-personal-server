@@ -14,14 +14,10 @@ public class FilterEmployeeScaleRule implements IProcessRule<FilterEmployeeScale
         var query = process.Query();
         var employeeScaleFilter = process.getInitObject();
 
-        if (employeeScaleFilter.getAll() != null) {
-            query.Field("id", "");
-            query.Where().AndNotEmpty("id");
-        }
-
+       
         if (employeeScaleFilter.getId() != null) {
             query.Field("id", employeeScaleFilter.getId());
-            query.Where().AndEqu("id");
+            query.Where().Field("id", employeeScaleFilter.getId());
         }
         if (employeeScaleFilter.getBusiness() != null) {
             query.Field("business_id", employeeScaleFilter.getBusiness().getId());

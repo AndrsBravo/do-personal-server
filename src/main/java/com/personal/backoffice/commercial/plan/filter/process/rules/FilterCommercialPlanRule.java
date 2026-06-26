@@ -14,14 +14,9 @@ public class FilterCommercialPlanRule implements IProcessRule<FilterCommercialPl
         var query = process.Query();
         var commercialPlanFilter = process.getInitObject();
 
-        if (commercialPlanFilter.getAll() != null) {
-            query.Field("id", "");
-            query.Where().AndNotEmpty("id");
-        }
-
         if (commercialPlanFilter.getId() != null) {
             query.Field("id", commercialPlanFilter.getId());
-            query.Where().AndEqu("id");
+            query.Where().Field("id", commercialPlanFilter.getId());
         }
 
         if (commercialPlanFilter.getType() != null) {

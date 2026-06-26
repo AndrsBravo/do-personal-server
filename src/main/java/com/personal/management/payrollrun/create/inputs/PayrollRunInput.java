@@ -1,6 +1,5 @@
 package com.personal.management.payrollrun.create.inputs;
 
-import com.personal.management.country.entities.Country;
 import com.personal.management.payroll.entities.Payroll;
 import com.personal.management.payrollrun.entities.PayrollRun;
 import com.personal.management.shared.inputs.CountryInputBase;
@@ -40,7 +39,7 @@ public class PayrollRunInput extends CountryInputBase {
         _payrollRun.setDescription(description);
         _payrollRun.setPayrollRunType(new TypeEntityBase(payrollRunTypeId));
         _payrollRun.setCreatedBy(sessionUser);
-        _payrollRun.setCountry(new Country(this.getCountryId()));
+        _payrollRun.setCountry(this.getCountry());
         return _payrollRun;
     }
 }

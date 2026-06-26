@@ -16,12 +16,12 @@ public class CreateOrgRelationRule implements IProcessRule<CreateOrgRelationProc
 
         if (result.getNotification() != null) {
 
-            process.addLog(pLogger.ERROR("Crear nuevo Tipo de Usuario", result.getNotification().message()));
+            process.addLog(pLogger.ERROR("Crear Relación Organizacional", result.getNotification().message()));
             process.stopWithErrors();
             return;
         }
 
-        process.addLog(pLogger.INFO("Crear nuevo Tipo de Usuario", "Tipo de Usuario creado con éxito"));
+        process.addLog(pLogger.INFO("Crear Relación Organizacional", "Relación Organizacional creada con éxito"));
 
     }
 

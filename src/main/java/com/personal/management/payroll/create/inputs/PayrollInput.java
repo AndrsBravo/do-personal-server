@@ -1,7 +1,6 @@
 package com.personal.management.payroll.create.inputs;
 
 import com.personal.business.temporalfrequency.entities.TemporalFrequency;
-import com.personal.management.country.entities.Country;
 import com.personal.management.payroll.entities.Payroll;
 import com.personal.management.shared.inputs.CountryInputBase;
 
@@ -39,7 +38,7 @@ public class PayrollInput extends CountryInputBase {
         _payroll.setDescription(description);
         _payroll.setTemporalFrequency(new TemporalFrequency(temporalFrequencyId));
         _payroll.setCreatedBy(sessionUser);
-        _payroll.setCountry(new Country(this.getCountryId()));
+        _payroll.setCountry(this.getCountry());
         return _payroll;
     }
 }

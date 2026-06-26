@@ -13,14 +13,10 @@ public class FilterHierarchyDeductionRule implements IProcessRule<FilterHierarch
         var pLogger = LogFactory.builder(FilterHierarchyDeductionProcess.class, FilterHierarchyDeductionRule.class);
         var query = process.Query();
         var hierarchyDeductionFilter = process.getInitObject();
-        if (hierarchyDeductionFilter.getAll() != null) {
-            query.Field("id", "");
-            query.Where().AndNotEmpty("id");
-        }
 
         if (hierarchyDeductionFilter.getId() != null) {
             query.Field("id", hierarchyDeductionFilter.getId());
-            query.Where().AndEqu("id");
+            query.Where().Field("id", hierarchyDeductionFilter.getId());
         }
 
         if (hierarchyDeductionFilter.getDeductionId() != null) {

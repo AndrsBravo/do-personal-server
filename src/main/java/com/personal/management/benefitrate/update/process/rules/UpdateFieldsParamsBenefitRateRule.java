@@ -16,7 +16,7 @@ public class UpdateFieldsParamsBenefitRateRule implements IProcessRule<UpdateBen
         var benefitRate = process.getInitObject();
 
         query.Field("id", benefitRate.getId());
-        query.Where().AndEqu("id");
+        query.Where().Equ("id");
 
         query.Field("country_id", benefitRate.getCountry().getId());
         query.Where().AndEqu("country_id");

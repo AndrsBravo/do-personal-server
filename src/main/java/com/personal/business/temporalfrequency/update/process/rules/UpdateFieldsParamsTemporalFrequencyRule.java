@@ -16,7 +16,7 @@ public class UpdateFieldsParamsTemporalFrequencyRule implements IProcessRule<Upd
         var temporalFrequency = process.getInitObject();
 
         query.Field("id", temporalFrequency.getId());
-        query.Where().AndEqu("id");
+        query.Where().Equ("id");
 
         if (temporalFrequency.getFrequency() != null) {
             query.Set("tf_category", temporalFrequency.getFrequency());

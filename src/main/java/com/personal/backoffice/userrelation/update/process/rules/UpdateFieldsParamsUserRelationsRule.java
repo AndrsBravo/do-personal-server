@@ -16,7 +16,7 @@ public class UpdateFieldsParamsUserRelationsRule implements IProcessRule<UpdateU
         var userRelation = process.getInitObject();
 
         query.Field("id", userRelation.getId());
-        query.Where().AndEqu("id");
+        query.Where().Equ("id");
 
         if (userRelation.getRelation() != null) {
             query.Set("ur_relation", userRelation.getRelation());

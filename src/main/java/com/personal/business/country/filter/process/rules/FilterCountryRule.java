@@ -13,26 +13,21 @@ public class FilterCountryRule implements IProcessRule<FilterCountryProcess> {
         var pLogger = LogFactory.builder(FilterCountryProcess.class, FilterCountryRule.class);
         var query = process.Query();
 
-        var initObject = process.getInitObject();
+        var countryFilter = process.getInitObject();
 
-        if (initObject.getAll() != null) {
-            query.Field("id", "");
-            query.Where().AndNotEmpty("id");
+        if (countryFilter.getId() != null) {
+            query.Field("id", countryFilter.getId());
+            query.Where().Field("id", countryFilter.getId());
         }
 
-        if (initObject.getId() != null) {
-            query.Field("id", initObject.getId());
-            query.Where().AndEqu("id");
+        if (countryFilter.getCode() != null) {
+            query.Field("co_code", countryFilter.getCode());
+            query.Where().AndEqu("co_code");
         }
 
-        if (initObject.getCode() != null) {
-            query.Field("oc_code", initObject.getCode());
-            query.Where().AndEqu("oc_code");
-        }
-
-        if (initObject.getName() != null) {
-            query.Field("oc_name", initObject.getName());
-            query.Where().AndEqu("oc_name");
+        if (countryFilter.getName() != null) {
+            query.Field("co_name", countryFilter.getName());
+            query.Where().AndEqu("co_name");
         }
 
         var filterCountry = CountryServiceFactory.FilterCountries();

@@ -16,7 +16,7 @@ public class UpdateFieldsParamsHierarchyRule implements IProcessRule<UpdateHiera
         var hierarchy = process.getInitObject();
 
         query.Field("id", hierarchy.getId());
-        query.Where().AndEqu("id");
+        query.Where().Equ("id");
 
         if (hierarchy.getHierarchy() != null) {
             query.Set("bssh_hierarchy", hierarchy.getHierarchy());

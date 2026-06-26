@@ -15,14 +15,9 @@ public class FilterBenefitCategoryRule implements IProcessRule<FilterBenefitCate
         var query = process.Query();
         var benefitCategory = process.getInitObject();
 
-        if (benefitCategory.getAll() != null) {
-            query.Field("id", "");
-            query.Where().AndNotEmpty("id");
-        }
-
         if (benefitCategory.getId() != null) {
             query.Field("id", benefitCategory.getId());
-            query.Where().AndEqu("id");
+            query.Where().Field("id", benefitCategory.getId());
         }
 
         if (benefitCategory.getType() != null) {

@@ -15,14 +15,9 @@ public class FilterDeductionRateRule implements IProcessRule<FilterDeductionRate
 
         var deductionRateFilter = process.getInitObject();
 
-        if (deductionRateFilter.getAll() != null) {
-            query.Field("id", "");
-            query.Where().AndNotEmpty("id");
-        }
-
         if (deductionRateFilter.getId() != null) {
             query.Field("id", deductionRateFilter.getId());
-            query.Where().AndEqu("id");
+            query.Where().Field("id", deductionRateFilter.getId());
         }
 
         if (deductionRateFilter.getType() != null) {

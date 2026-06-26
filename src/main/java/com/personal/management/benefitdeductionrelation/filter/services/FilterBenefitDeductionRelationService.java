@@ -10,6 +10,7 @@ import com.personal.management.benefitdeductionrelation.entities.BenefitDeductio
 import com.personal.management.benefitdeductionrelation.factories.BenefitDeductionRelationResultFactory;
 import com.personal.shared.core.entities.SharedBenefit;
 import com.personal.shared.core.entities.SharedDeduction;
+import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
 import com.personal.shared.services.ServiceResult;
@@ -40,16 +41,15 @@ public class FilterBenefitDeductionRelationService implements IFilterService<Ben
                 .createQuery(queryString)
                 .params(query.getParams())
                 .execute()
-                .map((dbRow) -> {
-                    var or = new BenefitDeductionRelation();
-                    or.setId(dbRow.column("id").getString());
-                    or.setBenefit(new SharedBenefit(dbRow.column("business_benefit_id").getString()));
-                    or.setDeduction(new SharedDeduction(dbRow.column("business_deduction_id").getString()));
-                    or.setCreatedAt(dbRow.column("created_at").get(LocalDateTime.class));
-                    or.setUpdatedAt(dbRow.column("updated_at").get(LocalDateTime.class));
-                    or.setCreatedBy(new User(dbRow.column("created_by").getString()));
-                    return or;
-                })
+                .map((dbRow) -> EntityBuilder.Of(BenefitDeductionRelation::new)
+                .With(BenefitDeductionRelation::setId, dbRow.column("id").getString())
+                .With(BenefitDeductionRelation::setBenefit, new SharedBenefit(dbRow.column("business_benefit_id").getString()))
+                .With(BenefitDeductionRelation::setDeduction, new SharedDeduction(dbRow.column("business_deduction_id").getString()))
+                .With(BenefitDeductionRelation::setCreatedAt, dbRow.column("created_at").get(LocalDateTime.class))
+                .With(BenefitDeductionRelation::setUpdatedAt, dbRow.column("updated_at").get(LocalDateTime.class))
+                .With(BenefitDeductionRelation::setCreatedBy, new User(dbRow.column("created_by").getString()))
+                .Get()
+                )
                 .collect(Collectors.toList());
 
         if (result.isEmpty()) {

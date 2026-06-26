@@ -14,6 +14,8 @@ public class ValidateOrgHierarchyRule implements IProcessRule<CreateOrgHierarchy
 
         var orgHierarchy = process.getInitObject();
         query.Field("id", orgHierarchy.getId());
+        query.Field("country_id", orgHierarchy.getCountry().getId());
+        query.Field("orgh_level", Short.toString(orgHierarchy.getLevel()));
         query.Field("orgh_title", orgHierarchy.getTitle());
         query.Field("orgh_hierarchy", orgHierarchy.getHierarchy());
         query.Field("orgh_description", orgHierarchy.getDescription());
@@ -21,7 +23,7 @@ public class ValidateOrgHierarchyRule implements IProcessRule<CreateOrgHierarchy
         query.Field("updated_at", orgHierarchy.getUpdatedAt().toString());
         query.Field("created_by", orgHierarchy.getCreatedBy().getId());
 
-        process.addLog(pLogger.INFO("Crear nueva relación de Usuario", "Relación de Usuario creada con éxito"));
+        process.addLog(pLogger.INFO("Validar nueva Jerarquía", "La Jerarquía ha sido validada con éxito"));
 
     }
 

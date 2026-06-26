@@ -16,13 +16,13 @@ public class UpdateFieldsParamsOriginCategoryRule implements IProcessRule<Update
         var originCategory = process.getInitObject();
 
         query.Field("id", originCategory.getId());
-        query.Where().AndEqu("id");
+        query.Where().Equ("id");
 
         if (originCategory.getOrigin() != null) {
-            query.Set("oc_origin", originCategory.getOrigin());
+            query.Set("co_origin", originCategory.getOrigin());
         }
         if (originCategory.getDescription() != null) {
-            query.Set("oc_description", originCategory.getDescription());
+            query.Set("co_description", originCategory.getDescription());
         }
         process.addLog(pLogger.INFO("Validar campos de Tipo de Usuario", "Los campos 'type' y 'description' son obligatorios"));
 

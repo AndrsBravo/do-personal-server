@@ -16,7 +16,7 @@ public class UpdateFieldsParamsHierarchyBenefitFeedRule implements IProcessRule<
         var hierarchyBenefitFeed = process.getInitObject();
 
         query.Field("id", hierarchyBenefitFeed.getId());
-        query.Where().AndEqu("id");
+        query.Where().Equ("id");
 
         if (hierarchyBenefitFeed.getBusiness() != null) {
             query.Set("business_id", hierarchyBenefitFeed.getBusiness().getId());

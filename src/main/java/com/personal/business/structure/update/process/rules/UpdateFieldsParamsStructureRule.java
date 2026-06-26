@@ -16,7 +16,7 @@ public class UpdateFieldsParamsStructureRule implements IProcessRule<UpdateStruc
         var structure = process.getInitObject();
 
         query.Field("id", structure.getId());
-        query.Where().AndEqu("id");
+        query.Where().Equ("id");
 
         if (structure.getStructure() != null) {
             query.Set("bss_structure", structure.getStructure());

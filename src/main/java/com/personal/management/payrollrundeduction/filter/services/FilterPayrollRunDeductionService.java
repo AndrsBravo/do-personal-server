@@ -11,6 +11,7 @@ import com.personal.management.payrollrundeduction.entities.PayrollRunDeduction;
 import com.personal.management.payrollrundeduction.factories.PayrollRunDeductionResultFactory;
 import com.personal.shared.core.entities.SharedDeduction;
 import com.personal.shared.core.entities.SharedPayrollRun;
+import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
 import com.personal.shared.services.ServiceResult;
@@ -41,17 +42,15 @@ public class FilterPayrollRunDeductionService implements IFilterService<PayrollR
                 .createQuery(queryString)
                 .params(query.getParams())
                 .execute()
-                .map((dbRow) -> {
-                    var payrollRunDeduction = new PayrollRunDeduction();
-                    payrollRunDeduction.setId(dbRow.column("id").getString());
-                    payrollRunDeduction.setCountry(new Country(dbRow.column("country_id").getString()));
-                    payrollRunDeduction.setDeduction(new SharedDeduction(dbRow.column("payroll_deductions_id").getString()));
-                    payrollRunDeduction.setPayrollRun(new SharedPayrollRun(dbRow.column("payroll_runs_id").getString()));
-                    payrollRunDeduction.setCreatedAt(dbRow.column("created_at").get(LocalDateTime.class));
-                    payrollRunDeduction.setUpdatedAt(dbRow.column("updated_at").get(LocalDateTime.class));
-                    payrollRunDeduction.setCreatedBy(new User(dbRow.column("created_by").getString()));
-                    return payrollRunDeduction;
-                })
+                .map((dbRow) -> EntityBuilder.Of(PayrollRunDeduction::new)
+                .With(PayrollRunDeduction::setId, dbRow.column("id").getString())
+                .With(PayrollRunDeduction::setCountry, new Country(dbRow.column("country_id").getString()))
+                .With(PayrollRunDeduction::setDeduction, new SharedDeduction(dbRow.column("payroll_deductions_id").getString()))
+                .With(PayrollRunDeduction::setPayrollRun, new SharedPayrollRun(dbRow.column("payroll_runs_id").getString()))
+                .With(PayrollRunDeduction::setCreatedAt, dbRow.column("created_at").get(LocalDateTime.class))
+                .With(PayrollRunDeduction::setUpdatedAt, dbRow.column("updated_at").get(LocalDateTime.class))
+                .With(PayrollRunDeduction::setCreatedBy, new User(dbRow.column("created_by").getString()))
+                .Get())
                 .collect(Collectors.toList());
 
         if (result.isEmpty()) {

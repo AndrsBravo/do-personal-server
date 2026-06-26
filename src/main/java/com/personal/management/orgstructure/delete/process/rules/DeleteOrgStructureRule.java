@@ -23,12 +23,12 @@ public class DeleteOrgStructureRule implements IProcessRule<DeleteOrgStructurePr
 
         if (result.getNotification() != null) {
 
-            process.addLog(pLogger.ERROR("Eliminar Tipo de Usuario", result.getNotification().message()));
+            process.addLog(pLogger.ERROR("Eliminar Estructura de Organización", result.getNotification().message()));
             process.stopWithErrors();
             return;
         }
 
-        process.addLog(pLogger.INFO("Eliminar Tipo de Usuario", "Tipo de Usuario eliminado con éxito"));
+        process.addLog(pLogger.INFO("Eliminar Estructura de Organización", "La Estructura de Organización fue eliminada exitosamente."));
 
     }
 

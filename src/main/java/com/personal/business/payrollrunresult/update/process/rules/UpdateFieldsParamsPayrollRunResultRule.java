@@ -16,7 +16,7 @@ public class UpdateFieldsParamsPayrollRunResultRule implements IProcessRule<Upda
         var payrollRunResult = process.getInitObject();
 
         query.Field("id", payrollRunResult.getId());
-        query.Where().AndEqu("id");
+        query.Where().Equ("id");
 
         if (payrollRunResult.getPayroll() != null) {
             query.Set("payrolls_id", payrollRunResult.getPayroll().getId());

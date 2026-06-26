@@ -11,6 +11,7 @@ import com.personal.business.deduction.entities.Deduction;
 import com.personal.business.deductionrate.entities.DeductionRate;
 import com.personal.business.deductionrate.factories.DeductionRateResultFactory;
 import com.personal.business.temporalfrequency.entities.TemporalFrequency;
+import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
 import com.personal.shared.services.ServiceResult;
@@ -41,24 +42,23 @@ public class FilterDeductionRateService implements IFilterService<DeductionRate>
                 .createQuery(queryString)
                 .params(query.getParams())
                 .execute()
-                .map((dbRow) -> {
-                    var deductionRate = new DeductionRate();
-                    deductionRate.setId(dbRow.column("id").getString());
-                    deductionRate.setBusiness(new Business(dbRow.column("business_id").getString()));
-                    deductionRate.setDeduction(new Deduction(dbRow.column("business_deduction_id").getString()));
-                    deductionRate.setRate(dbRow.column("business_deduction_id").getDouble());
-                    deductionRate.setTemporalFrequency(new TemporalFrequency(dbRow.column("temporal_frequency_id").getString()));
-                    deductionRate.setAmount(dbRow.column("bdr_amount").getDouble());
-                    deductionRate.setBaseAmount(dbRow.column("bdr_base_amount").getDouble());
-                    deductionRate.setRate(dbRow.column("bdr_rate").getDouble());
-                    deductionRate.setLevel(dbRow.column("bdr_level").get(Byte.class));
-                    deductionRate.setStartedAt(dbRow.column("bdr_started_at").get(LocalDateTime.class));
-                    deductionRate.setEndedAt(dbRow.column("bdr_ended_at").get(LocalDateTime.class));
-                    deductionRate.setCreatedAt(dbRow.column("created_at").get(LocalDateTime.class));
-                    deductionRate.setUpdatedAt(dbRow.column("updated_at").get(LocalDateTime.class));
-                    deductionRate.setCreatedBy(new User(dbRow.column("created_by").getString()));
-                    return deductionRate;
-                })
+                .map((dbRow) -> EntityBuilder.Of(DeductionRate::new)
+                .With(DeductionRate::setId, dbRow.column("id").getString())
+                .With(DeductionRate::setBusiness, new Business(dbRow.column("business_id").getString()))
+                .With(DeductionRate::setDeduction, new Deduction(dbRow.column("business_deduction_id").getString()))
+                .With(DeductionRate::setRate, dbRow.column("business_deduction_id").getDouble())
+                .With(DeductionRate::setTemporalFrequency, new TemporalFrequency(dbRow.column("temporal_frequency_id").getString()))
+                .With(DeductionRate::setAmount, dbRow.column("bdr_amount").getDouble())
+                .With(DeductionRate::setBaseAmount, dbRow.column("bdr_base_amount").getDouble())
+                .With(DeductionRate::setRate, dbRow.column("bdr_rate").getDouble())
+                .With(DeductionRate::setLevel, dbRow.column("bdr_level").get(Byte.class))
+                .With(DeductionRate::setStartedAt, dbRow.column("bdr_started_at").get(LocalDateTime.class))
+                .With(DeductionRate::setEndedAt, dbRow.column("bdr_ended_at").get(LocalDateTime.class))
+                .With(DeductionRate::setCreatedAt, dbRow.column("created_at").get(LocalDateTime.class))
+                .With(DeductionRate::setUpdatedAt, dbRow.column("updated_at").get(LocalDateTime.class))
+                .With(DeductionRate::setCreatedBy, new User(dbRow.column("created_by").getString()))
+                .Get()
+                )
                 .collect(Collectors.toList());
 
         if (result.isEmpty()) {

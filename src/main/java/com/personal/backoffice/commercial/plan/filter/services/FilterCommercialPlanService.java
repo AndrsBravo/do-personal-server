@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import com.personal.backoffice.commercial.plan.entities.CommercialPlan;
 import com.personal.backoffice.commercial.plan.factories.CommercialPlanResultFactory;
 import com.personal.backoffice.user.entities.User;
+import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
 import com.personal.shared.services.ServiceResult;
@@ -38,17 +39,17 @@ public class FilterCommercialPlanService implements IFilterService<CommercialPla
                 .createQuery(queryString)
                 .params(query.getParams())
                 .execute()
-                .map((dbRow) -> {
-                    var u = new CommercialPlan();
-                    u.setId(dbRow.column("id").getString());
-                    u.setPlan(dbRow.column("cp_plan").getString());
-                    u.setTitle(dbRow.column("cp_title").getString());
-                    u.setDescription(dbRow.column("cp_description").getString());
-                    u.setCreatedAt(dbRow.column("cp_created_at").get(LocalDateTime.class));
-                    u.setUpdatedAt(dbRow.column("cp_updated_at").get(LocalDateTime.class));
-                    u.setCreatedBy(new User(dbRow.column("cp_created_by").getString()));
-                    return u;
-                })
+                .map((dbRow)
+                        -> EntityBuilder.Of(CommercialPlan::new)
+                        .With(CommercialPlan::setId, dbRow.column("id").getString())
+                        .With(CommercialPlan::setPlan, dbRow.column("cp_plan").getString())
+                        .With(CommercialPlan::setTitle, dbRow.column("cp_title").getString())
+                        .With(CommercialPlan::setDescription, dbRow.column("cp_description").getString())
+                        .With(CommercialPlan::setCreatedAt, dbRow.column("cp_created_at").get(LocalDateTime.class))
+                        .With(CommercialPlan::setUpdatedAt, dbRow.column("cp_updated_at").get(LocalDateTime.class))
+                        .With(CommercialPlan::setCreatedBy, new User(dbRow.column("cp_created_by").getString()))
+                        .Get()
+                )
                 .collect(Collectors.toList());
 
         if (result.isEmpty()) {

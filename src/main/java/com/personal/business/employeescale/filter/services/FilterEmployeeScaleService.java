@@ -11,6 +11,7 @@ import com.personal.business.employee.entities.Employee;
 import com.personal.business.employeescale.entities.EmployeeScale;
 import com.personal.business.employeescale.factories.EmployeeScaleResultFactory;
 import com.personal.business.hierarchy.entities.Hierarchy;
+import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
 import com.personal.shared.services.ServiceResult;
@@ -41,19 +42,18 @@ public class FilterEmployeeScaleService implements IFilterService<EmployeeScale>
                 .createQuery(queryString)
                 .params(query.getParams())
                 .execute()
-                .map((dbRow) -> {
-                    var employeeScale = new EmployeeScale();
-                    employeeScale.setId(dbRow.column("id").getString());
-                    employeeScale.setBusiness(new Business(dbRow.column("business_id").getString()));
-                    employeeScale.setEmployee(new Employee(dbRow.column("employees_id").getString()));
-                    employeeScale.setHierarchy(new Hierarchy(dbRow.column("business_hierarchy_id").getString()));
-                    employeeScale.setStartedAt(dbRow.column("es_started_at").get(LocalDateTime.class));
-                    employeeScale.setEndedAt(dbRow.column("es_ended_at").get(LocalDateTime.class));
-                    employeeScale.setCreatedAt(dbRow.column("created_at").get(LocalDateTime.class));
-                    employeeScale.setUpdatedAt(dbRow.column("updated_at").get(LocalDateTime.class));
-                    employeeScale.setCreatedBy(new User(dbRow.column("created_by").getString()));
-                    return employeeScale;
-                })
+                .map((dbRow) -> EntityBuilder.Of(EmployeeScale::new)
+                .With(EmployeeScale::setId, dbRow.column("id").getString())
+                .With(EmployeeScale::setBusiness, new Business(dbRow.column("business_id").getString()))
+                .With(EmployeeScale::setEmployee, new Employee(dbRow.column("employees_id").getString()))
+                .With(EmployeeScale::setHierarchy, new Hierarchy(dbRow.column("business_hierarchy_id").getString()))
+                .With(EmployeeScale::setStartedAt, dbRow.column("es_started_at").get(LocalDateTime.class))
+                .With(EmployeeScale::setEndedAt, dbRow.column("es_ended_at").get(LocalDateTime.class))
+                .With(EmployeeScale::setCreatedAt, dbRow.column("created_at").get(LocalDateTime.class))
+                .With(EmployeeScale::setUpdatedAt, dbRow.column("updated_at").get(LocalDateTime.class))
+                .With(EmployeeScale::setCreatedBy, new User(dbRow.column("created_by").getString()))
+                .Get()
+                )
                 .collect(Collectors.toList());
 
         if (result.isEmpty()) {

@@ -16,15 +16,21 @@ public class UpdateFieldsParamsOrgStructureRule implements IProcessRule<UpdateOr
         var orgStructure = process.getInitObject();
 
         query.Field("id", orgStructure.getId());
-        query.Where().AndEqu("id");
+        query.Where().Equ("id");
 
+        if (orgStructure.getTitle() != null) {
+            query.Set("orgs_title", orgStructure.getTitle());
+        }
+        if (orgStructure.getLevel() != 0) {
+            query.Set("orgs_level", Short.toString(orgStructure.getLevel()));
+        }
         if (orgStructure.getStructure() != null) {
             query.Set("orgs_structure", orgStructure.getStructure());
         }
         if (orgStructure.getDescription() != null) {
             query.Set("orgs_description", orgStructure.getDescription());
         }
-        process.addLog(pLogger.INFO("Validar campos de Tipo de Usuario", "Los campos 'type' y 'description' son obligatorios"));
+        process.addLog(pLogger.INFO("Validar nueva Estructura de Organización", "Los campos de la Estructura fueron validados exitosamente."));
 
     }
 }

@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import com.personal.backoffice.clienttype.factories.ClientTypeResultFactory;
 import com.personal.backoffice.user.entities.User;
+import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.entities.TypeEntityBase;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
@@ -38,17 +39,17 @@ public class FilterClientTypeService implements IFilterService<TypeEntityBase> {
                 .createQuery(queryString)
                 .params(query.getParams())
                 .execute()
-                .map((dbRow) -> {
-                    var u = new TypeEntityBase();
-                    u.setId(dbRow.column("id").getString());
-                    u.setType(dbRow.column("ct_type").getString());
-                    u.setTitle(dbRow.column("ct_title").getString());
-                    u.setDescription(dbRow.column("ct_description").getString());
-                    u.setCreatedAt(dbRow.column("ct_created_at").get(LocalDateTime.class));
-                    u.setUpdatedAt(dbRow.column("ct_updated_at").get(LocalDateTime.class));
-                    u.setCreatedBy(new User(dbRow.column("ct_created_by").getString()));
-                    return u;
-                })
+                .map((dbRow)
+                        -> EntityBuilder.Of(TypeEntityBase::new)
+                        .With(TypeEntityBase::setId, dbRow.column("id").getString())
+                        .With(TypeEntityBase::setType, dbRow.column("ct_type").getString())
+                        .With(TypeEntityBase::setTitle, dbRow.column("ct_title").getString())
+                        .With(TypeEntityBase::setDescription, dbRow.column("ct_description").getString())
+                        .With(TypeEntityBase::setCreatedAt, dbRow.column("ct_created_at").get(LocalDateTime.class))
+                        .With(TypeEntityBase::setUpdatedAt, dbRow.column("ct_updated_at").get(LocalDateTime.class))
+                        .With(TypeEntityBase::setCreatedBy, new User(dbRow.column("ct_created_by").getString()))
+                        .Get()
+                )
                 .collect(Collectors.toList());
 
         if (result.isEmpty()) {

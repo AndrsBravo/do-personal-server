@@ -23,12 +23,12 @@ public class DeleteOrgHierarchyRule implements IProcessRule<DeleteOrgHierarchyPr
 
         if (result.getNotification() != null) {
 
-            process.addLog(pLogger.ERROR("Eliminar Tipo de Usuario", result.getNotification().message()));
+            process.addLog(pLogger.ERROR("Eliminar nueva Jerarquía", result.getNotification().message()));
             process.stopWithErrors();
             return;
         }
 
-        process.addLog(pLogger.INFO("Eliminar Tipo de Usuario", "Tipo de Usuario eliminado con éxito"));
+        process.addLog(pLogger.INFO("Eliminar nueva Jerarquía", "La Jerarquía ha sido eliminada con éxito"));
 
     }
 

@@ -1,6 +1,5 @@
 package com.personal.management.payrollbenefit.create.inputs;
 
-import com.personal.management.country.entities.Country;
 import com.personal.management.payrollbenefit.entities.PayrollBenefit;
 import com.personal.management.shared.inputs.CountryInputBase;
 import com.personal.shared.core.entities.SharedBenefit;
@@ -27,7 +26,7 @@ public class PayrollBenefitInput extends CountryInputBase {
         var payrollBenefit = this.id == null || this.id.isEmpty() ? new PayrollBenefit() : new PayrollBenefit(this.id);
         payrollBenefit.setBenefit(new SharedBenefit(benefitId));
         payrollBenefit.setPayroll(new SharedPayroll(payrollId));
-        payrollBenefit.setCountry(new Country(this.getCountryId()));
+        payrollBenefit.setCountry(this.getCountry());
         payrollBenefit.setCreatedBy(sessionUser);
         return payrollBenefit;
     }

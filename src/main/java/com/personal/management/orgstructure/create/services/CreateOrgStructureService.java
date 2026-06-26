@@ -38,7 +38,7 @@ public class CreateOrgStructureService implements ICreateService<OrgStructure> {
                     .params(query.getParams())
                     .execute();
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al crear el tipo de usuario " + e.getMessage());
+
             return OrgStructureResultFactory.CreateFail();
         }
 

@@ -16,7 +16,7 @@ public class UpdateFieldsParamsPayrollRunDeductionRule implements IProcessRule<U
         var payrollRunDeduction = process.getInitObject();
 
         query.Field("id", payrollRunDeduction.getId());
-        query.Where().AndEqu("id");
+        query.Where().Equ("id");
 
         if (payrollRunDeduction.getDeduction() != null) {
             query.Set("payroll_deductions_id", payrollRunDeduction.getDeduction().getId());

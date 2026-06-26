@@ -3,7 +3,7 @@ package com.personal.backoffice.userrole.api.routers;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
-import com.personal.backoffice.api.BaseRouterTest;
+import com.personal.shared.api.BaseRouterTest;
 
 import io.helidon.http.Status;
 import io.helidon.webserver.testing.junit5.DirectClient;

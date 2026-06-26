@@ -16,7 +16,7 @@ public class UpdateFieldsParamsCommercialEntityRule implements IProcessRule<Upda
         var commercialEntity = process.getInitObject();
 
         query.Field("id", commercialEntity.getId());
-        query.Where().AndEqu("id");
+        query.Where().Equ("id");
 
         if (commercialEntity.getEntity() != null) {
             query.Set("ce_entity", commercialEntity.getEntity());

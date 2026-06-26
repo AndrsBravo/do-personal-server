@@ -16,7 +16,7 @@ public class UpdateFieldsParamsHierarchyDeductionFeedRule implements IProcessRul
         var hierarchyDeductionFeed = process.getInitObject();
 
         query.Field("id", hierarchyDeductionFeed.getId());
-        query.Where().AndEqu("id");
+        query.Where().Equ("id");
 
         if (hierarchyDeductionFeed.getBusiness() != null) {
             query.Set("business_id", hierarchyDeductionFeed.getBusiness().getId());

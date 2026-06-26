@@ -1,0 +1,32 @@
+{
+    "structures":[
+
+{"title":"Junta de Accionistas", "structure":"Junta",  "level":1 },
+{"title":"Junta Directiva", "structure":"Junta",  "level":2 },
+{"title":"Dirección Ejecutiva", "structure":"Dirección",  "level":3 },
+{"title":"Dirección General/Regional", "structure":"Dirección",  "level":4 },
+{"title":"Dirección Capitulo", "structure":"Dirección",  "level":5 },
+{"title":"Gerencia General", "structure":"Gerencia",  "level":6 },
+{"title":"Gerencia Area", "structure":"Gerencia",  "level":7 },
+{"title":"Departamentos", "structure":"Departamento",  "level":8 },
+{"title":"Sección/Area", "structure":"Sección",  "level":9 },
+{"title":"sub-Sección/Sub-Area", "structure":"Sub-sección",  "level":10}
+    ],
+    "hierarchies":[
+
+{"title":"Miembro de la Junta Acc","hierarchy": "Miembro","level": 1 },
+{"title":"Miembro de la Junta Dir","hierarchy": "Miembro","level": 2 },
+{"title":"Director Ejecutivo/a","hierarchy": "Director","level": 3 },
+{"title":"Director General/Regional","hierarchy": "Director","level": 4 },
+{"title":"Director Capitulo","hierarchy": "Director","level": 5 },
+{"title":"Gerente General","hierarchy": "Gerente","level": 6 },
+{"title":"Gerente de Area","hierarchy": "Gerente","level": 7 },
+{"title":"Jefe de Departamentos","hierarchy": "Jefe","level": 8 },
+{"title":"Coordinador de area","hierarchy": "Coordinador","level": 9 },
+{"title":"Supervisor de area","hierarchy": "Supervisor","level": 10},
+{"title":"Analista de area","hierarchy": "Analista","level": 11},
+{"title":"Asistente de area","hierarchy": "Asistente","level": 12},
+{"title":"Auxiliar de area","hierarchy": "Auxiliar","level": 13}
+
+    ]
+}

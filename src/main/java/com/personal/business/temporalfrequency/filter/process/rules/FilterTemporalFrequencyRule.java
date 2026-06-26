@@ -15,14 +15,9 @@ public class FilterTemporalFrequencyRule implements IProcessRule<FilterTemporalF
 
         var query = process.Query();
 
-        if (temporalFrequencyFilter.getAll() != null) {
-            query.Field("id", "");
-            query.Where().AndNotEmpty("id");
-        }
-
         if (temporalFrequencyFilter.getId() != null) {
             query.Field("id", temporalFrequencyFilter.getId());
-            query.Where().AndEqu("id");
+            query.Where().Field("id", temporalFrequencyFilter.getId());
         }
 
         if (temporalFrequencyFilter.getType() != null) {

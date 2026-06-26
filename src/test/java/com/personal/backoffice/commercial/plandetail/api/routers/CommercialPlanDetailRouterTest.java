@@ -5,7 +5,7 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import com.personal.backoffice.api.BaseRouterTest;
+import com.personal.shared.api.BaseRouterTest;
 
 import io.helidon.http.Status;
 import io.helidon.webserver.testing.junit5.DirectClient;

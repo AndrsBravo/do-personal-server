@@ -11,6 +11,7 @@ import com.personal.business.employee.entities.Employee;
 import com.personal.business.payroll.entities.Payroll;
 import com.personal.business.payrollemployee.entities.PayrollEmployee;
 import com.personal.business.payrollemployee.factories.PayrollEmployeeResultFactory;
+import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
 import com.personal.shared.services.ServiceResult;
@@ -41,17 +42,16 @@ public class FilterPayrollEmployeeService implements IFilterService<PayrollEmplo
                 .createQuery(queryString)
                 .params(query.getParams())
                 .execute()
-                .map((dbRow) -> {
-                    var payrollEmployee = new PayrollEmployee();
-                    payrollEmployee.setId(dbRow.column("id").getString());
-                    payrollEmployee.setBusiness(new Business(dbRow.column("business_id").getString()));
-                    payrollEmployee.setEmployee(new Employee(dbRow.column("employees_id").getString()));
-                    payrollEmployee.setPayroll(new Payroll(dbRow.column("payrolls_id").getString()));
-                    payrollEmployee.setCreatedAt(dbRow.column("created_at").get(LocalDateTime.class));
-                    payrollEmployee.setUpdatedAt(dbRow.column("updated_at").get(LocalDateTime.class));
-                    payrollEmployee.setCreatedBy(new User(dbRow.column("created_by").getString()));
-                    return payrollEmployee;
-                })
+                .map((dbRow) -> EntityBuilder.Of(PayrollEmployee::new)
+                .With(PayrollEmployee::setId, dbRow.column("id").getString())
+                .With(PayrollEmployee::setBusiness, new Business(dbRow.column("business_id").getString()))
+                .With(PayrollEmployee::setEmployee, new Employee(dbRow.column("employees_id").getString()))
+                .With(PayrollEmployee::setPayroll, new Payroll(dbRow.column("payrolls_id").getString()))
+                .With(PayrollEmployee::setCreatedAt, dbRow.column("created_at").get(LocalDateTime.class))
+                .With(PayrollEmployee::setUpdatedAt, dbRow.column("updated_at").get(LocalDateTime.class))
+                .With(PayrollEmployee::setCreatedBy, new User(dbRow.column("created_by").getString()))
+                .Get()
+                )
                 .collect(Collectors.toList());
 
         if (result.isEmpty()) {

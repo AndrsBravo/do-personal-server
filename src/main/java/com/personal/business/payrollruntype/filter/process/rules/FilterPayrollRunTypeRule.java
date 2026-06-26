@@ -15,14 +15,10 @@ public class FilterPayrollRunTypeRule implements IProcessRule<FilterPayrollRunTy
         var query = process.Query();
 
         var payRollRunType = process.getInitObject();
-        if (payRollRunType.getAll() != null) {
-            query.Field("id", "");
-            query.Where().AndNotEmpty("id");
-        }
 
         if (payRollRunType.getId() != null) {
             query.Field("id", payRollRunType.getId());
-            query.Where().AndEqu("id");
+            query.Where().Field("id", payRollRunType.getId());
         }
 
         if (payRollRunType.getType() != null) {

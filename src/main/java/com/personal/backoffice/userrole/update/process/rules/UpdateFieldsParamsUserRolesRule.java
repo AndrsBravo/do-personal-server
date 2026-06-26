@@ -16,7 +16,7 @@ public class UpdateFieldsParamsUserRolesRule implements IProcessRule<UpdateUserR
         var userRole = process.getInitObject();
 
         query.Field("id", userRole.getId());
-        query.Where().AndEqu("id");
+        query.Where().Equ("id");
 
         process.addLog(pLogger.INFO("Validar campos de Tipo de Usuario", "Los campos 'type' y 'description' son obligatorios"));
 

@@ -1,11 +1,8 @@
 package com.personal.management.country.entities;
 
-import com.personal.shared.entities.BaseEntity;
+import com.personal.shared.core.entities.SharedCountry;
 
-public class Country extends BaseEntity {
-
-    private String name;
-    private String code;
+public class Country extends SharedCountry {
 
     public Country() {
         super();
@@ -15,19 +12,4 @@ public class Country extends BaseEntity {
         super(id);
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
 }

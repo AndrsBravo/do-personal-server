@@ -16,7 +16,7 @@ public class UpdateFieldsParamsUserTypesRule implements IProcessRule<UpdateUserT
         var userType = process.getInitObject();
 
         query.Field("id", userType.getId());
-        query.Where().AndEqu("id");
+        query.Where().Equ("id");
 
         if (userType.getType() != null) {
             query.Set("ust_type", userType.getType());

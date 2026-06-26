@@ -39,7 +39,7 @@ public class CreateUserRoleService implements ICreateService<UserRole> {
         try {
 
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al crear el tipo de usuario " + e.getMessage());
+
             return UserRoleResultFactory.CreateFail();
         }
 

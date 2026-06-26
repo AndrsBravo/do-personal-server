@@ -13,6 +13,7 @@ import com.personal.backoffice.userrelation.api.routers.UserRelationsRouter;
 import com.personal.backoffice.userrole.api.routers.UserRolesRouter;
 import com.personal.backoffice.usertype.api.routers.UserTypesRouter;
 
+import io.helidon.http.Status;
 import io.helidon.webserver.http.HttpRules;
 import io.helidon.webserver.http.HttpService;
 
@@ -32,7 +33,12 @@ public class BackOfficeRouter implements HttpService {
                 .register("/users", new UserRouter())
                 .register("/user_relation", new UserRelationsRouter())
                 .register("/user_role", new UserRolesRouter())
-                .register("/user_types", new UserTypesRouter());
+                .register("/user_types", new UserTypesRouter())
+                .get((req, res) -> {
+
+                    res.status(Status.OK_200).send("Hola desde al BackOffice Router");
+
+                });
 
     }
 }

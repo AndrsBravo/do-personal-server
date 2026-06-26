@@ -14,13 +14,14 @@ public class ValidateOrgRelationRule implements IProcessRule<CreateOrgRelationPr
 
         var orgRelation = process.getInitObject();
         query.Field("id", orgRelation.getId());
+        query.Field("country_id", orgRelation.getCountry().getId());
         query.Field("organization_hierarchy", orgRelation.getHierarchy().getId());
         query.Field("organization_structure", orgRelation.getStructure().getId());
         query.Field("created_at", orgRelation.getCreatedAt().toString());
         query.Field("updated_at", orgRelation.getUpdatedAt().toString());
         query.Field("created_by", orgRelation.getCreatedBy().getId());
 
-        process.addLog(pLogger.INFO("Crear nueva relación de Usuario", "Relación de Usuario creada con éxito"));
+        process.addLog(pLogger.INFO("Validar Relación Organizacional", "Relación Organizacional validada con éxito"));
 
     }
 

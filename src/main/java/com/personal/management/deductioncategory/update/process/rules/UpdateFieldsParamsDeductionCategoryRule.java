@@ -16,7 +16,7 @@ public class UpdateFieldsParamsDeductionCategoryRule implements IProcessRule<Upd
         var deductionCategory = process.getInitObject();
 
         query.Field("id", deductionCategory.getId());
-        query.Where().AndEqu("id");
+        query.Where().Equ("id");
 
         if (deductionCategory.getCategory() != null) {
             query.Set("dc_category", deductionCategory.getCategory());

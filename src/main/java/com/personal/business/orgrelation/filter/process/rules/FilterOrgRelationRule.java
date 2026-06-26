@@ -13,14 +13,10 @@ public class FilterOrgRelationRule implements IProcessRule<FilterOrgRelationProc
         var pLogger = LogFactory.builder(FilterOrgRelationProcess.class, FilterOrgRelationRule.class);
         var query = process.Query();
         var orgRelationFilter = process.getInitObject();
-        if (orgRelationFilter.getAll() != null) {
-            query.Field("id", "");
-            query.Where().AndNotEmpty("id");
-        }
 
         if (orgRelationFilter.getId() != null) {
             query.Field("id", orgRelationFilter.getId());
-            query.Where().AndEqu("id");
+            query.Where().Field("id", orgRelationFilter.getId());
         }
 
         if (orgRelationFilter.getStructureId() != null) {

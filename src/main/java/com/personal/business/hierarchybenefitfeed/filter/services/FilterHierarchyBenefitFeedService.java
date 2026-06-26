@@ -12,6 +12,7 @@ import com.personal.business.hierarchy.entities.Hierarchy;
 import com.personal.business.hierarchybenefitfeed.entities.HierarchyBenefitFeed;
 import com.personal.business.hierarchybenefitfeed.factories.HierarchyBenefitFeedResultFactory;
 import com.personal.business.temporalfrequency.entities.TemporalFrequency;
+import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
 import com.personal.shared.services.ServiceResult;
@@ -42,21 +43,20 @@ public class FilterHierarchyBenefitFeedService implements IFilterService<Hierarc
                 .createQuery(queryString)
                 .params(query.getParams())
                 .execute()
-                .map((dbRow) -> {
-                    var hierarchyBenefitFeed = new HierarchyBenefitFeed();
-                    hierarchyBenefitFeed.setId(dbRow.column("id").getString());
-                    hierarchyBenefitFeed.setBusiness(new Business(dbRow.column("business_id").getString()));
-                    hierarchyBenefitFeed.setBenefit(new Benefit(dbRow.column("business_benefits_id").getString()));
-                    hierarchyBenefitFeed.setHierarchy(new Hierarchy(dbRow.column("business_hierarchy_id").getString()));
-                    hierarchyBenefitFeed.setTemporalFrequency(new TemporalFrequency(dbRow.column("temporal_frequency_id").getString()));
-                    hierarchyBenefitFeed.setAmount(dbRow.column("hbf_amount").get(Double.class));
-                    hierarchyBenefitFeed.setStartedAt(dbRow.column("hbf_started_at").get(LocalDateTime.class));
-                    hierarchyBenefitFeed.setEndedAt(dbRow.column("hbf_ended_at").get(LocalDateTime.class));
-                    hierarchyBenefitFeed.setCreatedAt(dbRow.column("created_at").get(LocalDateTime.class));
-                    hierarchyBenefitFeed.setUpdatedAt(dbRow.column("updated_at").get(LocalDateTime.class));
-                    hierarchyBenefitFeed.setCreatedBy(new User(dbRow.column("created_by").getString()));
-                    return hierarchyBenefitFeed;
-                })
+                .map((dbRow) -> EntityBuilder.Of(HierarchyBenefitFeed::new)
+                .With(HierarchyBenefitFeed::setId, dbRow.column("id").getString())
+                .With(HierarchyBenefitFeed::setBusiness, new Business(dbRow.column("business_id").getString()))
+                .With(HierarchyBenefitFeed::setBenefit, new Benefit(dbRow.column("business_benefits_id").getString()))
+                .With(HierarchyBenefitFeed::setHierarchy, new Hierarchy(dbRow.column("business_hierarchy_id").getString()))
+                .With(HierarchyBenefitFeed::setTemporalFrequency, new TemporalFrequency(dbRow.column("temporal_frequency_id").getString()))
+                .With(HierarchyBenefitFeed::setAmount, dbRow.column("hbf_amount").get(Double.class))
+                .With(HierarchyBenefitFeed::setStartedAt, dbRow.column("hbf_started_at").get(LocalDateTime.class))
+                .With(HierarchyBenefitFeed::setEndedAt, dbRow.column("hbf_ended_at").get(LocalDateTime.class))
+                .With(HierarchyBenefitFeed::setCreatedAt, dbRow.column("created_at").get(LocalDateTime.class))
+                .With(HierarchyBenefitFeed::setUpdatedAt, dbRow.column("updated_at").get(LocalDateTime.class))
+                .With(HierarchyBenefitFeed::setCreatedBy, new User(dbRow.column("created_by").getString()))
+                .Get()
+                )
                 .collect(Collectors.toList());
 
         if (result.isEmpty()) {

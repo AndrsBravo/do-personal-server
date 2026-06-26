@@ -9,6 +9,7 @@ import com.personal.backoffice.user.entities.User;
 import com.personal.management.payroll.entities.Payroll;
 import com.personal.management.payrollrun.entities.PayrollRun;
 import com.personal.management.payrollrun.factories.PayrollRunResultFactory;
+import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.entities.TypeEntityBase;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
@@ -40,18 +41,16 @@ public class FilterPayrollRunService implements IFilterService<PayrollRun> {
                 .createQuery(queryString)
                 .params(query.getParams())
                 .execute()
-                .map((dbRow) -> {
-                    var payrollRun = new PayrollRun();
-                    payrollRun.setId(dbRow.column("id").getString());
-                    payrollRun.setPayroll(new Payroll(dbRow.column("payrolls_id").getString()));
-                    payrollRun.setTitle(dbRow.column("prr_title").getString());
-                    payrollRun.setDescription(dbRow.column("prr_description").getString());
-                    payrollRun.setPayrollRunType(new TypeEntityBase(dbRow.column("payroll_runs_type_id").getString()));
-                    payrollRun.setCreatedAt(dbRow.column("created_at").get(LocalDateTime.class));
-                    payrollRun.setUpdatedAt(dbRow.column("updated_at").get(LocalDateTime.class));
-                    payrollRun.setCreatedBy(new User(dbRow.column("created_by").getString()));
-                    return payrollRun;
-                })
+                .map((dbRow) -> EntityBuilder.Of(PayrollRun::new)
+                .With(PayrollRun::setId, dbRow.column("id").getString())
+                .With(PayrollRun::setPayroll, new Payroll(dbRow.column("payrolls_id").getString()))
+                .With(PayrollRun::setTitle, dbRow.column("prr_title").getString())
+                .With(PayrollRun::setDescription, dbRow.column("prr_description").getString())
+                .With(PayrollRun::setPayrollRunType, new TypeEntityBase(dbRow.column("payroll_runs_type_id").getString()))
+                .With(PayrollRun::setCreatedAt, dbRow.column("created_at").get(LocalDateTime.class))
+                .With(PayrollRun::setUpdatedAt, dbRow.column("updated_at").get(LocalDateTime.class))
+                .With(PayrollRun::setCreatedBy, new User(dbRow.column("created_by").getString()))
+                .Get())
                 .collect(Collectors.toList());
 
         if (result.isEmpty()) {

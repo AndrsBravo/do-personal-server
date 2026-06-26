@@ -16,7 +16,7 @@ public class UpdateFieldsParamsCommercialPlanDetailRule implements IProcessRule<
         var commercialPlan = process.getInitObject();
 
         query.Field("id", commercialPlan.getId());
-        query.Where().AndEqu("id");
+        query.Where().Equ("id");
 
         if (commercialPlan.getPlan() != null) {
             query.Set("commercial_plan_id", commercialPlan.getPlan().getId());

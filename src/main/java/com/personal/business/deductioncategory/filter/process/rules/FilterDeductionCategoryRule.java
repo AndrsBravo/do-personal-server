@@ -15,14 +15,9 @@ public class FilterDeductionCategoryRule implements IProcessRule<FilterDeduction
         var query = process.Query();
         var deductionCategory = process.getInitObject();
 
-        if (deductionCategory.getAll() != null) {
-            query.Field("id", "");
-            query.Where().AndNotEmpty("id");
-        }
-
         if (deductionCategory.getId() != null) {
             query.Field("id", deductionCategory.getId());
-            query.Where().AndEqu("id");
+            query.Where().Field("id", deductionCategory.getId());
         }
 
         if (deductionCategory.getType() != null) {

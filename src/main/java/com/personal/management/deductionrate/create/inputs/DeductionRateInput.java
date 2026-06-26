@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import com.personal.business.deduction.entities.Deduction;
 import com.personal.business.temporalfrequency.entities.TemporalFrequency;
 import com.personal.management.deductionrate.entities.DeductionRate;
-import com.personal.management.country.entities.Country;
 import com.personal.management.shared.inputs.CountryInputBase;
 
 public class DeductionRateInput extends CountryInputBase {
@@ -34,7 +33,7 @@ public class DeductionRateInput extends CountryInputBase {
         deductionRate.setStartedAt(started_at);
         deductionRate.setEndedAt(ended_at);
         deductionRate.setCreatedBy(sessionUser);
-        deductionRate.setCountry(new Country(this.getCountryId()));
+        deductionRate.setCountry(this.getCountry());
         return deductionRate;
     }
 }

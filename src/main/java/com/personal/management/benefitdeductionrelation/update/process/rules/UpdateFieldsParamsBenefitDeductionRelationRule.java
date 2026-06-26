@@ -16,7 +16,7 @@ public class UpdateFieldsParamsBenefitDeductionRelationRule implements IProcessR
         var benefitDeductionRelation = process.getInitObject();
 
         query.Field("id", benefitDeductionRelation.getId());
-        query.Where().AndEqu("id");
+        query.Where().Equ("id");
 
         if (benefitDeductionRelation.getBenefit() != null) {
             query.Set("business_benefit_id", benefitDeductionRelation.getBenefit().getId());

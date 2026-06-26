@@ -12,16 +12,11 @@ public class FilterBusinessRule implements IProcessRule<FilterBusinessProcess> {
 
         var pLogger = LogFactory.builder(FilterBusinessProcess.class, FilterBusinessRule.class);
         var query = process.Query();
-        var initObject = process.getInitObject();
+        var business = process.getInitObject();
 
-        if (initObject.getAll() != null) {
-            query.Field("id", "");
-            query.Where().AndNotEmpty("id");
-        }
-
-        if (initObject.getId() != null) {
-            query.Field("id", initObject.getId());
-            query.Where().AndEqu("id");
+        if (business.getId() != null) {
+            query.Field("id", business.getId());
+            query.Where().Field("id", business.getId());
         }
 
         var filterBusiness = BusinessServiceFactory.FilterBusiness();

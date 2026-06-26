@@ -14,14 +14,9 @@ public class FilterCommercialEntityRule implements IProcessRule<FilterCommercial
         var query = process.Query();
         var commercialEntityFilter = process.getInitObject();
 
-        if (commercialEntityFilter.getAll() != null) {
-            query.Field("id", "");
-            query.Where().AndNotEmpty("id");
-        }
-
         if (commercialEntityFilter.getId() != null) {
             query.Field("id", commercialEntityFilter.getId());
-            query.Where().AndEqu("id");
+            query.Where().Field("id", commercialEntityFilter.getId());
         }
 
         if (commercialEntityFilter.getType() != null) {

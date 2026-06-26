@@ -38,7 +38,7 @@ public class DeleteOrgRelationService implements IDeleteService<OrgRelation> {
                     .execute();
 
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al eliminar el tipo de usuario " + e.getMessage());
+
             return OrgRelationResultFactory.DeleteFail();
         }
 

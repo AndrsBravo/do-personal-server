@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import com.personal.backoffice.user.entities.User;
 import com.personal.backoffice.userrelation.entities.UserRelation;
 import com.personal.backoffice.userrelation.factories.UserRelationResultFactory;
+import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
 import com.personal.shared.services.ServiceResult;
@@ -38,17 +39,17 @@ public class FilterUserRelationService implements IFilterService<UserRelation> {
                 .createQuery(queryString)
                 .params(query.getParams())
                 .execute()
-                .map((dbRow) -> {
-                    var u = new UserRelation();
-                    u.setId(dbRow.column("id").getString());
-                    u.setRelation(dbRow.column("ur_relation").getString());
-                    u.setTitle(dbRow.column("ur_title").getString());
-                    u.setDescription(dbRow.column("ur_description").getString());
-                    u.setCreatedAt(dbRow.column("ur_created_at").get(LocalDateTime.class));
-                    u.setUpdatedAt(dbRow.column("ur_updated_at").get(LocalDateTime.class));
-                    u.setCreatedBy(new User(dbRow.column("ur_created_by").getString()));
-                    return u;
-                })
+                .map((dbRow)
+                        -> EntityBuilder.Of(UserRelation::new)
+                        .With(UserRelation::setId, dbRow.column("id").getString())
+                        .With(UserRelation::setRelation, dbRow.column("ur_relation").getString())
+                        .With(UserRelation::setTitle, dbRow.column("ur_title").getString())
+                        .With(UserRelation::setDescription, dbRow.column("ur_description").getString())
+                        .With(UserRelation::setCreatedAt, dbRow.column("ur_created_at").get(LocalDateTime.class))
+                        .With(UserRelation::setUpdatedAt, dbRow.column("ur_updated_at").get(LocalDateTime.class))
+                        .With(UserRelation::setCreatedBy, new User(dbRow.column("ur_created_by").getString()))
+                        .Get()
+                )
                 .collect(Collectors.toList());
 
         if (result.isEmpty()) {

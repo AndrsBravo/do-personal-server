@@ -13,14 +13,10 @@ public class FilterEmployeeBenefitFeedRule implements IProcessRule<FilterEmploye
         var pLogger = LogFactory.builder(FilterEmployeeBenefitFeedProcess.class, FilterEmployeeBenefitFeedRule.class);
         var query = process.Query();
         var employeeBenefitFeedFilter = process.getInitObject();
-        if (employeeBenefitFeedFilter.getAll() != null) {
-            query.Field("id", "");
-            query.Where().AndNotEmpty("id");
-        }
 
         if (employeeBenefitFeedFilter.getId() != null) {
             query.Field("id", employeeBenefitFeedFilter.getId());
-            query.Where().AndEqu("id");
+            query.Where().Field("id", employeeBenefitFeedFilter.getId());
         }
 
         if (employeeBenefitFeedFilter.getBenefitId() != null) {

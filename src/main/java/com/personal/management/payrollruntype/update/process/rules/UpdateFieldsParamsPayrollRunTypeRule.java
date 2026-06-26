@@ -16,7 +16,7 @@ public class UpdateFieldsParamsPayrollRunTypeRule implements IProcessRule<Update
         var payrollRunType = process.getInitObject();
 
         query.Field("id", payrollRunType.getId());
-        query.Where().AndEqu("id");
+        query.Where().Equ("id");
 
         if (payrollRunType.getType() != null) {
             query.Set("prt_type", payrollRunType.getType());

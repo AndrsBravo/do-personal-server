@@ -6,7 +6,6 @@ public class SharedOrgStructure extends ShortEntity {
 
     private short level;
     private String title;
-    private String charge;
     private String structure;
     private String description;
 
@@ -40,14 +39,6 @@ public class SharedOrgStructure extends ShortEntity {
 
     public String getTitle() {
         return title;
-    }
-
-    public void setCharge(String charge) {
-        this.charge = charge;
-    }
-
-    public String getCharge() {
-        return charge;
     }
 
     public String getDescription() {

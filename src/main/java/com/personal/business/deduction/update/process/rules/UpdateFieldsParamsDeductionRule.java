@@ -16,7 +16,7 @@ public class UpdateFieldsParamsDeductionRule implements IProcessRule<UpdateDeduc
         var deduction = process.getInitObject();
 
         query.Field("id", deduction.getId());
-        query.Where().AndEqu("id");
+        query.Where().Equ("id");
 
         if (deduction.getDeduction() != null) {
             query.Set("bd_deduction", deduction.getDeduction());

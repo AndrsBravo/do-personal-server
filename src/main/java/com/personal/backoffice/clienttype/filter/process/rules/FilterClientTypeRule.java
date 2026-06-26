@@ -14,14 +14,9 @@ public class FilterClientTypeRule implements IProcessRule<FilterClientTypeProces
         var query = process.Query();
         var clientTypeFilter = process.getInitObject();
 
-        if (clientTypeFilter.getAll() != null) {
-            query.Field("id", "");
-            query.Where().AndNotEmpty("id");
-        }
-
         if (clientTypeFilter.getId() != null) {
             query.Field("id", clientTypeFilter.getId());
-            query.Where().AndEqu("id");
+            query.Where().Field("id", clientTypeFilter.getId());
         }
 
         if (clientTypeFilter.getType() != null) {

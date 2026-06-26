@@ -11,6 +11,7 @@ import com.personal.business.deduction.entities.Deduction;
 import com.personal.business.employee.entities.Employee;
 import com.personal.business.employeededuction.entities.EmployeeDeduction;
 import com.personal.business.employeededuction.factories.EmployeeDeductionResultFactory;
+import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
 import com.personal.shared.services.ServiceResult;
@@ -41,17 +42,16 @@ public class FilterEmployeeDeductionService implements IFilterService<EmployeeDe
                 .createQuery(queryString)
                 .params(query.getParams())
                 .execute()
-                .map((dbRow) -> {
-                    var employeeDeduction = new EmployeeDeduction();
-                    employeeDeduction.setId(dbRow.column("id").getString());
-                    employeeDeduction.setBusiness(new Business(dbRow.column("business_id").getString()));
-                    employeeDeduction.setDeduction(new Deduction(dbRow.column("business_deductions_id").getString()));
-                    employeeDeduction.setEmployee(new Employee(dbRow.column("employees_id").getString()));
-                    employeeDeduction.setCreatedAt(dbRow.column("created_at").get(LocalDateTime.class));
-                    employeeDeduction.setUpdatedAt(dbRow.column("updated_at").get(LocalDateTime.class));
-                    employeeDeduction.setCreatedBy(new User(dbRow.column("created_by").getString()));
-                    return employeeDeduction;
-                })
+                .map((dbRow) -> EntityBuilder.Of(EmployeeDeduction::new)
+                .With(EmployeeDeduction::setId, dbRow.column("id").getString())
+                .With(EmployeeDeduction::setBusiness, new Business(dbRow.column("business_id").getString()))
+                .With(EmployeeDeduction::setDeduction, new Deduction(dbRow.column("business_deductions_id").getString()))
+                .With(EmployeeDeduction::setEmployee, new Employee(dbRow.column("employees_id").getString()))
+                .With(EmployeeDeduction::setCreatedAt, dbRow.column("created_at").get(LocalDateTime.class))
+                .With(EmployeeDeduction::setUpdatedAt, dbRow.column("updated_at").get(LocalDateTime.class))
+                .With(EmployeeDeduction::setCreatedBy, new User(dbRow.column("created_by").getString()))
+                .Get()
+                )
                 .collect(Collectors.toList());
 
         if (result.isEmpty()) {

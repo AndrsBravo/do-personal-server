@@ -11,6 +11,7 @@ import com.personal.backoffice.user.entities.User;
 import com.personal.backoffice.user.entities.UserRelation;
 import com.personal.backoffice.user.entities.UserRole;
 import com.personal.backoffice.user.factories.UserResultFactory;
+import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
 import com.personal.shared.services.ServiceResult;
@@ -41,18 +42,17 @@ public class FilterAssociatedUserBusinessService implements IFilterService<Assoc
                 .createQuery(queryString)
                 .params(query.getParams())
                 .execute()
-                .map((dbRow) -> {
-                    var u = new AssociateUserBusiness();
-                    u.setId(dbRow.column("id").getString());
-                    u.setBusiness(new Business(dbRow.column("business_id").getString()));
-                    u.setUser(new User(dbRow.column("users_id").getString()));
-                    u.setUserRole(new UserRole(dbRow.column("user_role_id").getString()));
-                    u.setUserRelation(new UserRelation(dbRow.column("user_relation_id").getString()));
-                    u.setCreatedAt(dbRow.column("created_at").get(LocalDateTime.class));
-                    u.setUpdatedAt(dbRow.column("updated_at").get(LocalDateTime.class));
-                    u.setCreatedBy(new User(dbRow.column("created_by").getString()));
-                    return u;
-                })
+                .map((dbRow) -> EntityBuilder.Of(AssociateUserBusiness::new)
+                .With(AssociateUserBusiness::setId, dbRow.column("id").getString())
+                .With(AssociateUserBusiness::setBusiness, new Business(dbRow.column("business_id").getString()))
+                .With(AssociateUserBusiness::setUser, new User(dbRow.column("users_id").getString()))
+                .With(AssociateUserBusiness::setUserRole, new UserRole(dbRow.column("user_role_id").getString()))
+                .With(AssociateUserBusiness::setUserRelation, new UserRelation(dbRow.column("user_relation_id").getString()))
+                .With(AssociateUserBusiness::setCreatedAt, dbRow.column("created_at").get(LocalDateTime.class))
+                .With(AssociateUserBusiness::setUpdatedAt, dbRow.column("updated_at").get(LocalDateTime.class))
+                .With(AssociateUserBusiness::setCreatedBy, new User(dbRow.column("created_by").getString()))
+                .Get()
+                )
                 .collect(Collectors.toList());
 
         if (result.isEmpty()) {

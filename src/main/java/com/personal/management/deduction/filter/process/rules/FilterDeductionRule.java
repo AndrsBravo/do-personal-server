@@ -13,14 +13,10 @@ public class FilterDeductionRule implements IProcessRule<FilterDeductionProcess>
         var pLogger = LogFactory.builder(FilterDeductionProcess.class, FilterDeductionRule.class);
         var query = process.Query();
         var deductionFilter = process.getInitObject();
-        if (deductionFilter.getAll() != null) {
-            query.Field("id", "");
-            query.Where().AndNotEmpty("id");
-        }
 
         if (deductionFilter.getId() != null) {
             query.Field("id", deductionFilter.getId());
-            query.Where().AndEqu("id");
+            query.Where().Field("id", deductionFilter.getId());
         }
 
         if (deductionFilter.getType() != null) {

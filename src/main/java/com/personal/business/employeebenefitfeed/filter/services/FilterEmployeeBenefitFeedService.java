@@ -12,6 +12,7 @@ import com.personal.business.employee.entities.Employee;
 import com.personal.business.employeebenefitfeed.entities.EmployeeBenefitFeed;
 import com.personal.business.employeebenefitfeed.factories.EmployeeBenefitFeedResultFactory;
 import com.personal.business.temporalfrequency.entities.TemporalFrequency;
+import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
 import com.personal.shared.services.ServiceResult;
@@ -42,21 +43,20 @@ public class FilterEmployeeBenefitFeedService implements IFilterService<Employee
                 .createQuery(queryString)
                 .params(query.getParams())
                 .execute()
-                .map((dbRow) -> {
-                    var employeeBenefitFeed = new EmployeeBenefitFeed();
-                    employeeBenefitFeed.setId(dbRow.column("id").getString());
-                    employeeBenefitFeed.setBusiness(new Business(dbRow.column("business_id").getString()));
-                    employeeBenefitFeed.setBenefit(new Benefit(dbRow.column("business_benefits_id").getString()));
-                    employeeBenefitFeed.setEmployee(new Employee(dbRow.column("employee_benefit_id").getString()));
-                    employeeBenefitFeed.setTemporalFrequency(new TemporalFrequency(dbRow.column("temporal_frequency_id").getString()));
-                    employeeBenefitFeed.setAmount(dbRow.column("ebf_amount").get(Double.class));
-                    employeeBenefitFeed.setStartedAt(dbRow.column("ebf_started_at").get(LocalDateTime.class));
-                    employeeBenefitFeed.setEndedAt(dbRow.column("ebf_ended_at").get(LocalDateTime.class));
-                    employeeBenefitFeed.setCreatedAt(dbRow.column("created_at").get(LocalDateTime.class));
-                    employeeBenefitFeed.setUpdatedAt(dbRow.column("updated_at").get(LocalDateTime.class));
-                    employeeBenefitFeed.setCreatedBy(new User(dbRow.column("created_by").getString()));
-                    return employeeBenefitFeed;
-                })
+                .map((dbRow) -> EntityBuilder.Of(EmployeeBenefitFeed::new)
+                .With(EmployeeBenefitFeed::setId, dbRow.column("id").getString())
+                .With(EmployeeBenefitFeed::setBusiness, new Business(dbRow.column("business_id").getString()))
+                .With(EmployeeBenefitFeed::setBenefit, new Benefit(dbRow.column("business_benefits_id").getString()))
+                .With(EmployeeBenefitFeed::setEmployee, new Employee(dbRow.column("employee_benefit_id").getString()))
+                .With(EmployeeBenefitFeed::setTemporalFrequency, new TemporalFrequency(dbRow.column("temporal_frequency_id").getString()))
+                .With(EmployeeBenefitFeed::setAmount, dbRow.column("ebf_amount").get(Double.class))
+                .With(EmployeeBenefitFeed::setStartedAt, dbRow.column("ebf_started_at").get(LocalDateTime.class))
+                .With(EmployeeBenefitFeed::setEndedAt, dbRow.column("ebf_ended_at").get(LocalDateTime.class))
+                .With(EmployeeBenefitFeed::setCreatedAt, dbRow.column("created_at").get(LocalDateTime.class))
+                .With(EmployeeBenefitFeed::setUpdatedAt, dbRow.column("updated_at").get(LocalDateTime.class))
+                .With(EmployeeBenefitFeed::setCreatedBy, new User(dbRow.column("created_by").getString()))
+                .Get()
+                )
                 .collect(Collectors.toList());
 
         if (result.isEmpty()) {

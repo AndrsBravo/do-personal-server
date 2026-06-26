@@ -1,7 +1,6 @@
 package com.personal.management.benefit.create.inputs;
 
 import com.personal.management.benefit.entities.Benefit;
-import com.personal.management.country.entities.Country;
 import com.personal.management.shared.inputs.CountryInputBase;
 
 public class BenefitInput extends CountryInputBase {
@@ -32,7 +31,7 @@ public class BenefitInput extends CountryInputBase {
         _benefit.setBenefit(benefit);
         _benefit.setDescription(description);
         _benefit.setCreatedBy(sessionUser);
-        _benefit.setCountry(new Country(this.getCountryId()));
+        _benefit.setCountry(this.getCountry());
         return _benefit;
     }
 }
