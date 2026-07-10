@@ -5,19 +5,31 @@ import com.personal.shared.notifications.Notification;
 public class FinanceCategoryNotificationFactory {
 
     public static Notification CreateFinanceCategoryFail() {
-        return new Notification("Ha ocurrido un error mientras se creaba el tipo de usuario ");
+        return new Notification("Ha ocurrido un error mientras se creaba la categoría financiera ");
+    }
+
+    public static Notification CreateFinanceCategorySuccess() {
+        return new Notification("La categoría financiera se ha creado correctamente.");
     }
 
     public static Notification UpdateFinanceCategoryFail() {
-        return new Notification("Ha ocurrido un error mientras se actualizaba el tipo de usuario ");
+        return new Notification("Ha ocurrido un error mientras se actualizaba la categoría financiera ");
+    }
+
+    public static Notification UpdateFinanceCategorySuccess() {
+        return new Notification("La categoría financiera se ha actualizado correctamente.");
     }
 
     public static Notification DeleteFinanceCategoryFail() {
-        return new Notification("Ha ocurrido un error mientras se eliminaba el tipo de usuario ");
+        return new Notification("Ha ocurrido un error mientras se eliminaba la categoría financiera ");
+    }
+
+    public static Notification DeleteFinanceCategorySuccess() {
+        return new Notification("La categoría financiera se ha eliminado correctamente.");
     }
 
     public static Notification FetchNull() {
-        return new Notification("No se han encontrado tipos de usuario.");
+        return new Notification("No se han encontrado resultados.");
     }
 
 }

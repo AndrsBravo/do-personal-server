@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.personal.backoffice.userrole.entities.UserRole;
 import com.personal.backoffice.userrole.notifications.UserRoleNotificationFactory;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 public class UserRoleResultFactory {
 

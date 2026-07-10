@@ -1,16 +1,26 @@
 package com.personal.business.employeedeductionfeed.factories;
 
-import com.personal.business.employeedeductionfeed.create.services.CreateEmployeeDeductionFeedService;
-import com.personal.business.employeedeductionfeed.delete.services.DeleteEmployeeDeductionFeedService;
 import com.personal.business.employeedeductionfeed.filter.services.FilterEmployeeDeductionFeedService;
-import com.personal.business.employeedeductionfeed.update.services.EditEmployeeDeductionFeedService;
+import com.personal.business.employeedeductionfeed.notifications.EmployeeDeductionFeedNotificationFactory;
 import com.personal.server.dbclient.DbClientMSSQLFactory;
+import com.personal.shared.factories.CreateService;
+import com.personal.shared.factories.CreateServiceBuilder;
+import com.personal.shared.factories.DeleteService;
+import com.personal.shared.factories.DeleteServiceBuilder;
+import com.personal.shared.factories.UpdateService;
+import com.personal.shared.factories.UpdateServiceBuilder;
 
 public class EmployeeDeductionFeedServiceFactory {
 
-    public static CreateEmployeeDeductionFeedService CreateEmployeeDeductionFeed(String dbClient) {
+    private static final String TABLE_NAME = "employee_deductions_feeds";
 
-        return new CreateEmployeeDeductionFeedService(DbClientMSSQLFactory.DbClient(dbClient));
+    public static CreateService CreateEmployeeDeductionFeed(String dbClient) {
+        return CreateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(EmployeeDeductionFeedNotificationFactory.CreateEmployeeDeductionFeedSuccess())
+                .withFailureNotification(EmployeeDeductionFeedNotificationFactory.CreateEmployeeDeductionFeedFail())
+                .build();
     }
 
     public static FilterEmployeeDeductionFeedService FilterEmployeeDeductionFeed(String dbClient) {
@@ -18,14 +28,24 @@ public class EmployeeDeductionFeedServiceFactory {
         return new FilterEmployeeDeductionFeedService(DbClientMSSQLFactory.DbClient(dbClient));
     }
 
-    public static EditEmployeeDeductionFeedService EditEmployeeDeductionFeed(String dbClient) {
+    public static UpdateService EditEmployeeDeductionFeed(String dbClient) {
 
-        return new EditEmployeeDeductionFeedService(DbClientMSSQLFactory.DbClient(dbClient));
+        return UpdateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(EmployeeDeductionFeedNotificationFactory.UpdateEmployeeDeductionFeedSuccess())
+                .withFailureNotification(EmployeeDeductionFeedNotificationFactory.UpdateEmployeeDeductionFeedFail())
+                .build();
     }
 
-    public static DeleteEmployeeDeductionFeedService DeleteEmployeeDeductionFeed(String dbClient) {
+    public static DeleteService DeleteEmployeeDeductionFeed(String dbClient) {
 
-        return new DeleteEmployeeDeductionFeedService(DbClientMSSQLFactory.DbClient(dbClient));
+        return DeleteServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(EmployeeDeductionFeedNotificationFactory.DeleteEmployeeDeductionFeedSuccess())
+                .withFailureNotification(EmployeeDeductionFeedNotificationFactory.DeleteEmployeeDeductionFeedFail())
+                .build();
     }
 
 }

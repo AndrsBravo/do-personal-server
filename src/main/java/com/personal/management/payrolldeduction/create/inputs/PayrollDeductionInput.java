@@ -1,7 +1,7 @@
 package com.personal.management.payrolldeduction.create.inputs;
 
 import com.personal.management.payrolldeduction.entities.PayrollDeduction;
-import com.personal.management.shared.inputs.CountryInputBase;
+import com.personal.backoffice.shared.inputs.CountryInputBase;
 import com.personal.shared.core.entities.SharedDeduction;
 import com.personal.shared.core.entities.SharedPayroll;
 

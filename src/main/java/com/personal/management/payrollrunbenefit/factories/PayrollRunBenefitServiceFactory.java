@@ -1,16 +1,26 @@
 package com.personal.management.payrollrunbenefit.factories;
 
-import com.personal.management.payrollrunbenefit.create.services.CreatePayrollRunBenefitService;
-import com.personal.management.payrollrunbenefit.delete.services.DeletePayrollRunBenefitService;
 import com.personal.management.payrollrunbenefit.filter.services.FilterPayrollRunBenefitService;
-import com.personal.management.payrollrunbenefit.update.services.EditPayrollRunBenefitService;
+import com.personal.management.payrollrunbenefit.notifications.PayrollRunBenefitNotificationFactory;
 import com.personal.server.dbclient.DbClientMSSQLFactory;
+import com.personal.shared.factories.CreateService;
+import com.personal.shared.factories.CreateServiceBuilder;
+import com.personal.shared.factories.DeleteService;
+import com.personal.shared.factories.DeleteServiceBuilder;
+import com.personal.shared.factories.UpdateService;
+import com.personal.shared.factories.UpdateServiceBuilder;
 
 public class PayrollRunBenefitServiceFactory {
 
-    public static CreatePayrollRunBenefitService CreatePayrollRunBenefit() {
+    private static final String TABLE_NAME = "payroll_runs_benefits";
 
-        return new CreatePayrollRunBenefitService(DbClientMSSQLFactory.Management());
+    public static CreateService CreatePayrollRunBenefit() {
+        return CreateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.Management())
+                .withSuccessNotification(PayrollRunBenefitNotificationFactory.CreatePayrollRunBenefitSuccess())
+                .withFailureNotification(PayrollRunBenefitNotificationFactory.CreatePayrollRunBenefitFail())
+                .build();
     }
 
     public static FilterPayrollRunBenefitService FilterPayrollRunBenefit() {
@@ -18,14 +28,24 @@ public class PayrollRunBenefitServiceFactory {
         return new FilterPayrollRunBenefitService(DbClientMSSQLFactory.Management());
     }
 
-    public static EditPayrollRunBenefitService EditPayrollRunBenefit() {
+    public static UpdateService EditPayrollRunBenefit() {
 
-        return new EditPayrollRunBenefitService(DbClientMSSQLFactory.Management());
+        return UpdateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.Management())
+                .withSuccessNotification(PayrollRunBenefitNotificationFactory.UpdatePayrollRunBenefitSuccess())
+                .withFailureNotification(PayrollRunBenefitNotificationFactory.UpdatePayrollRunBenefitFail())
+                .build();
     }
 
-    public static DeletePayrollRunBenefitService DeletePayrollRunBenefit() {
+    public static DeleteService DeletePayrollRunBenefit() {
 
-        return new DeletePayrollRunBenefitService(DbClientMSSQLFactory.Management());
+        return DeleteServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.Management())
+                .withSuccessNotification(PayrollRunBenefitNotificationFactory.DeletePayrollRunBenefitSuccess())
+                .withFailureNotification(PayrollRunBenefitNotificationFactory.DeletePayrollRunBenefitFail())
+                .build();
     }
 
 }

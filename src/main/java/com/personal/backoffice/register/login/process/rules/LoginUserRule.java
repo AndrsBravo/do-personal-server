@@ -20,7 +20,7 @@ public class LoginUserRule implements IProcessRule<LoginProcess> {
 
         var userByEmailForLogin = UserServiceFactory.FilterUser().filter(query);
 
-        if (userByEmailForLogin.getResult() == null) {
+        if (userByEmailForLogin.getRecords() < 1) {
             process.addLog(pLogger.WARNING("Login by email", "User not found with email: " + user.getEmail()));
             process.stop();
             return;

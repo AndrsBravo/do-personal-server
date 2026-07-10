@@ -10,7 +10,7 @@ public class MigrationProcessExecutorTest {
     }
 
     @Test
-    public void testBuilder() {
+    public void testMigrationProcess() {
         MigrationProcess migrationProcess = MigrationProcessExecutor
                 .builder().init("")
                 .onStateChanged((state, process) -> {

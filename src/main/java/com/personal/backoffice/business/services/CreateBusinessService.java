@@ -2,15 +2,16 @@ package com.personal.backoffice.business.services;
 
 import java.util.Optional;
 
-import com.personal.backoffice.business.entities.Business;
-import com.personal.backoffice.business.factories.BusinessResultFactory;
+import com.personal.backoffice.business.notifications.BusinessNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.CreateResult;
+import com.personal.shared.services.entities.CreateResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class CreateBusinessService implements ICreateService<Business> {
+public class CreateBusinessService implements ICreateService {
 
     private final Optional<DbClient> dbBusiness;
 
@@ -19,9 +20,9 @@ public class CreateBusinessService implements ICreateService<Business> {
     }
 
     @Override
-    public ServiceResult<Business> create(Query query) {
+    public CreateResult create(Query query) {
         if (dbBusiness.isEmpty()) {
-            return BusinessResultFactory.CreateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbBusiness.get();
@@ -29,24 +30,24 @@ public class CreateBusinessService implements ICreateService<Business> {
         var insertQuery = query.InsertInto("business").Get();
 
         System.out.println(insertQuery);
-        long result = 0;
 
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createInsert(insertQuery)
                     .params(query.getParams())
                     .execute();
 
+            return CreateResultBuilder.build()
+                    .withRecords(records)
+                    .withNotification(BusinessNotificationFactory.CreateBusinessSuccess())
+                    .get();
         } catch (Exception e) {
             //System.out.println("Hubo una excepción al crear el tipo de empresa " + e.getMessage());
-            return BusinessResultFactory.CreateFail();
+            return CreateResultBuilder.build()
+                    .withException(e)
+                    .withNotification(BusinessNotificationFactory.CreateBusinessFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return BusinessResultFactory.CreateFail();
-        }
-
-        return BusinessResultFactory.CreateSuccess(new Business());
 
     }
 

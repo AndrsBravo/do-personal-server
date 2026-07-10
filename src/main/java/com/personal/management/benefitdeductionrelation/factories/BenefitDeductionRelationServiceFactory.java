@@ -1,16 +1,26 @@
 package com.personal.management.benefitdeductionrelation.factories;
 
-import com.personal.management.benefitdeductionrelation.create.services.CreateBenefitDeductionRelationService;
-import com.personal.management.benefitdeductionrelation.delete.services.DeleteBenefitDeductionRelationService;
 import com.personal.management.benefitdeductionrelation.filter.services.FilterBenefitDeductionRelationService;
-import com.personal.management.benefitdeductionrelation.update.services.EditBenefitDeductionRelationService;
+import com.personal.management.benefitdeductionrelation.notifications.BenefitDeductionRelationNotificationFactory;
 import com.personal.server.dbclient.DbClientMSSQLFactory;
+import com.personal.shared.factories.CreateService;
+import com.personal.shared.factories.CreateServiceBuilder;
+import com.personal.shared.factories.DeleteService;
+import com.personal.shared.factories.DeleteServiceBuilder;
+import com.personal.shared.factories.UpdateService;
+import com.personal.shared.factories.UpdateServiceBuilder;
 
 public class BenefitDeductionRelationServiceFactory {
 
-    public static CreateBenefitDeductionRelationService CreateBenefitDeductionRelation() {
+    private static final String TABLE_NAME = "benefits_deductions_base";
 
-        return new CreateBenefitDeductionRelationService(DbClientMSSQLFactory.Management());
+    public static CreateService CreateBenefitDeductionRelation() {
+        return CreateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.Management())
+                .withSuccessNotification(BenefitDeductionRelationNotificationFactory.CreateBenefitDeductionRelationSuccess())
+                .withFailureNotification(BenefitDeductionRelationNotificationFactory.CreateBenefitDeductionRelationFail())
+                .build();
     }
 
     public static FilterBenefitDeductionRelationService FilterBenefitDeductionRelation() {
@@ -18,14 +28,24 @@ public class BenefitDeductionRelationServiceFactory {
         return new FilterBenefitDeductionRelationService(DbClientMSSQLFactory.Management());
     }
 
-    public static EditBenefitDeductionRelationService EditBenefitDeductionRelation() {
+    public static UpdateService EditBenefitDeductionRelation() {
 
-        return new EditBenefitDeductionRelationService(DbClientMSSQLFactory.Management());
+        return UpdateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.Management())
+                .withSuccessNotification(BenefitDeductionRelationNotificationFactory.UpdateBenefitDeductionRelationSuccess())
+                .withFailureNotification(BenefitDeductionRelationNotificationFactory.UpdateBenefitDeductionRelationFail())
+                .build();
     }
 
-    public static DeleteBenefitDeductionRelationService DeleteBenefitDeductionRelation() {
+    public static DeleteService DeleteBenefitDeductionRelation() {
 
-        return new DeleteBenefitDeductionRelationService(DbClientMSSQLFactory.Management());
+        return DeleteServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.Management())
+                .withSuccessNotification(BenefitDeductionRelationNotificationFactory.DeleteBenefitDeductionRelationSuccess())
+                .withFailureNotification(BenefitDeductionRelationNotificationFactory.DeleteBenefitDeductionRelationFail())
+                .build();
     }
 
 }

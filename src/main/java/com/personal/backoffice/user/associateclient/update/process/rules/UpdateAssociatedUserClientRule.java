@@ -29,7 +29,7 @@ public class UpdateAssociatedUserClientRule implements IProcessRule<UpdateAssoci
 
         var update = UserServiceFactory.UpdateAssociatedUserClient().edit(query);
 
-        if (update.getResult() == null) {
+        if (update.getRecords() < 1) {
             process.addLog(pLogger.ERROR("Modificar asociación Usuario y Cliente", "Error al asociar usuario a cliente: " + update.getNotification().message()));
             process.stopWithErrors();
             return;

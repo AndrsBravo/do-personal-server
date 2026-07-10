@@ -1,7 +1,7 @@
 package com.personal.backoffice.system.databases.process.migration.rules;
 
+import com.personal.backoffice.system.databases.factories.SystemServiceFactory;
 import com.personal.backoffice.system.databases.process.migration.MigrationProcess;
-import com.personal.backoffice.system.factories.SystemServiceFactory;
 import com.personal.shared.process.IProcessRule;
 import com.personal.shared.process.logs.LogFactory;
 

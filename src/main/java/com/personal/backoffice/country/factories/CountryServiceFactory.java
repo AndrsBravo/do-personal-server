@@ -1,16 +1,27 @@
 package com.personal.backoffice.country.factories;
 
-import com.personal.backoffice.country.create.services.CreateCountryService;
-import com.personal.backoffice.country.delete.services.DeleteCountryService;
 import com.personal.backoffice.country.filter.services.FilterCountryService;
-import com.personal.backoffice.country.update.services.EditCountryService;
+import com.personal.backoffice.country.notifications.CountryNotificationFactory;
 import com.personal.server.dbclient.DbClientMSSQLFactory;
+import com.personal.shared.factories.CreateService;
+import com.personal.shared.factories.CreateServiceBuilder;
+import com.personal.shared.factories.DeleteService;
+import com.personal.shared.factories.DeleteServiceBuilder;
+import com.personal.shared.factories.UpdateService;
+import com.personal.shared.factories.UpdateServiceBuilder;
 
 public class CountryServiceFactory {
 
-    public static CreateCountryService CreateCountry() {
+    private static final String TABLE_NAME = "countries";
 
-        return new CreateCountryService(DbClientMSSQLFactory.SystemMaster());
+    public static CreateService CreateCountry() {
+        return CreateServiceBuilder
+                .builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.SystemMaster())
+                .withSuccessNotification(CountryNotificationFactory.CreateCountrySuccess())
+                .withFailureNotification(CountryNotificationFactory.CreateCountryFail())
+                .build();
     }
 
     public static FilterCountryService FilterCountries() {
@@ -18,14 +29,24 @@ public class CountryServiceFactory {
         return new FilterCountryService(DbClientMSSQLFactory.SystemMaster());
     }
 
-    public static EditCountryService EditCountry() {
+    public static UpdateService EditCountry() {
 
-        return new EditCountryService(DbClientMSSQLFactory.SystemMaster());
+        return UpdateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.SystemMaster())
+                .withSuccessNotification(CountryNotificationFactory.UpdateCountrySuccess())
+                .withFailureNotification(CountryNotificationFactory.UpdateCountryFail())
+                .build();
     }
 
-    public static DeleteCountryService DeleteCountry() {
+    public static DeleteService DeleteCountry() {
 
-        return new DeleteCountryService(DbClientMSSQLFactory.SystemMaster());
+        return DeleteServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.SystemMaster())
+                .withSuccessNotification(CountryNotificationFactory.DeleteCountrySuccess())
+                .withFailureNotification(CountryNotificationFactory.DeleteCountryFail())
+                .build();
     }
 
 }

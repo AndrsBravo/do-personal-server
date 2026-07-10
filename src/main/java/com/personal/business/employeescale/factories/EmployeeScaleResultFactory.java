@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.personal.business.employeescale.entities.EmployeeScale;
 import com.personal.business.employeescale.notifications.EmployeeScaleNotificationFactory;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 public class EmployeeScaleResultFactory {
 

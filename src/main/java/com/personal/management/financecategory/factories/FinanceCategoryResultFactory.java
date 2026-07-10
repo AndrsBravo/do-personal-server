@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.personal.management.financecategory.entities.FinanceCategory;
 import com.personal.management.financecategory.notifications.FinanceCategoryNotificationFactory;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 public class FinanceCategoryResultFactory {
 

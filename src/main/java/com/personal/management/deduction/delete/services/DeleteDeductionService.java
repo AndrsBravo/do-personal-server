@@ -6,7 +6,7 @@ import com.personal.management.deduction.entities.Deduction;
 import com.personal.management.deduction.factories.DeductionResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 import io.helidon.dbclient.DbClient;
 

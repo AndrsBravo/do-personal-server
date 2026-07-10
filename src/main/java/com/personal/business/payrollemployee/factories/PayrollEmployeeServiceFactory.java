@@ -1,16 +1,26 @@
 package com.personal.business.payrollemployee.factories;
 
-import com.personal.business.payrollemployee.create.services.CreatePayrollEmployeeService;
-import com.personal.business.payrollemployee.delete.services.DeletePayrollEmployeeService;
 import com.personal.business.payrollemployee.filter.services.FilterPayrollEmployeeService;
-import com.personal.business.payrollemployee.update.services.EditPayrollEmployeeService;
+import com.personal.business.payrollemployee.notifications.PayrollEmployeeNotificationFactory;
 import com.personal.server.dbclient.DbClientMSSQLFactory;
+import com.personal.shared.factories.CreateService;
+import com.personal.shared.factories.CreateServiceBuilder;
+import com.personal.shared.factories.DeleteService;
+import com.personal.shared.factories.DeleteServiceBuilder;
+import com.personal.shared.factories.UpdateService;
+import com.personal.shared.factories.UpdateServiceBuilder;
 
 public class PayrollEmployeeServiceFactory {
 
-    public static CreatePayrollEmployeeService CreatePayrollEmployee(String dbClient) {
+    private static final String TABLE_NAME = "payroll_employee";
 
-        return new CreatePayrollEmployeeService(DbClientMSSQLFactory.DbClient(dbClient));
+    public static CreateService CreatePayrollEmployee(String dbClient) {
+        return CreateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(PayrollEmployeeNotificationFactory.CreatePayrollEmployeeSuccess())
+                .withFailureNotification(PayrollEmployeeNotificationFactory.CreatePayrollEmployeeFail())
+                .build();
     }
 
     public static FilterPayrollEmployeeService FilterPayrollEmployee(String dbClient) {
@@ -18,14 +28,24 @@ public class PayrollEmployeeServiceFactory {
         return new FilterPayrollEmployeeService(DbClientMSSQLFactory.DbClient(dbClient));
     }
 
-    public static EditPayrollEmployeeService EditPayrollEmployee(String dbClient) {
+    public static UpdateService EditPayrollEmployee(String dbClient) {
 
-        return new EditPayrollEmployeeService(DbClientMSSQLFactory.DbClient(dbClient));
+        return UpdateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(PayrollEmployeeNotificationFactory.UpdatePayrollEmployeeSuccess())
+                .withFailureNotification(PayrollEmployeeNotificationFactory.UpdatePayrollEmployeeFail())
+                .build();
     }
 
-    public static DeletePayrollEmployeeService DeletePayrollEmployee(String dbClient) {
+    public static DeleteService DeletePayrollEmployee(String dbClient) {
 
-        return new DeletePayrollEmployeeService(DbClientMSSQLFactory.DbClient(dbClient));
+        return DeleteServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(PayrollEmployeeNotificationFactory.DeletePayrollEmployeeSuccess())
+                .withFailureNotification(PayrollEmployeeNotificationFactory.DeletePayrollEmployeeFail())
+                .build();
     }
 
 }

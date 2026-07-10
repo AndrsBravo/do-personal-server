@@ -10,26 +10,38 @@ import com.personal.backoffice.user.associateclient.add.services.AssociateUserCl
 import com.personal.backoffice.user.associateclient.delete.services.DeleteAssociatedUserClientService;
 import com.personal.backoffice.user.associateclient.filter.services.FilterAssociatedUserClientService;
 import com.personal.backoffice.user.associateclient.update.services.UpdateAssociatedUserClientService;
-import com.personal.backoffice.user.create.services.CreateUserService;
 import com.personal.backoffice.user.filter.services.FilterUserService;
-import com.personal.backoffice.user.update.services.EditUserService;
+import com.personal.backoffice.user.notifications.UserNotificationFactory;
 import com.personal.server.dbclient.DbClientMSSQLFactory;
+import com.personal.shared.factories.CreateService;
+import com.personal.shared.factories.CreateServiceBuilder;
+import com.personal.shared.factories.UpdateService;
+import com.personal.shared.factories.UpdateServiceBuilder;
 
 import io.helidon.dbclient.DbClient;
 
 public class UserServiceFactory {
 
+    private static final String TABLE_NAME = "users";
     private static Optional<DbClient> dbClient = DbClientMSSQLFactory.SystemMaster();
 
-    public static CreateUserService CreateUser() {
-
-        return new CreateUserService(dbClient);
-
+    public static CreateService CreateUser() {
+        return CreateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(dbClient)
+                .withSuccessNotification(UserNotificationFactory.CreateUserSuccess())
+                .withFailureNotification(UserNotificationFactory.CreateUserFail())
+                .build();
     }
 
-    public static EditUserService EditUser() {
+    public static UpdateService EditUser() {
 
-        return new EditUserService(dbClient);
+        return UpdateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(dbClient)
+                .withSuccessNotification(UserNotificationFactory.UpdateUserSuccess())
+                .withFailureNotification(UserNotificationFactory.UpdateUserFail())
+                .build();
 
     }
 

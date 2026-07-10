@@ -1,7 +1,7 @@
 package com.personal.management.country.create.inputs;
 
 import com.personal.management.country.entities.Country;
-import com.personal.management.shared.inputs.CountryInputBase;
+import com.personal.backoffice.shared.inputs.CountryInputBase;
 
 public class CountryInput extends CountryInputBase {
 

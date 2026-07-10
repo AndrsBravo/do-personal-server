@@ -2,9 +2,9 @@ package com.personal.management.payrollruntype.factories;
 
 import java.util.List;
 
+import com.personal.backoffice.shared.entities.TypeEntity;
 import com.personal.management.payrollruntype.notifications.PayrollRunTypeNotificationFactory;
-import com.personal.management.shared.entities.TypeEntity;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 public class PayrollRunTypeResultFactory {
 

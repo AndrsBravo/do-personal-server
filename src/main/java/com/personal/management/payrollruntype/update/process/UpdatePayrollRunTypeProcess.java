@@ -1,6 +1,6 @@
 package com.personal.management.payrollruntype.update.process;
 
-import com.personal.management.shared.entities.TypeEntity;
+import com.personal.backoffice.shared.entities.TypeEntity;
 import com.personal.shared.process.SupplierProcess;
 
 public class UpdatePayrollRunTypeProcess extends SupplierProcess<TypeEntity> {

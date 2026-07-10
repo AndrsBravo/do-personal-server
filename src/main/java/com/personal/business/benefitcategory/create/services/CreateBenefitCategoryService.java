@@ -2,15 +2,16 @@ package com.personal.business.benefitcategory.create.services;
 
 import java.util.Optional;
 
-import com.personal.business.benefitcategory.entities.BenefitCategory;
-import com.personal.business.benefitcategory.factories.BenefitCategoryResultFactory;
+import com.personal.business.benefitcategory.notifications.BenefitCategoryNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.CreateResult;
+import com.personal.shared.services.entities.CreateResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class CreateBenefitCategoryService implements ICreateService<BenefitCategory> {
+public class CreateBenefitCategoryService implements ICreateService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,34 +20,32 @@ public class CreateBenefitCategoryService implements ICreateService<BenefitCateg
     }
 
     @Override
-    public ServiceResult<BenefitCategory> create(Query query) {
+    public CreateResult create(Query query) {
         if (dbClient.isEmpty()) {
-            return BenefitCategoryResultFactory.CreateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var insertQuery = query.InsertInto("benefit_categories").Get();
 
-        //System.out.println(insertQuery);
-        long result = 0;
-
         try {
 
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createInsert(insertQuery)
                     .params(query.getParams())
                     .execute();
+            return CreateResultBuilder.build()
+                    .withRecords(records)
+                    .withNotification(BenefitCategoryNotificationFactory.CreateBenefitCategorySuccess())
+                    .get();
         } catch (Exception e) {
 
-            return BenefitCategoryResultFactory.CreateFail();
+            return CreateResultBuilder.build()
+                    .withException(e)
+                    .withNotification(BenefitCategoryNotificationFactory.CreateBenefitCategoryFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return BenefitCategoryResultFactory.CreateFail();
-        }
-
-        return BenefitCategoryResultFactory.CreateSuccess(new BenefitCategory());
 
     }
 

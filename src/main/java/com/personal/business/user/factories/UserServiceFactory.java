@@ -2,28 +2,39 @@ package com.personal.business.user.factories;
 
 import java.util.Optional;
 
-import com.personal.business.user.create.services.CreateUserService;
 import com.personal.business.user.filter.services.FilterUserService;
-import com.personal.business.user.update.services.EditUserService;
+import com.personal.business.user.notifications.UserNotificationFactory;
 import com.personal.server.dbclient.DbClientMSSQLFactory;
+import com.personal.shared.factories.CreateService;
+import com.personal.shared.factories.CreateServiceBuilder;
+import com.personal.shared.factories.UpdateService;
+import com.personal.shared.factories.UpdateServiceBuilder;
 
 import io.helidon.dbclient.DbClient;
 
 public class UserServiceFactory {
 
-    public static CreateUserService CreateUser(String dbName) {
+    private static final String TABLE_NAME = "users";
 
-        Optional<DbClient> dbClient = DbClientMSSQLFactory.DbClient(dbName);
+    public static CreateService CreateUser(String dbName) {
 
-        return new CreateUserService(dbClient);
+        return CreateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbName))
+                .withSuccessNotification(UserNotificationFactory.CreateUserSuccess())
+                .withFailureNotification(UserNotificationFactory.CreateUserFail())
+                .build();
 
     }
 
-    public static EditUserService EditUser(String dbName) {
+    public static UpdateService EditUser(String dbName) {
 
-        Optional<DbClient> dbClient = DbClientMSSQLFactory.DbClient(dbName);
-
-        return new EditUserService(dbClient);
+        return UpdateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbName))
+                .withSuccessNotification(UserNotificationFactory.UpdateUserSuccess())
+                .withFailureNotification(UserNotificationFactory.UpdateUserFail())
+                .build();
 
     }
 

@@ -6,7 +6,7 @@ import com.personal.business.employeebenefitfeed.entities.EmployeeBenefitFeed;
 import com.personal.business.employeebenefitfeed.factories.EmployeeBenefitFeedResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IEditService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 import io.helidon.dbclient.DbClient;
 

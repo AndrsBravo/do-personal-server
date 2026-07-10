@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import com.personal.business.deduction.entities.Deduction;
 import com.personal.business.temporalfrequency.entities.TemporalFrequency;
 import com.personal.management.deductionrate.entities.DeductionRate;
-import com.personal.management.shared.inputs.CountryInputBase;
+import com.personal.backoffice.shared.inputs.CountryInputBase;
 
 public class DeductionRateInput extends CountryInputBase {
 

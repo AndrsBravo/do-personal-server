@@ -1,16 +1,26 @@
 package com.personal.business.financecategory.factories;
 
-import com.personal.business.financecategory.create.services.CreateFinanceCategoryService;
-import com.personal.business.financecategory.delete.services.DeleteFinanceCategoryService;
 import com.personal.business.financecategory.filter.services.FilterFinanceCategoryService;
-import com.personal.business.financecategory.update.services.EditFinanceCategoryService;
+import com.personal.business.financecategory.notifications.FinanceCategoryNotificationFactory;
 import com.personal.server.dbclient.DbClientMSSQLFactory;
+import com.personal.shared.factories.CreateService;
+import com.personal.shared.factories.CreateServiceBuilder;
+import com.personal.shared.factories.DeleteService;
+import com.personal.shared.factories.DeleteServiceBuilder;
+import com.personal.shared.factories.UpdateService;
+import com.personal.shared.factories.UpdateServiceBuilder;
 
 public class FinanceCategoryServiceFactory {
 
-    public static CreateFinanceCategoryService CreateFinanceCategory(String dbClient) {
+    private static final String TABLE_NAME = "finance_categories";
 
-        return new CreateFinanceCategoryService(DbClientMSSQLFactory.DbClient(dbClient));
+    public static CreateService CreateFinanceCategory(String dbClient) {
+        return CreateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(FinanceCategoryNotificationFactory.CreateFinanceCategorySuccess())
+                .withFailureNotification(FinanceCategoryNotificationFactory.CreateFinanceCategoryFail())
+                .build();
     }
 
     public static FilterFinanceCategoryService FilterFinanceCategory(String dbClient) {
@@ -18,14 +28,24 @@ public class FinanceCategoryServiceFactory {
         return new FilterFinanceCategoryService(DbClientMSSQLFactory.DbClient(dbClient));
     }
 
-    public static EditFinanceCategoryService EditFinanceCategory(String dbClient) {
+    public static UpdateService EditFinanceCategory(String dbClient) {
 
-        return new EditFinanceCategoryService(DbClientMSSQLFactory.DbClient(dbClient));
+        return UpdateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(FinanceCategoryNotificationFactory.UpdateFinanceCategorySuccess())
+                .withFailureNotification(FinanceCategoryNotificationFactory.UpdateFinanceCategoryFail())
+                .build();
     }
 
-    public static DeleteFinanceCategoryService DeleteFinanceCategory(String dbClient) {
+    public static DeleteService DeleteFinanceCategory(String dbClient) {
 
-        return new DeleteFinanceCategoryService(DbClientMSSQLFactory.DbClient(dbClient));
+        return DeleteServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(FinanceCategoryNotificationFactory.DeleteFinanceCategorySuccess())
+                .withFailureNotification(FinanceCategoryNotificationFactory.DeleteFinanceCategoryFail())
+                .build();
     }
 
 }

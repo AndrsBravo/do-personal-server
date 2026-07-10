@@ -1,16 +1,26 @@
 package com.personal.business.origincategory.factories;
 
-import com.personal.business.origincategory.create.services.CreateOriginCategoryService;
-import com.personal.business.origincategory.delete.services.DeleteOriginCategoryService;
 import com.personal.business.origincategory.filter.services.FilterOriginCategoryService;
-import com.personal.business.origincategory.update.services.EditOriginCategoryService;
+import com.personal.business.origincategory.notifications.OriginCategoryNotificationFactory;
 import com.personal.server.dbclient.DbClientMSSQLFactory;
+import com.personal.shared.factories.CreateService;
+import com.personal.shared.factories.CreateServiceBuilder;
+import com.personal.shared.factories.DeleteService;
+import com.personal.shared.factories.DeleteServiceBuilder;
+import com.personal.shared.factories.UpdateService;
+import com.personal.shared.factories.UpdateServiceBuilder;
 
 public class OriginCategoryServiceFactory {
 
-    public static CreateOriginCategoryService CreateOriginCategory(String dbClient) {
+    private static final String TABLE_NAME = "origin_categories";
 
-        return new CreateOriginCategoryService(DbClientMSSQLFactory.DbClient(dbClient));
+    public static CreateService CreateOriginCategory(String dbClient) {
+        return CreateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(OriginCategoryNotificationFactory.CreateOriginCategorySuccess())
+                .withFailureNotification(OriginCategoryNotificationFactory.CreateOriginCategoryFail())
+                .build();
     }
 
     public static FilterOriginCategoryService FilterOriginCategory(String dbClient) {
@@ -18,14 +28,24 @@ public class OriginCategoryServiceFactory {
         return new FilterOriginCategoryService(DbClientMSSQLFactory.DbClient(dbClient));
     }
 
-    public static EditOriginCategoryService EditOriginCategory(String dbClient) {
+    public static UpdateService EditOriginCategory(String dbClient) {
 
-        return new EditOriginCategoryService(DbClientMSSQLFactory.DbClient(dbClient));
+        return UpdateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(OriginCategoryNotificationFactory.UpdateOriginCategorySuccess())
+                .withFailureNotification(OriginCategoryNotificationFactory.UpdateOriginCategoryFail())
+                .build();
     }
 
-    public static DeleteOriginCategoryService DeleteOriginCategory(String dbClient) {
+    public static DeleteService DeleteOriginCategory(String dbClient) {
 
-        return new DeleteOriginCategoryService(DbClientMSSQLFactory.DbClient(dbClient));
+        return DeleteServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(OriginCategoryNotificationFactory.DeleteOriginCategorySuccess())
+                .withFailureNotification(OriginCategoryNotificationFactory.DeleteOriginCategoryFail())
+                .build();
     }
 
 }

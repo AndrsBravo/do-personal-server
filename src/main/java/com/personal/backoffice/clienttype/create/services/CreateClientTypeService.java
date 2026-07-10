@@ -2,15 +2,16 @@ package com.personal.backoffice.clienttype.create.services;
 
 import java.util.Optional;
 
-import com.personal.backoffice.clienttype.factories.ClientTypeResultFactory;
-import com.personal.shared.entities.TypeEntityBase;
+import com.personal.backoffice.clienttype.notifications.ClientTypeNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.CreateResult;
+import com.personal.shared.services.entities.CreateResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class CreateClientTypeService implements ICreateService<TypeEntityBase> {
+public class CreateClientTypeService implements ICreateService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,34 +20,32 @@ public class CreateClientTypeService implements ICreateService<TypeEntityBase> {
     }
 
     @Override
-    public ServiceResult<TypeEntityBase> create(Query query) {
+    public CreateResult create(Query query) {
         if (dbClient.isEmpty()) {
-            return ClientTypeResultFactory.CreateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var insertQuery = query.InsertInto("client_types").Get();
 
-        //System.out.println(insertQuery);
-        long result = 0;
-
         try {
 
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createInsert(insertQuery)
                     .params(query.getParams())
                     .execute();
+            return CreateResultBuilder.build()
+                    .withRecords(records)
+                    .withNotification(ClientTypeNotificationFactory.CreateClientTypeSuccess())
+                    .get();
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al crear el tipo de cliente " + e.getMessage());
-            return ClientTypeResultFactory.CreateFail();
-        }
 
-        if (result == 0) {
-            return ClientTypeResultFactory.CreateFail();
+            return CreateResultBuilder.build()
+                    .withException(e)
+                    .withNotification(ClientTypeNotificationFactory.CreateClientTypeFail())
+                    .get();
         }
-
-        return ClientTypeResultFactory.CreateSuccess(new TypeEntityBase());
 
     }
 

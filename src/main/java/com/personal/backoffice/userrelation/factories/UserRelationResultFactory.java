@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.personal.backoffice.userrelation.entities.UserRelation;
 import com.personal.backoffice.userrelation.notifications.UserRelationNotificationFactory;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 public class UserRelationResultFactory {
 

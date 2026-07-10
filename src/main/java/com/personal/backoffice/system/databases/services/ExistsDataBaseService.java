@@ -5,7 +5,7 @@ import java.util.Optional;
 import com.personal.shared.notifications.Notification;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IGetService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 import io.helidon.dbclient.DbClient;
 

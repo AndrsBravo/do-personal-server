@@ -2,15 +2,16 @@ package com.personal.business.payrollruntype.create.services;
 
 import java.util.Optional;
 
-import com.personal.business.payrollruntype.factories.PayrollRunTypeResultFactory;
-import com.personal.business.shared.entities.TypeEntity;
+import com.personal.business.payrollruntype.notifications.PayrollRunTypeNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.CreateResult;
+import com.personal.shared.services.entities.CreateResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class CreatePayrollRunTypeService implements ICreateService<TypeEntity> {
+public class CreatePayrollRunTypeService implements ICreateService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,34 +20,32 @@ public class CreatePayrollRunTypeService implements ICreateService<TypeEntity> {
     }
 
     @Override
-    public ServiceResult<TypeEntity> create(Query query) {
+    public CreateResult create(Query query) {
         if (dbClient.isEmpty()) {
-            return PayrollRunTypeResultFactory.CreateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var insertQuery = query.InsertInto("payroll_runs_types").Get();
 
-        //System.out.println(insertQuery);
-        long result = 0;
-
         try {
 
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createInsert(insertQuery)
                     .params(query.getParams())
                     .execute();
+            return CreateResultBuilder.build()
+                    .withRecords(records)
+                    .withNotification(PayrollRunTypeNotificationFactory.CreatePayrollRunTypeSuccess())
+                    .get();
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al crear el tipo de cliente " + e.getMessage());
-            return PayrollRunTypeResultFactory.CreateFail();
-        }
 
-        if (result == 0) {
-            return PayrollRunTypeResultFactory.CreateFail();
+            return CreateResultBuilder.build()
+                    .withException(e)
+                    .withNotification(PayrollRunTypeNotificationFactory.CreatePayrollRunTypeFail())
+                    .get();
         }
-
-        return PayrollRunTypeResultFactory.CreateSuccess(new TypeEntity());
 
     }
 

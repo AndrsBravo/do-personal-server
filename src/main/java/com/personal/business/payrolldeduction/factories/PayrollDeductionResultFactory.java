@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.personal.business.payrolldeduction.entities.PayrollDeduction;
 import com.personal.business.payrolldeduction.notifications.PayrollDeductionNotificationFactory;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 public class PayrollDeductionResultFactory {
 

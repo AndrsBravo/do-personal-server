@@ -19,7 +19,7 @@ public class ValidateCountryRule implements IProcessRule<CreateCountryProcess> {
         query.Field("co_updated_at", country.getUpdatedAt().toString());
         query.Field("co_created_by", country.getCreatedBy().getId());
 
-        process.addLog(pLogger.INFO("Crear nuevo Tipo de Usuario", "Tipo de Usuario creado con éxito"));
+        process.addLog(pLogger.INFO("Crear nuevo País", "País validado correctamente!"));
 
     }
 

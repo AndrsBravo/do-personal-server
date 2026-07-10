@@ -7,7 +7,7 @@ import com.personal.backoffice.user.associateclient.entities.AssociateUserClient
 import com.personal.backoffice.user.entities.User;
 import com.personal.backoffice.user.notifications.UserNotificationFactory;
 import com.personal.shared.notifications.Notification;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 public class UserResultFactory {
 

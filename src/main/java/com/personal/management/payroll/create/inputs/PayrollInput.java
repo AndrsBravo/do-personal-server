@@ -2,7 +2,7 @@ package com.personal.management.payroll.create.inputs;
 
 import com.personal.business.temporalfrequency.entities.TemporalFrequency;
 import com.personal.management.payroll.entities.Payroll;
-import com.personal.management.shared.inputs.CountryInputBase;
+import com.personal.backoffice.shared.inputs.CountryInputBase;
 
 public class PayrollInput extends CountryInputBase {
 

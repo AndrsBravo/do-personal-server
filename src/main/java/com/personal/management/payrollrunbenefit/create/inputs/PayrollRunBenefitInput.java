@@ -1,7 +1,7 @@
 package com.personal.management.payrollrunbenefit.create.inputs;
 
 import com.personal.management.payrollrunbenefit.entities.PayrollRunBenefit;
-import com.personal.management.shared.inputs.CountryInputBase;
+import com.personal.backoffice.shared.inputs.CountryInputBase;
 import com.personal.shared.core.entities.SharedBenefit;
 import com.personal.shared.core.entities.SharedPayrollRun;
 

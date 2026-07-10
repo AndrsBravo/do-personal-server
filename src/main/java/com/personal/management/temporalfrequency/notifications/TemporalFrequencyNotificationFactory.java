@@ -5,19 +5,23 @@ import com.personal.shared.notifications.Notification;
 public class TemporalFrequencyNotificationFactory {
 
     public static Notification CreateTemporalFrequencyFail() {
-        return new Notification("Ha ocurrido un error mientras se creaba el tipo de usuario ");
+        return new Notification("Ha ocurrido un error mientras se creaba la frecuencia temporal ");
+    }
+
+    public static Notification CreateTemporalFrequencySuccess() {
+        return new Notification("La frecuencia temporal se ha creado correctamente.");
     }
 
     public static Notification UpdateTemporalFrequencyFail() {
-        return new Notification("Ha ocurrido un error mientras se actualizaba el tipo de usuario ");
+        return new Notification("Ha ocurrido un error mientras se actualizaba la frecuencia temporal ");
     }
 
     public static Notification DeleteTemporalFrequencyFail() {
-        return new Notification("Ha ocurrido un error mientras se eliminaba el tipo de usuario ");
+        return new Notification("Ha ocurrido un error mientras se eliminaba la frecuencia temporal ");
     }
 
     public static Notification FetchNull() {
-        return new Notification("No se han encontrado tipos de usuario.");
+        return new Notification("No se han encontrado resultados.");
     }
 
 }

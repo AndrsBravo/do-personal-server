@@ -9,8 +9,20 @@ public class UserNotificationFactory {
         return new Notification("Ha ocurrido un error mientras se creaba el usuario. ");
     }
 
-    public static Notification UserCreated(User user) {
-        return new Notification("El usuario " + user.getNames() + " fue creado exitosamente.");
+    public static Notification CreateUserSuccess() {
+        return new Notification("El usuario fue creado exitosamente.");
+    }
+
+    public static Notification CreateUserCredentialsFail() {
+        return new Notification("Ha ocurrido un error mientras se creaban las credenciales del usuario. ");
+    }
+
+    public static Notification CreateUserCredentialsSuccess() {
+        return new Notification("Las credenciales del usuario fueron creadas exitosamente.");
+    }
+
+    public static Notification UpdateUserSuccess() {
+        return new Notification("El usuario fue actualizado exitosamente.");
     }
 
     public static Notification UpdateUserFail() {
@@ -33,6 +45,10 @@ public class UserNotificationFactory {
         return new Notification("Ha ocurrido un error mientras se asociaba el cliente al usuario.");
     }
 
+    public static Notification AssociateUserClientSuccess() {
+        return new Notification("El cliente fue asociado exitosamente al usuario.");
+    }
+
     public static Notification DeleteAssociatedUserClientFail() {
         return new Notification("Ha ocurrido un error mientras se eliminaba la relación Cliente, Usuario.");
     }
@@ -51,6 +67,10 @@ public class UserNotificationFactory {
 
     public static Notification AssociateUserBusinessFail() {
         return new Notification("Ha ocurrido un error mientras se asociaba la empresa al usuario.");
+    }
+
+    public static Notification AssociateUserBusinessSuccess() {
+        return new Notification("La empresa fue asociada exitosamente al usuario.");
     }
 
     public static Notification DeleteAssociatedUserBusinessFail() {

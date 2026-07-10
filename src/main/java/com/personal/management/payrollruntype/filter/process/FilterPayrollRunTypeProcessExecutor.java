@@ -1,7 +1,7 @@
 package com.personal.management.payrollruntype.filter.process;
 
+import com.personal.backoffice.shared.entities.TypeEntity;
 import com.personal.management.payrollruntype.filter.process.rules.FilterPayrollRunTypeRule;
-import com.personal.management.shared.entities.TypeEntity;
 import com.personal.shared.inputs.FilterTypeInput;
 import com.personal.shared.process.FunctionalProcessExecutor;
 

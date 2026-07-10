@@ -2,17 +2,29 @@ package com.personal.backoffice.client.factories;
 
 import com.personal.backoffice.client.commercialplan.add.services.AddClientCommercialPlanService;
 import com.personal.backoffice.client.commercialplan.filter.services.FilterClientCommercialPlanService;
-import com.personal.backoffice.client.create.services.CreateClientService;
-import com.personal.backoffice.client.delete.services.DeleteClientService;
 import com.personal.backoffice.client.filter.services.FilterClientService;
-import com.personal.backoffice.client.update.services.EditClientService;
+import com.personal.backoffice.client.notifications.ClientNotificationFactory;
 import com.personal.server.dbclient.DbClientMSSQLFactory;
+import com.personal.shared.factories.CreateService;
+import com.personal.shared.factories.CreateServiceBuilder;
+import com.personal.shared.factories.DeleteService;
+import com.personal.shared.factories.DeleteServiceBuilder;
+import com.personal.shared.factories.UpdateService;
+import com.personal.shared.factories.UpdateServiceBuilder;
 
 public class ClientServiceFactory {
 
-    public static CreateClientService CreateClient() {
+    private static final String TABLE_NAME = "clients";
 
-        return new CreateClientService(DbClientMSSQLFactory.SystemMaster());
+    public static CreateService CreateClient() {
+
+        return CreateServiceBuilder
+                .builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.SystemMaster())
+                .withSuccessNotification(ClientNotificationFactory.CreateClientSuccess())
+                .withFailureNotification(ClientNotificationFactory.CreateClientFail())
+                .build();
     }
 
     public static FilterClientService FilterClients() {
@@ -20,14 +32,23 @@ public class ClientServiceFactory {
         return new FilterClientService(DbClientMSSQLFactory.SystemMaster());
     }
 
-    public static EditClientService EditClient() {
-
-        return new EditClientService(DbClientMSSQLFactory.SystemMaster());
+    public static UpdateService EditClient() {
+        return UpdateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.SystemMaster())
+                .withSuccessNotification(ClientNotificationFactory.UpdateClientSuccess())
+                .withFailureNotification(ClientNotificationFactory.UpdateClientFail())
+                .build();
     }
 
-    public static DeleteClientService DeleteClient() {
+    public static DeleteService DeleteClient() {
 
-        return new DeleteClientService(DbClientMSSQLFactory.SystemMaster());
+        return DeleteServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.SystemMaster())
+                .withSuccessNotification(ClientNotificationFactory.DeleteClientSuccess())
+                .withFailureNotification(ClientNotificationFactory.DeleteClientFail())
+                .build();
     }
 
     public static AddClientCommercialPlanService AddClientCommercialPlan() {

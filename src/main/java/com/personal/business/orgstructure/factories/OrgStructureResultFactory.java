@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.personal.business.orgstructure.entities.OrgStructure;
 import com.personal.business.orgstructure.notifications.OrgStructureNotificationFactory;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 public class OrgStructureResultFactory {
 

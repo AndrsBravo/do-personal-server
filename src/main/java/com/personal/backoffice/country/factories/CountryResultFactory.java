@@ -4,20 +4,20 @@ import java.util.List;
 
 import com.personal.backoffice.country.entities.Country;
 import com.personal.backoffice.country.notifications.CountryNotificationFactory;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 public class CountryResultFactory {
 
-    public static ServiceResult<Country> CreateFail() {
-        return new ServiceResult<>(CountryNotificationFactory.CreateCountryFail(), null);
+    public static ServiceResult<Country> CreateFail(String message) {
+        return new ServiceResult<>(CountryNotificationFactory.CreateCountryFail(message), null);
     }
 
     public static ServiceResult<Country> CreateSuccess(Country country) {
         return new ServiceResult<>(null, country);
     }
 
-    public static ServiceResult<Country> UpdateFail() {
-        return new ServiceResult<>(CountryNotificationFactory.UpdateCountryFail(), null);
+    public static ServiceResult<Country> UpdateFail(String message) {
+        return new ServiceResult<>(CountryNotificationFactory.UpdateCountryFail(message), null);
     }
 
     public static ServiceResult<Country> UpdateSuccess(Country country) {
@@ -28,12 +28,12 @@ public class CountryResultFactory {
         return new ServiceResult<>(null, country);
     }
 
-    public static ServiceResult<Country> DeleteFail() {
-        return new ServiceResult<>(CountryNotificationFactory.DeleteCountryFail(), null);
+    public static ServiceResult<Country> DeleteFail(String message) {
+        return new ServiceResult<>(CountryNotificationFactory.DeleteCountryFail(message), null);
     }
 
-    public static ServiceResult<List<Country>> FetchNull() {
-        return new ServiceResult<>(CountryNotificationFactory.FetchNull(), null);
+    public static ServiceResult<List<Country>> FetchNull(String message) {
+        return new ServiceResult<>(CountryNotificationFactory.FetchNull(message), null);
     }
 
     public static ServiceResult<List<Country>> FetchResult(List<Country> countries) {

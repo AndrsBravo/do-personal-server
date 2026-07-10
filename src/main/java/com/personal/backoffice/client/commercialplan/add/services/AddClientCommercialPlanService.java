@@ -2,15 +2,16 @@ package com.personal.backoffice.client.commercialplan.add.services;
 
 import java.util.Optional;
 
-import com.personal.backoffice.client.entities.ClientCommercialPlan;
-import com.personal.backoffice.client.factories.ClientResultFactory;
+import com.personal.backoffice.client.notifications.ClientNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.CreateResult;
+import com.personal.shared.services.entities.CreateResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class AddClientCommercialPlanService implements ICreateService<ClientCommercialPlan> {
+public class AddClientCommercialPlanService implements ICreateService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,34 +20,33 @@ public class AddClientCommercialPlanService implements ICreateService<ClientComm
     }
 
     @Override
-    public ServiceResult<ClientCommercialPlan> create(Query query) {
+    public CreateResult create(Query query) {
         if (dbClient.isEmpty()) {
-            return ClientResultFactory.AddCommercialPlanFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var insertQuery = query.InsertInto("client_commercial_plan").Get();
 
-        //System.out.println(insertQuery);
         //System.out.println(query.getParams());
-        long result = 0;
-
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createInsert(insertQuery)
                     .params(query.getParams())
                     .execute();
+
+            return CreateResultBuilder.build()
+                    .withRecords(records)
+                    .withNotification(ClientNotificationFactory.AddCommercialPlanSuccessful())
+                    .get();
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al crear el Plan Comercial del Cliente " + e.getMessage());
-            return ClientResultFactory.AddCommercialPlanFail();
+            //System.out.println("Hubo una excepción al crear el tipo de empresa " + e.getMessage());
+            return CreateResultBuilder.build()
+                    .withException(e)
+                    .withNotification(ClientNotificationFactory.AddCommercialPlanFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return ClientResultFactory.AddCommercialPlanFail();
-        }
-
-        return ClientResultFactory.AddCommercialPlanSuccess(new ClientCommercialPlan());
 
     }
 

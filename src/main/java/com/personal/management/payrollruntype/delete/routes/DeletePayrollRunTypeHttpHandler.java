@@ -1,7 +1,7 @@
 package com.personal.management.payrollruntype.delete.routes;
 
+import com.personal.backoffice.shared.entities.TypeEntity;
 import com.personal.management.payrollruntype.delete.process.DeletePayrollRunTypeProcessExecutor;
-import com.personal.management.shared.entities.TypeEntity;
 import com.personal.shared.process.ProcessState;
 
 import io.helidon.http.Status;

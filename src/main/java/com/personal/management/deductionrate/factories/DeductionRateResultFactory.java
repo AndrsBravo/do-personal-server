@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.personal.management.deductionrate.entities.DeductionRate;
 import com.personal.management.deductionrate.notifications.DeductionRateNotificationFactory;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 public class DeductionRateResultFactory {
 

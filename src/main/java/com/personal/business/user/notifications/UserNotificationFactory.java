@@ -8,12 +8,16 @@ public class UserNotificationFactory {
         return new Notification("Ha ocurrido un error mientras se creaba el usuario. ");
     }
 
-    public static Notification UserCreated() {
+    public static Notification CreateUserSuccess() {
         return new Notification("El usuario fue creado exitosamente.");
     }
 
     public static Notification UpdateUserFail() {
         return new Notification("Ha ocurrido un error mientras se actualizaba el usuario ");
+    }
+
+    public static Notification UpdateUserSuccess() {
+        return new Notification("El usuario se ha actualizado correctamente.");
     }
 
     public static Notification UserValidationFail() {

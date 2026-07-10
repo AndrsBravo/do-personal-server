@@ -1,7 +1,7 @@
 package com.personal.management.origincategory.create.inputs;
 
+import com.personal.backoffice.shared.inputs.CountryInputBase;
 import com.personal.management.origincategory.entities.OriginCategory;
-import com.personal.management.shared.inputs.CountryInputBase;
 
 public class OriginCategoryInput extends CountryInputBase {
 

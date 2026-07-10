@@ -1,0 +1,776 @@
+{
+    "countries": [
+        {
+            "code": "RD",
+            "name": "Republica Dominicana",
+            "createdBy": {
+                "Id": "H13A11L26A31"
+            }
+        }
+    ],
+    "user_types": [
+        {
+            "type": "master",
+            "title": "Master",
+            "description": "Usuario por defecto",
+            "createdBy": {
+                "Id": "H13A11L26A31"
+            }
+        },
+        {
+            "type": "system",
+            "title": "System",
+            "description": "Usuarios administradores del sistema",
+            "createdBy": {
+                "Id": "H13A11L26A31"
+            }
+        },
+        {
+            "type": "public",
+            "title": "Publico",
+            "description": "Auto creados y puede crear clientes, empresas y otras entidades",
+            "createdBy": {
+                "Id": "H13A11L26A31"
+            }
+        },
+        {
+            "type": "limited",
+            "title": "Limitado",
+            "description": "Auto creados Sin perfil de cliente, creados por un cliente",
+            "createdBy": {
+                "Id": "H13A11L26A31"
+            }
+        },
+        {
+            "type": "owned",
+            "title": "Owned",
+            "description": "Creados por un otro usuario para asignar entidades.",
+            "createdBy": {
+                "Id": "H13A11L26A31"
+            }
+        }
+    ],
+    "user_relations": [
+        {
+            "relation": "owner",
+            "title": "Owner",
+            "description": "La entidad fue creada por el usuario.",
+            "createdBy": {
+                "Id": "H13A11L26A31"
+            }
+        },
+        {
+            "relation": "shared",
+            "title": "Shared",
+            "description": "La entidad fue compartida al usuario.",
+            "createdBy": {
+                "Id": "H13A11L26A31"
+            }
+        }
+    ],
+    "user_roles": [
+        {
+            "role": "master",
+            "title": "Master",
+            "description": "Para crear las primeras entidades por defecto",
+            "createdBy": {
+                "Id": "H13A11L26A31"
+            }
+        },
+        {
+            "role": "sys-master",
+            "title": "System Master",
+            "description": "Para crear las entidades y usuarios administradores de sistemas",
+            "createdBy": {
+                "Id": "H13A11L26A31"
+            }
+        },
+        {
+            "role": "sys-admin",
+            "title": "System Admin",
+            "description": "Para administrar entidades y procesos de sistemas",
+            "createdBy": {
+                "Id": "H13A11L26A31"
+            }
+        },
+        {
+            "role": "sys-user",
+            "title": "System User",
+            "description": "Para gestionar soportes de sistemas",
+            "createdBy": {
+                "Id": "H13A11L26A31"
+            }
+        },
+        {
+            "role": "admin",
+            "title": "Administrador",
+            "description": "Para administrar operaciones de clientes.",
+            "createdBy": {
+                "Id": "H13A11L26A31"
+            }
+        },
+        {
+            "role": "collaborator",
+            "title": "Colaborador",
+            "description": "Para gestionar procesos de clientes",
+            "createdBy": {
+                "Id": "H13A11L26A31"
+            }
+        }
+    ],
+    "entities": [
+        {
+            "entity": "user",
+            "title": "Usuarios",
+            "description": "Cantidad de usuarios asociados",
+            "createdBy": {
+                "Id": "H13A11L26A31"
+            }
+        },
+        {
+            "entity": "client",
+            "title": "Clientes",
+            "description": "Cantidad de clientes gestionados",
+            "createdBy": {
+                "Id": "H13A11L26A31"
+            }
+        },
+        {
+            "entity": "business",
+            "title": "Empresas",
+            "description": "Cantidad de empresas gestionadas",
+            "createdBy": {
+                "Id": "H13A11L26A31"
+            }
+        },
+        {
+            "entity": "payroll",
+            "title": "Nominas",
+            "description": "Cantidad de nominas gestionadas",
+            "createdBy": {
+                "Id": "H13A11L26A31"
+            }
+        },
+        {
+            "entity": "employee",
+            "title": "Empleados",
+            "description": "Cantidad de empleados gestionados",
+            "createdBy": {
+                "Id": "H13A11L26A31"
+            }
+        },
+        {
+            "entity": "time",
+            "title": "Tiempo Uso",
+            "description": "Cantidad de tiempo de uso disponible",
+            "createdBy": {
+                "Id": "H13A11L26A31"
+            }
+        }
+    ],
+    "commercial_plans": [
+        {
+            "plan": "demo",
+            "title": "Plan Demo",
+            "description": "Plan de demostración",
+            "details": [
+                {
+                    "entity": {
+                        "entity": "user",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 1,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "client",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 1,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "business",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 1,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "employee",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 5,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "day",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 30,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                }
+            ]
+        },
+        {
+            "plan": "consultant",
+            "title": "Plan Consultor",
+            "description": "Plan de consultor",
+            "details": [
+                {
+                    "entity": {
+                        "entity": "user",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 2,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "client",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 2,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "business",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 5,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "employee",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 100,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "day",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 90,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                }
+            ]
+        },
+        {
+            "plan": "consultant-pro",
+            "title": "Plan Consultor Pro",
+            "description": "Plan de consultor pro",
+            "details": [
+                {
+                    "entity": {
+                        "entity": "user",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 10,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "client",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 10,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "business",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 25,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "employee",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 500,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "day",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 90,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                }
+            ]
+        },
+        {
+            "plan": "consultant-plus",
+            "title": "Plan Consultor Plus",
+            "description": "Plan de consultor plus",
+            "details": [
+                {
+                    "entity": {
+                        "entity": "user",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 20,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "client",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 18,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "business",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 55,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "employee",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 1500,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "day",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 90,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                }
+            ]
+        },
+        {
+            "plan": "consultant-max",
+            "title": "Plan Consultor Max",
+            "description": "Plan de consultor max",
+            "details": [
+                {
+                    "entity": {
+                        "entity": "user",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 30,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "client",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 25,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "business",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 75,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "employee",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 2000,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "day",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 90,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                }
+            ]
+        },
+        {
+            "plan": "micro",
+            "title": "Plan Micro",
+            "description": "Plan de micro",
+            "details": [
+                {
+                    "entity": {
+                        "entity": "user",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 2,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "client",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 1,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "business",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 1,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "employee",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 25,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "day",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 90,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                }
+            ]
+        },
+        {
+            "plan": "business",
+            "title": "Plan Business",
+            "description": "Plan de business",
+            "details": [
+                {
+                    "entity": {
+                        "entity": "user",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 15,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "client",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 5,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "business",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 5,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "employee",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 500,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "day",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 90,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                }
+            ]
+        },
+        {
+            "plan": "corporate",
+            "title": "Plan Corporate",
+            "description": "Plan de corporate",
+            "details": [
+                {
+                    "entity": {
+                        "entity": "user",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 25,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "client",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 10,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "business",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 10,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "employee",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 2500,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "day",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 90,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                }
+            ]
+        },
+        {
+            "plan": "holding",
+            "title": "Plan Holding",
+            "description": "Plan de holding",
+            "details": [
+                {
+                    "entity": {
+                        "entity": "user",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 50,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "client",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 20,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "business",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 20,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "employee",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 5500,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                },
+                {
+                    "entity": {
+                        "entity": "day",
+                        "createdBy": {
+                            "Id": "H13A11L26A31"
+                        }
+                    },
+                    "quantity": 90,
+                    "createdBy": {
+                        "Id": "H13A11L26A31"
+                    }
+                }
+            ]
+        }
+    ]
+}

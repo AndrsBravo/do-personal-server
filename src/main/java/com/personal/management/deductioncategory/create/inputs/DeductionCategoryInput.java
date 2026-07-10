@@ -1,7 +1,7 @@
 package com.personal.management.deductioncategory.create.inputs;
 
+import com.personal.backoffice.shared.inputs.CountryInputBase;
 import com.personal.management.deductioncategory.entities.DeductionCategory;
-import com.personal.management.shared.inputs.CountryInputBase;
 
 public class DeductionCategoryInput extends CountryInputBase {
 

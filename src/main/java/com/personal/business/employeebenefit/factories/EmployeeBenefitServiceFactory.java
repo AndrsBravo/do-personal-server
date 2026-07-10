@@ -1,16 +1,26 @@
 package com.personal.business.employeebenefit.factories;
 
-import com.personal.business.employeebenefit.create.services.CreateEmployeeBenefitService;
-import com.personal.business.employeebenefit.delete.services.DeleteEmployeeBenefitService;
 import com.personal.business.employeebenefit.filter.services.FilterEmployeeBenefitService;
-import com.personal.business.employeebenefit.update.services.EditEmployeeBenefitService;
+import com.personal.business.employeebenefit.notifications.EmployeeBenefitNotificationFactory;
 import com.personal.server.dbclient.DbClientMSSQLFactory;
+import com.personal.shared.factories.CreateService;
+import com.personal.shared.factories.CreateServiceBuilder;
+import com.personal.shared.factories.DeleteService;
+import com.personal.shared.factories.DeleteServiceBuilder;
+import com.personal.shared.factories.UpdateService;
+import com.personal.shared.factories.UpdateServiceBuilder;
 
 public class EmployeeBenefitServiceFactory {
 
-    public static CreateEmployeeBenefitService CreateEmployeeBenefit(String dbClient) {
+    private static final String TABLE_NAME = "employee_benefits";
 
-        return new CreateEmployeeBenefitService(DbClientMSSQLFactory.DbClient(dbClient));
+    public static CreateService CreateEmployeeBenefit(String dbClient) {
+        return CreateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(EmployeeBenefitNotificationFactory.CreateEmployeeBenefitSuccess())
+                .withFailureNotification(EmployeeBenefitNotificationFactory.CreateEmployeeBenefitFail())
+                .build();
     }
 
     public static FilterEmployeeBenefitService FilterEmployeeBenefit(String dbClient) {
@@ -18,14 +28,24 @@ public class EmployeeBenefitServiceFactory {
         return new FilterEmployeeBenefitService(DbClientMSSQLFactory.DbClient(dbClient));
     }
 
-    public static EditEmployeeBenefitService EditEmployeeBenefit(String dbClient) {
+    public static UpdateService EditEmployeeBenefit(String dbClient) {
 
-        return new EditEmployeeBenefitService(DbClientMSSQLFactory.DbClient(dbClient));
+        return UpdateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(EmployeeBenefitNotificationFactory.UpdateEmployeeBenefitSuccess())
+                .withFailureNotification(EmployeeBenefitNotificationFactory.UpdateEmployeeBenefitFail())
+                .build();
     }
 
-    public static DeleteEmployeeBenefitService DeleteEmployeeBenefit(String dbClient) {
+    public static DeleteService DeleteEmployeeBenefit(String dbClient) {
 
-        return new DeleteEmployeeBenefitService(DbClientMSSQLFactory.DbClient(dbClient));
+        return DeleteServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(EmployeeBenefitNotificationFactory.DeleteEmployeeBenefitSuccess())
+                .withFailureNotification(EmployeeBenefitNotificationFactory.DeleteEmployeeBenefitFail())
+                .build();
     }
 
 }

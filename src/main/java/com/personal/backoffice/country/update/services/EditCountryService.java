@@ -4,9 +4,10 @@ import java.util.Optional;
 
 import com.personal.backoffice.country.entities.Country;
 import com.personal.backoffice.country.factories.CountryResultFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IEditService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 import io.helidon.dbclient.DbClient;
 
@@ -22,7 +23,7 @@ public class EditCountryService implements IEditService<Country> {
     public ServiceResult<Country> edit(Query query) {
 
         if (dbClient.isEmpty()) {
-            return CountryResultFactory.UpdateFail();
+            return ServicesResultFactory.<Country>DbNotAvailable();
         }
 
         var dbclient = dbClient.get();
@@ -39,12 +40,12 @@ public class EditCountryService implements IEditService<Country> {
 
         } catch (Exception e) {
             //System.out.println("Hubo una excepción al actualizar el tipo de cliente " + e.getMessage());
-            return CountryResultFactory.UpdateFail();
+            return CountryResultFactory.UpdateFail(e.getMessage());
         }
 
         //System.out.println("query.getParams(): " + query.getParams().values().toString());
         if (result == 0) {
-            return CountryResultFactory.UpdateFail();
+            return CountryResultFactory.UpdateFail("No se pudo actualizar el país.");
         }
 
         return CountryResultFactory.UpdateSuccess(new Country());

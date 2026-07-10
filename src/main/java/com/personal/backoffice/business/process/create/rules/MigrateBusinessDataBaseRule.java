@@ -1,7 +1,7 @@
 package com.personal.backoffice.business.process.create.rules;
 
 import com.personal.backoffice.business.process.create.CreateBusinessProcess;
-import com.personal.backoffice.system.factories.SystemServiceFactory;
+import com.personal.backoffice.system.databases.factories.SystemServiceFactory;
 import com.personal.shared.process.IProcessRule;
 import com.personal.shared.process.logs.LogFactory;
 import com.personal.shared.query.Query;
@@ -20,7 +20,7 @@ public class MigrateBusinessDataBaseRule implements IProcessRule<CreateBusinessP
 
         var migrateDataBaseService = SystemServiceFactory.MigrateDataBaseService(dbName).create(query);
 
-        if (migrateDataBaseService.getResult() != null) {
+        if (migrateDataBaseService.getRecords() > 0) {
             process.addLog(pLogger.SUCCESS("Migrar Client Master Data Base", "Migración completada exitosamente!"));
         }
 

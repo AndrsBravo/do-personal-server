@@ -60,6 +60,10 @@ public abstract class Process<E> {
         this.logs.add(log);
     }
 
+    public void addLog(List<Log> logs) {
+        this.logs.addAll(logs);
+    }
+
     public void terminate() {
         this.stop(ProcessState.COMPLETED);
     }

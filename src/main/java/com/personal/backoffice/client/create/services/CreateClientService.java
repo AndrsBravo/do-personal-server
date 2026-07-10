@@ -2,15 +2,16 @@ package com.personal.backoffice.client.create.services;
 
 import java.util.Optional;
 
-import com.personal.backoffice.client.entities.Client;
-import com.personal.backoffice.client.factories.ClientResultFactory;
+import com.personal.backoffice.client.notifications.ClientNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.CreateResult;
+import com.personal.shared.services.entities.CreateResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class CreateClientService implements ICreateService<Client> {
+public class CreateClientService implements ICreateService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,36 +20,32 @@ public class CreateClientService implements ICreateService<Client> {
     }
 
     @Override
-    public ServiceResult<Client> create(Query query) {
+    public CreateResult create(Query query) {
         if (dbClient.isEmpty()) {
-            return ClientResultFactory.CreateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var insertQuery = query.InsertInto("clients").Get();
 
-        //System.out.println(insertQuery);
         //System.out.println(query.getParams());
-        long result = 0;
-
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createInsert(insertQuery)
                     .params(query.getParams())
                     .execute();
-
+            return CreateResultBuilder.build()
+                    .withRecords(records)
+                    .withNotification(ClientNotificationFactory.CreateClientSuccess())
+                    .get();
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al crear el tipo de cliente " + e.getMessage());
-            return ClientResultFactory.CreateFail();
+            //System.out.println("Hubo una excepción al crear el tipo de empresa " + e.getMessage());
+            return CreateResultBuilder.build()
+                    .withException(e)
+                    .withNotification(ClientNotificationFactory.CreateClientFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return ClientResultFactory.CreateFail();
-        }
-
-        return ClientResultFactory.CreateSuccess(new Client());
-
     }
 
 }

@@ -2,15 +2,16 @@ package com.personal.backoffice.user.associatebusiness.add.services;
 
 import java.util.Optional;
 
-import com.personal.backoffice.user.associatebusiness.entities.AssociateUserBusiness;
-import com.personal.backoffice.user.factories.UserResultFactory;
+import com.personal.backoffice.user.notifications.UserNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.CreateResult;
+import com.personal.shared.services.entities.CreateResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class AssociateUserBusinessService implements ICreateService<AssociateUserBusiness> {
+public class AssociateUserBusinessService implements ICreateService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,36 +20,33 @@ public class AssociateUserBusinessService implements ICreateService<AssociateUse
     }
 
     @Override
-    public ServiceResult<AssociateUserBusiness> create(Query query) {
+    public CreateResult create(Query query) {
         if (dbClient.isEmpty()) {
-            return UserResultFactory.AssociateUserBusinessFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var insertQuery = query.InsertInto("user_has_business").Get();
 
-        //System.out.println(insertQuery);
         //System.out.println(query.getParams());
-        long result = 0;
-
-        result = dbclient.execute()
-                .createInsert(insertQuery)
-                .params(query.getParams())
-                .execute();
-
         try {
+            var records = dbclient.execute()
+                    .createInsert(insertQuery)
+                    .params(query.getParams())
+                    .execute();
+
+            return CreateResultBuilder.build()
+                    .withRecords(records)
+                    .withNotification(UserNotificationFactory.AssociateUserBusinessSuccess())
+                    .get();
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al asociar usuario al Cliente " + e.getMessage());
-            return UserResultFactory.AssociateUserBusinessFail();
+
+            return CreateResultBuilder.build()
+                    .withException(e)
+                    .withNotification(UserNotificationFactory.AssociateUserBusinessFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return UserResultFactory.AssociateUserBusinessFail();
-        }
-
-        return UserResultFactory.AssociateUserBusinessSuccess(new AssociateUserBusiness());
-
     }
 
 }

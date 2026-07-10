@@ -1,7 +1,7 @@
 package com.personal.management.orgstructure.create.inputs;
 
 import com.personal.management.orgstructure.entities.OrgStructure;
-import com.personal.management.shared.inputs.CountryInputBase;
+import com.personal.backoffice.shared.inputs.CountryInputBase;
 
 public class OrgStructureInput extends CountryInputBase {
 

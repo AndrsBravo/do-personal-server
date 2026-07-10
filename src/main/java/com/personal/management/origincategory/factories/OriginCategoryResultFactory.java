@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.personal.management.origincategory.entities.OriginCategory;
 import com.personal.management.origincategory.notifications.OriginCategoryNotificationFactory;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 public class OriginCategoryResultFactory {
 

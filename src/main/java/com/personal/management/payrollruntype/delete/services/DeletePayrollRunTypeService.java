@@ -2,11 +2,11 @@ package com.personal.management.payrollruntype.delete.services;
 
 import java.util.Optional;
 
+import com.personal.backoffice.shared.entities.TypeEntity;
 import com.personal.management.payrollruntype.factories.PayrollRunTypeResultFactory;
-import com.personal.management.shared.entities.TypeEntity;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 import io.helidon.dbclient.DbClient;
 

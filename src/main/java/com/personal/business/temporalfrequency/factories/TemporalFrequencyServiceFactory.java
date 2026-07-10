@@ -1,16 +1,26 @@
 package com.personal.business.temporalfrequency.factories;
 
-import com.personal.business.temporalfrequency.create.services.CreateTemporalFrequencyService;
-import com.personal.business.temporalfrequency.delete.services.DeleteTemporalFrequencyService;
 import com.personal.business.temporalfrequency.filter.services.FilterTemporalFrequencyService;
-import com.personal.business.temporalfrequency.update.services.EditTemporalFrequencyService;
+import com.personal.business.temporalfrequency.notifications.TemporalFrequencyNotificationFactory;
 import com.personal.server.dbclient.DbClientMSSQLFactory;
+import com.personal.shared.factories.CreateService;
+import com.personal.shared.factories.CreateServiceBuilder;
+import com.personal.shared.factories.DeleteService;
+import com.personal.shared.factories.DeleteServiceBuilder;
+import com.personal.shared.factories.UpdateService;
+import com.personal.shared.factories.UpdateServiceBuilder;
 
 public class TemporalFrequencyServiceFactory {
 
-    public static CreateTemporalFrequencyService CreateTemporalFrequency(String dbClient) {
+    private static final String TABLE_NAME = "temporal_frequencies";
 
-        return new CreateTemporalFrequencyService(DbClientMSSQLFactory.DbClient(dbClient));
+    public static CreateService CreateTemporalFrequency(String dbClient) {
+        return CreateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(TemporalFrequencyNotificationFactory.CreateTemporalFrequencySuccess())
+                .withFailureNotification(TemporalFrequencyNotificationFactory.CreateTemporalFrequencyFail())
+                .build();
     }
 
     public static FilterTemporalFrequencyService FilterTemporalFrequency(String dbClient) {
@@ -18,14 +28,24 @@ public class TemporalFrequencyServiceFactory {
         return new FilterTemporalFrequencyService(DbClientMSSQLFactory.DbClient(dbClient));
     }
 
-    public static EditTemporalFrequencyService EditTemporalFrequency(String dbClient) {
+    public static UpdateService EditTemporalFrequency(String dbClient) {
 
-        return new EditTemporalFrequencyService(DbClientMSSQLFactory.DbClient(dbClient));
+        return UpdateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(TemporalFrequencyNotificationFactory.UpdateTemporalFrequencySuccess())
+                .withFailureNotification(TemporalFrequencyNotificationFactory.UpdateTemporalFrequencyFail())
+                .build();
     }
 
-    public static DeleteTemporalFrequencyService DeleteTemporalFrequency(String dbClient) {
+    public static DeleteService DeleteTemporalFrequency(String dbClient) {
 
-        return new DeleteTemporalFrequencyService(DbClientMSSQLFactory.DbClient(dbClient));
+        return DeleteServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(TemporalFrequencyNotificationFactory.DeleteTemporalFrequencySuccess())
+                .withFailureNotification(TemporalFrequencyNotificationFactory.DeleteTemporalFrequencyFail())
+                .build();
     }
 
 }

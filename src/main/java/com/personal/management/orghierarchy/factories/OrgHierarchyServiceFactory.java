@@ -1,16 +1,26 @@
 package com.personal.management.orghierarchy.factories;
 
-import com.personal.management.orghierarchy.create.services.CreateOrgHierarchyService;
-import com.personal.management.orghierarchy.delete.services.DeleteOrgHierarchyService;
 import com.personal.management.orghierarchy.filter.services.FilterOrgHierarchyService;
-import com.personal.management.orghierarchy.update.services.EditOrgHierarchyService;
+import com.personal.management.orghierarchy.notifications.OrgHierarchyNotificationFactory;
 import com.personal.server.dbclient.DbClientMSSQLFactory;
+import com.personal.shared.factories.CreateService;
+import com.personal.shared.factories.CreateServiceBuilder;
+import com.personal.shared.factories.DeleteService;
+import com.personal.shared.factories.DeleteServiceBuilder;
+import com.personal.shared.factories.UpdateService;
+import com.personal.shared.factories.UpdateServiceBuilder;
 
 public class OrgHierarchyServiceFactory {
 
-    public static CreateOrgHierarchyService CreateOrgHierarchy() {
+    private static final String TABLE_NAME = "organization_hierarchies";
 
-        return new CreateOrgHierarchyService(DbClientMSSQLFactory.Management());
+    public static CreateService CreateOrgHierarchy() {
+        return CreateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.Management())
+                .withSuccessNotification(OrgHierarchyNotificationFactory.CreateOrgHierarchySuccess())
+                .withFailureNotification(OrgHierarchyNotificationFactory.CreateOrgHierarchyFail())
+                .build();
     }
 
     public static FilterOrgHierarchyService FilterOrgHierarchy() {
@@ -18,14 +28,24 @@ public class OrgHierarchyServiceFactory {
         return new FilterOrgHierarchyService(DbClientMSSQLFactory.Management());
     }
 
-    public static EditOrgHierarchyService EditOrgHierarchy() {
+    public static UpdateService EditOrgHierarchy() {
 
-        return new EditOrgHierarchyService(DbClientMSSQLFactory.Management());
+        return UpdateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.Management())
+                .withSuccessNotification(OrgHierarchyNotificationFactory.UpdateOrgHierarchySuccess())
+                .withFailureNotification(OrgHierarchyNotificationFactory.UpdateOrgHierarchyFail())
+                .build();
     }
 
-    public static DeleteOrgHierarchyService DeleteOrgHierarchy() {
+    public static DeleteService DeleteOrgHierarchy() {
 
-        return new DeleteOrgHierarchyService(DbClientMSSQLFactory.Management());
+        return DeleteServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.Management())
+                .withSuccessNotification(OrgHierarchyNotificationFactory.DeleteOrgHierarchySuccess())
+                .withFailureNotification(OrgHierarchyNotificationFactory.DeleteOrgHierarchyFail())
+                .build();
     }
 
 }

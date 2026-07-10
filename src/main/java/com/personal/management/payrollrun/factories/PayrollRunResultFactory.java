@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.personal.management.payrollrun.entities.PayrollRun;
 import com.personal.management.payrollrun.notifications.PayrollRunNotificationFactory;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 public class PayrollRunResultFactory {
 

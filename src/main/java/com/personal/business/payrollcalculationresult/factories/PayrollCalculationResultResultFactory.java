@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.personal.business.payrollcalculationresult.entities.PayrollCalculationResult;
 import com.personal.business.payrollcalculationresult.notifications.PayrollCalculationResultNotificationFactory;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 public class PayrollCalculationResultResultFactory {
 

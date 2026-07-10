@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.personal.business.employeedeductionfeed.entities.EmployeeDeductionFeed;
 import com.personal.business.employeedeductionfeed.notifications.EmployeeDeductionFeedNotificationFactory;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 public class EmployeeDeductionFeedResultFactory {
 

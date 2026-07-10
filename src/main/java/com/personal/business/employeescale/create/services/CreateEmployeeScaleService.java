@@ -2,15 +2,16 @@ package com.personal.business.employeescale.create.services;
 
 import java.util.Optional;
 
-import com.personal.business.employeescale.entities.EmployeeScale;
-import com.personal.business.employeescale.factories.EmployeeScaleResultFactory;
+import com.personal.business.employeescale.notifications.EmployeeScaleNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.CreateResult;
+import com.personal.shared.services.entities.CreateResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class CreateEmployeeScaleService implements ICreateService<EmployeeScale> {
+public class CreateEmployeeScaleService implements ICreateService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,34 +20,32 @@ public class CreateEmployeeScaleService implements ICreateService<EmployeeScale>
     }
 
     @Override
-    public ServiceResult<EmployeeScale> create(Query query) {
+    public CreateResult create(Query query) {
         if (dbClient.isEmpty()) {
-            return EmployeeScaleResultFactory.CreateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var insertQuery = query.InsertInto("employee_scale").Get();
 
-        //System.out.println(insertQuery);
-        long result = 0;
-
         try {
 
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createInsert(insertQuery)
                     .params(query.getParams())
                     .execute();
+            return CreateResultBuilder.build()
+                    .withRecords(records)
+                    .withNotification(EmployeeScaleNotificationFactory.CreateEmployeeScaleSuccess())
+                    .get();
         } catch (Exception e) {
 
-            return EmployeeScaleResultFactory.CreateFail();
+            return CreateResultBuilder.build()
+                    .withException(e)
+                    .withNotification(EmployeeScaleNotificationFactory.CreateEmployeeScaleFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return EmployeeScaleResultFactory.CreateFail();
-        }
-
-        return EmployeeScaleResultFactory.CreateSuccess(new EmployeeScale());
 
     }
 

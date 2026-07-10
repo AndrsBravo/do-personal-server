@@ -1,16 +1,26 @@
 package com.personal.business.benefitrate.factories;
 
-import com.personal.business.benefitrate.create.services.CreateBenefitRateService;
-import com.personal.business.benefitrate.delete.services.DeleteBenefitRateService;
 import com.personal.business.benefitrate.filter.services.FilterBenefitRateService;
-import com.personal.business.benefitrate.update.services.EditBenefitRateService;
+import com.personal.business.benefitrate.notifications.BenefitRateNotificationFactory;
 import com.personal.server.dbclient.DbClientMSSQLFactory;
+import com.personal.shared.factories.CreateService;
+import com.personal.shared.factories.CreateServiceBuilder;
+import com.personal.shared.factories.DeleteService;
+import com.personal.shared.factories.DeleteServiceBuilder;
+import com.personal.shared.factories.UpdateService;
+import com.personal.shared.factories.UpdateServiceBuilder;
 
 public class BenefitRateServiceFactory {
 
-    public static CreateBenefitRateService CreateBenefitRate(String dbClient) {
+    private static final String TABLE_NAME = "business_benefits_rates";
 
-        return new CreateBenefitRateService(DbClientMSSQLFactory.DbClient(dbClient));
+    public static CreateService CreateBenefitRate(String dbClient) {
+        return CreateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(BenefitRateNotificationFactory.CreateBenefitRateSuccess())
+                .withFailureNotification(BenefitRateNotificationFactory.CreateBenefitRateFail())
+                .build();
     }
 
     public static FilterBenefitRateService FilterBenefitRate(String dbClient) {
@@ -18,14 +28,22 @@ public class BenefitRateServiceFactory {
         return new FilterBenefitRateService(DbClientMSSQLFactory.DbClient(dbClient));
     }
 
-    public static EditBenefitRateService EditBenefitRate(String dbClient) {
-
-        return new EditBenefitRateService(DbClientMSSQLFactory.DbClient(dbClient));
+    public static UpdateService EditBenefitRate(String dbClient) {
+        return UpdateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(BenefitRateNotificationFactory.UpdateBenefitRateSuccess())
+                .withFailureNotification(BenefitRateNotificationFactory.UpdateBenefitRateFail())
+                .build();
     }
 
-    public static DeleteBenefitRateService DeleteBenefitRate(String dbClient) {
-
-        return new DeleteBenefitRateService(DbClientMSSQLFactory.DbClient(dbClient));
+    public static DeleteService DeleteBenefitRate(String dbClient) {
+        return DeleteServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(BenefitRateNotificationFactory.DeleteBenefitRateSuccess())
+                .withFailureNotification(BenefitRateNotificationFactory.DeleteBenefitRateFail())
+                .build();
     }
 
 }

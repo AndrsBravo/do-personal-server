@@ -1,11 +1,11 @@
 package com.personal.management.orgrelation.entities;
 
-import com.personal.management.country.entities.Country;
+import com.personal.shared.core.entities.SharedCountry;
 import com.personal.shared.core.entities.SharedOrgRelation;
 
 public class OrgRelation extends SharedOrgRelation {
 
-    private Country country;
+    private SharedCountry country;
 
     public OrgRelation() {
         super();
@@ -15,11 +15,11 @@ public class OrgRelation extends SharedOrgRelation {
         super(id);
     }
 
-    public Country getCountry() {
+    public SharedCountry getCountry() {
         return country;
     }
 
-    public void setCountry(Country country) {
+    public void setCountry(SharedCountry country) {
         this.country = country;
     }
 

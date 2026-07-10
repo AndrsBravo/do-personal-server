@@ -5,19 +5,31 @@ import com.personal.shared.notifications.Notification;
 public class EmployeeNotificationFactory {
 
     public static Notification CreateEmployeeFail() {
-        return new Notification("Ha ocurrido un error mientras se creaba el tipo de usuario ");
+        return new Notification("Ha ocurrido un error mientras se creaba el empleado ");
+    }
+
+    public static Notification CreateEmployeeSuccess() {
+        return new Notification("El empleado se ha creado correctamente ");
     }
 
     public static Notification UpdateEmployeeFail() {
-        return new Notification("Ha ocurrido un error mientras se actualizaba el tipo de usuario ");
+        return new Notification("Ha ocurrido un error mientras se actualizaba el empleado ");
+    }
+
+    public static Notification UpdateEmployeeSuccess() {
+        return new Notification("El empleado se ha actualizado correctamente.");
     }
 
     public static Notification DeleteEmployeeFail() {
-        return new Notification("Ha ocurrido un error mientras se eliminaba el tipo de usuario ");
+        return new Notification("Ha ocurrido un error mientras se eliminaba el empleado ");
+    }
+
+    public static Notification DeleteEmployeeSuccess() {
+        return new Notification("El empleado se ha eliminado correctamente.");
     }
 
     public static Notification FetchNull() {
-        return new Notification("No se han encontrado tipos de usuario.");
+        return new Notification("No se han encontrado resultados.");
     }
 
 }

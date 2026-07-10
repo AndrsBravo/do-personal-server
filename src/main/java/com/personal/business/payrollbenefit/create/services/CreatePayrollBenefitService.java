@@ -2,15 +2,16 @@ package com.personal.business.payrollbenefit.create.services;
 
 import java.util.Optional;
 
-import com.personal.business.payrollbenefit.entities.PayrollBenefit;
-import com.personal.business.payrollbenefit.factories.PayrollBenefitResultFactory;
+import com.personal.business.payrollbenefit.notifications.PayrollBenefitNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.CreateResult;
+import com.personal.shared.services.entities.CreateResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class CreatePayrollBenefitService implements ICreateService<PayrollBenefit> {
+public class CreatePayrollBenefitService implements ICreateService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,34 +20,32 @@ public class CreatePayrollBenefitService implements ICreateService<PayrollBenefi
     }
 
     @Override
-    public ServiceResult<PayrollBenefit> create(Query query) {
+    public CreateResult create(Query query) {
         if (dbClient.isEmpty()) {
-            return PayrollBenefitResultFactory.CreateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var insertQuery = query.InsertInto("payroll_benefits").Get();
 
-        //System.out.println(insertQuery);
-        long result = 0;
-
         try {
 
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createInsert(insertQuery)
                     .params(query.getParams())
                     .execute();
+            return CreateResultBuilder.build()
+                    .withRecords(records)
+                    .withNotification(PayrollBenefitNotificationFactory.CreatePayrollBenefitSuccess())
+                    .get();
         } catch (Exception e) {
 
-            return PayrollBenefitResultFactory.CreateFail();
+            return CreateResultBuilder.build()
+                    .withException(e)
+                    .withNotification(PayrollBenefitNotificationFactory.CreatePayrollBenefitFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return PayrollBenefitResultFactory.CreateFail();
-        }
-
-        return PayrollBenefitResultFactory.CreateSuccess(new PayrollBenefit());
 
     }
 

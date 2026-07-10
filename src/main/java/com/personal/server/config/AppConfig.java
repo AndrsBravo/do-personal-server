@@ -22,4 +22,10 @@ public class AppConfig {
 
     }
 
+    public static Config config(String key) {
+        setUp();
+        return config.get(key);
+
+    }
+
 }

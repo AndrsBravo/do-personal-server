@@ -2,15 +2,16 @@ package com.personal.management.deductionrate.create.services;
 
 import java.util.Optional;
 
-import com.personal.management.deductionrate.entities.DeductionRate;
-import com.personal.management.deductionrate.factories.DeductionRateResultFactory;
+import com.personal.management.deductionrate.notifications.DeductionRateNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.CreateResult;
+import com.personal.shared.services.entities.CreateResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class CreateDeductionRateService implements ICreateService<DeductionRate> {
+public class CreateDeductionRateService implements ICreateService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,35 +20,32 @@ public class CreateDeductionRateService implements ICreateService<DeductionRate>
     }
 
     @Override
-    public ServiceResult<DeductionRate> create(Query query) {
+    public CreateResult create(Query query) {
         if (dbClient.isEmpty()) {
-            return DeductionRateResultFactory.CreateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var insertQuery = query.InsertInto("business_deductions_rates").Get();
 
-        //System.out.println(insertQuery);
-        long result = 0;
-
         try {
 
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createInsert(insertQuery)
                     .params(query.getParams())
                     .execute();
+            return CreateResultBuilder.build()
+                    .withRecords(records)
+                    .withNotification(DeductionRateNotificationFactory.CreateDeductionRateSuccess())
+                    .get();
         } catch (Exception e) {
 
-            return DeductionRateResultFactory.CreateFail();
+            return CreateResultBuilder.build()
+                    .withException(e)
+                    .withNotification(DeductionRateNotificationFactory.CreateDeductionRateFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return DeductionRateResultFactory.CreateFail();
-        }
-
-        return DeductionRateResultFactory.CreateSuccess(new DeductionRate());
-
     }
 
 }

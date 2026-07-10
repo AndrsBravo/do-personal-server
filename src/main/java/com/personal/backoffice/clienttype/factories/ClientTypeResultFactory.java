@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.personal.backoffice.clienttype.notifications.ClientTypeNotificationFactory;
 import com.personal.shared.entities.TypeEntityBase;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 public class ClientTypeResultFactory {
 

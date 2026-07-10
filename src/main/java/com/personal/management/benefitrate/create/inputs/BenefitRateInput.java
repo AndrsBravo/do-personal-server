@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import com.personal.business.benefit.entities.Benefit;
 import com.personal.business.temporalfrequency.entities.TemporalFrequency;
 import com.personal.management.benefitrate.entities.BenefitRate;
-import com.personal.management.shared.inputs.CountryInputBase;
+import com.personal.backoffice.shared.inputs.CountryInputBase;
 
 public class BenefitRateInput extends CountryInputBase {
 

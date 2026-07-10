@@ -30,7 +30,7 @@ public class EditUserRule implements IProcessRule<EditUserProcess> {
 
         var edit = UserServiceFactory.EditUser().edit(query);
 
-        if (edit.getResult() == null) {
+        if (edit.getRecords() < 1) {
             process.addLog(pLogger.ERROR("Modificar usuario", "Error al modificar usuario: " + edit.getNotification().message()));
             process.stopWithErrors();
             return;

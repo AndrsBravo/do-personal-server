@@ -3,8 +3,8 @@ package com.personal.backoffice.user.associateclient.add.inputs;
 import com.personal.backoffice.client.entities.Client;
 import com.personal.backoffice.user.associateclient.entities.AssociateUserClient;
 import com.personal.backoffice.user.entities.User;
-import com.personal.backoffice.user.entities.UserRelation;
-import com.personal.backoffice.user.entities.UserRole;
+import com.personal.backoffice.userrelation.entities.UserRelation;
+import com.personal.backoffice.userrole.entities.UserRole;
 import com.personal.shared.inputs.Input;
 
 public class AssociateUserClientInput extends Input {

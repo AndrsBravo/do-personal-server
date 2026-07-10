@@ -1,16 +1,26 @@
 package com.personal.management.financecategory.factories;
 
-import com.personal.management.financecategory.create.services.CreateFinanceCategoryService;
-import com.personal.management.financecategory.delete.services.DeleteFinanceCategoryService;
 import com.personal.management.financecategory.filter.services.FilterFinanceCategoryService;
-import com.personal.management.financecategory.update.services.EditFinanceCategoryService;
+import com.personal.management.financecategory.notifications.FinanceCategoryNotificationFactory;
 import com.personal.server.dbclient.DbClientMSSQLFactory;
+import com.personal.shared.factories.CreateService;
+import com.personal.shared.factories.CreateServiceBuilder;
+import com.personal.shared.factories.DeleteService;
+import com.personal.shared.factories.DeleteServiceBuilder;
+import com.personal.shared.factories.UpdateService;
+import com.personal.shared.factories.UpdateServiceBuilder;
 
 public class FinanceCategoryServiceFactory {
 
-    public static CreateFinanceCategoryService CreateFinanceCategory() {
+    private static final String TABLE_NAME = "finance_categories";
 
-        return new CreateFinanceCategoryService(DbClientMSSQLFactory.Management());
+    public static CreateService CreateFinanceCategory() {
+        return CreateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.Management())
+                .withSuccessNotification(FinanceCategoryNotificationFactory.CreateFinanceCategorySuccess())
+                .withFailureNotification(FinanceCategoryNotificationFactory.CreateFinanceCategoryFail())
+                .build();
     }
 
     public static FilterFinanceCategoryService FilterFinanceCategory() {
@@ -18,14 +28,24 @@ public class FinanceCategoryServiceFactory {
         return new FilterFinanceCategoryService(DbClientMSSQLFactory.Management());
     }
 
-    public static EditFinanceCategoryService EditFinanceCategory() {
+    public static UpdateService EditFinanceCategory() {
 
-        return new EditFinanceCategoryService(DbClientMSSQLFactory.Management());
+        return UpdateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.Management())
+                .withSuccessNotification(FinanceCategoryNotificationFactory.UpdateFinanceCategorySuccess())
+                .withFailureNotification(FinanceCategoryNotificationFactory.UpdateFinanceCategoryFail())
+                .build();
     }
 
-    public static DeleteFinanceCategoryService DeleteFinanceCategory() {
+    public static DeleteService DeleteFinanceCategory() {
 
-        return new DeleteFinanceCategoryService(DbClientMSSQLFactory.Management());
+        return DeleteServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.Management())
+                .withSuccessNotification(FinanceCategoryNotificationFactory.DeleteFinanceCategorySuccess())
+                .withFailureNotification(FinanceCategoryNotificationFactory.DeleteFinanceCategoryFail())
+                .build();
     }
 
 }

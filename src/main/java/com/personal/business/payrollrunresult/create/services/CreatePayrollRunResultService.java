@@ -2,15 +2,16 @@ package com.personal.business.payrollrunresult.create.services;
 
 import java.util.Optional;
 
-import com.personal.business.payrollrunresult.entities.PayrollRunResult;
-import com.personal.business.payrollrunresult.factories.PayrollRunResultResultFactory;
+import com.personal.business.payrollrunresult.notifications.PayrollRunResultNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.CreateResult;
+import com.personal.shared.services.entities.CreateResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class CreatePayrollRunResultService implements ICreateService<PayrollRunResult> {
+public class CreatePayrollRunResultService implements ICreateService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,34 +20,32 @@ public class CreatePayrollRunResultService implements ICreateService<PayrollRunR
     }
 
     @Override
-    public ServiceResult<PayrollRunResult> create(Query query) {
+    public CreateResult create(Query query) {
         if (dbClient.isEmpty()) {
-            return PayrollRunResultResultFactory.CreateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var insertQuery = query.InsertInto("payroll_runs_results").Get();
 
-        //System.out.println(insertQuery);
-        long result = 0;
-
         try {
 
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createInsert(insertQuery)
                     .params(query.getParams())
                     .execute();
+            return CreateResultBuilder.build()
+                    .withRecords(records)
+                    .withNotification(PayrollRunResultNotificationFactory.CreatePayrollRunResultSuccess())
+                    .get();
         } catch (Exception e) {
 
-            return PayrollRunResultResultFactory.CreateFail();
+            return CreateResultBuilder.build()
+                    .withException(e)
+                    .withNotification(PayrollRunResultNotificationFactory.CreatePayrollRunResultFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return PayrollRunResultResultFactory.CreateFail();
-        }
-
-        return PayrollRunResultResultFactory.CreateSuccess(new PayrollRunResult());
 
     }
 

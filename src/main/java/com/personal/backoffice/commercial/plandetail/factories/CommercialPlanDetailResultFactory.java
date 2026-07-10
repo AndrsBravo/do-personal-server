@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.personal.backoffice.commercial.plandetail.entities.CommercialPlanDetail;
 import com.personal.backoffice.commercial.plandetail.notifications.CommercialPlanDetailNotificationFactory;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 public class CommercialPlanDetailResultFactory {
 

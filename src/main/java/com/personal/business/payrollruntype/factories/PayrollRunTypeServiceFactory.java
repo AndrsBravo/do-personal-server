@@ -1,16 +1,26 @@
 package com.personal.business.payrollruntype.factories;
 
-import com.personal.business.payrollruntype.create.services.CreatePayrollRunTypeService;
-import com.personal.business.payrollruntype.delete.services.DeletePayrollRunTypeService;
 import com.personal.business.payrollruntype.filter.services.FilterPayrollRunTypeService;
-import com.personal.business.payrollruntype.update.services.EditPayrollRunTypeService;
+import com.personal.business.payrollruntype.notifications.PayrollRunTypeNotificationFactory;
 import com.personal.server.dbclient.DbClientMSSQLFactory;
+import com.personal.shared.factories.CreateService;
+import com.personal.shared.factories.CreateServiceBuilder;
+import com.personal.shared.factories.DeleteService;
+import com.personal.shared.factories.DeleteServiceBuilder;
+import com.personal.shared.factories.UpdateService;
+import com.personal.shared.factories.UpdateServiceBuilder;
 
 public class PayrollRunTypeServiceFactory {
 
-    public static CreatePayrollRunTypeService CreatePayrollRunType(String dbConnection) {
+    private static final String TABLE_NAME = "payroll_runs_types";
 
-        return new CreatePayrollRunTypeService(DbClientMSSQLFactory.DbClient(dbConnection));
+    public static CreateService CreatePayrollRunType(String dbClient) {
+        return CreateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(PayrollRunTypeNotificationFactory.CreatePayrollRunTypeSuccess())
+                .withFailureNotification(PayrollRunTypeNotificationFactory.CreatePayrollRunTypeFail())
+                .build();
     }
 
     public static FilterPayrollRunTypeService FilterPayrollRunType(String dbConnection) {
@@ -18,14 +28,24 @@ public class PayrollRunTypeServiceFactory {
         return new FilterPayrollRunTypeService(DbClientMSSQLFactory.DbClient(dbConnection));
     }
 
-    public static EditPayrollRunTypeService EditPayrollRunType(String dbConnection) {
+    public static UpdateService EditPayrollRunType(String dbClient) {
 
-        return new EditPayrollRunTypeService(DbClientMSSQLFactory.DbClient(dbConnection));
+        return UpdateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(PayrollRunTypeNotificationFactory.UpdatePayrollRunTypeSuccess())
+                .withFailureNotification(PayrollRunTypeNotificationFactory.UpdatePayrollRunTypeFail())
+                .build();
     }
 
-    public static DeletePayrollRunTypeService DeletePayrollRunType(String dbConnection) {
+    public static DeleteService DeletePayrollRunType(String dbClient) {
 
-        return new DeletePayrollRunTypeService(DbClientMSSQLFactory.DbClient(dbConnection));
+        return DeleteServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(PayrollRunTypeNotificationFactory.DeletePayrollRunTypeSuccess())
+                .withFailureNotification(PayrollRunTypeNotificationFactory.DeletePayrollRunTypeFail())
+                .build();
     }
 
 }

@@ -2,15 +2,16 @@ package com.personal.business.employeededuction.create.services;
 
 import java.util.Optional;
 
-import com.personal.business.employeededuction.entities.EmployeeDeduction;
-import com.personal.business.employeededuction.factories.EmployeeDeductionResultFactory;
+import com.personal.business.employeededuction.notifications.EmployeeDeductionNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.CreateResult;
+import com.personal.shared.services.entities.CreateResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class CreateEmployeeDeductionService implements ICreateService<EmployeeDeduction> {
+public class CreateEmployeeDeductionService implements ICreateService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,34 +20,32 @@ public class CreateEmployeeDeductionService implements ICreateService<EmployeeDe
     }
 
     @Override
-    public ServiceResult<EmployeeDeduction> create(Query query) {
+    public CreateResult create(Query query) {
         if (dbClient.isEmpty()) {
-            return EmployeeDeductionResultFactory.CreateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var insertQuery = query.InsertInto("employee_deductions").Get();
 
-        //System.out.println(insertQuery);
-        long result = 0;
-
         try {
 
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createInsert(insertQuery)
                     .params(query.getParams())
                     .execute();
+            return CreateResultBuilder.build()
+                    .withRecords(records)
+                    .withNotification(EmployeeDeductionNotificationFactory.CreateEmployeeDeductionSuccess())
+                    .get();
         } catch (Exception e) {
 
-            return EmployeeDeductionResultFactory.CreateFail();
+            return CreateResultBuilder.build()
+                    .withException(e)
+                    .withNotification(EmployeeDeductionNotificationFactory.CreateEmployeeDeductionFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return EmployeeDeductionResultFactory.CreateFail();
-        }
-
-        return EmployeeDeductionResultFactory.CreateSuccess(new EmployeeDeduction());
 
     }
 

@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 
 public abstract class ProcessExecutor<T extends Process> {
 
-    protected T process;
+    protected final T process;
 
     protected IOnStateChanged<T> listener;
     private final Iterator<Supplier<IProcessRule<T>>> businessRules;

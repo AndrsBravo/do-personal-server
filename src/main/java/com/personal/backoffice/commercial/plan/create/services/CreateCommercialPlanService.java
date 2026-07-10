@@ -2,15 +2,16 @@ package com.personal.backoffice.commercial.plan.create.services;
 
 import java.util.Optional;
 
-import com.personal.backoffice.commercial.plan.entities.CommercialPlan;
-import com.personal.backoffice.commercial.plan.factories.CommercialPlanResultFactory;
+import com.personal.backoffice.commercial.plan.notifications.CommercialPlanNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.CreateResult;
+import com.personal.shared.services.entities.CreateResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class CreateCommercialPlanService implements ICreateService<CommercialPlan> {
+public class CreateCommercialPlanService implements ICreateService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,35 +20,32 @@ public class CreateCommercialPlanService implements ICreateService<CommercialPla
     }
 
     @Override
-    public ServiceResult<CommercialPlan> create(Query query) {
+    public CreateResult create(Query query) {
         if (dbClient.isEmpty()) {
-            return CommercialPlanResultFactory.CreateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var insertQuery = query.InsertInto("commercial_plan").Get();
 
-        //System.out.println(insertQuery);
-        long result = 0;
-
         try {
 
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createInsert(insertQuery)
                     .params(query.getParams())
                     .execute();
+            return CreateResultBuilder.build()
+                    .withRecords(records)
+                    .withNotification(CommercialPlanNotificationFactory.CreateCommercialPlanSuccess())
+                    .get();
         } catch (Exception e) {
 
-            return CommercialPlanResultFactory.CreateFail();
+            return CreateResultBuilder.build()
+                    .withException(e)
+                    .withNotification(CommercialPlanNotificationFactory.CreateCommercialPlanFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return CommercialPlanResultFactory.CreateFail();
-        }
-
-        return CommercialPlanResultFactory.CreateSuccess(new CommercialPlan());
-
     }
 
 }

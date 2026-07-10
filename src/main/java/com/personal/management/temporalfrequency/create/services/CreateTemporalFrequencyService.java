@@ -2,15 +2,16 @@ package com.personal.management.temporalfrequency.create.services;
 
 import java.util.Optional;
 
-import com.personal.management.temporalfrequency.entities.TemporalFrequency;
-import com.personal.management.temporalfrequency.factories.TemporalFrequencyResultFactory;
+import com.personal.management.temporalfrequency.notifications.TemporalFrequencyNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.CreateResult;
+import com.personal.shared.services.entities.CreateResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class CreateTemporalFrequencyService implements ICreateService<TemporalFrequency> {
+public class CreateTemporalFrequencyService implements ICreateService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,35 +20,32 @@ public class CreateTemporalFrequencyService implements ICreateService<TemporalFr
     }
 
     @Override
-    public ServiceResult<TemporalFrequency> create(Query query) {
+    public CreateResult create(Query query) {
         if (dbClient.isEmpty()) {
-            return TemporalFrequencyResultFactory.CreateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var insertQuery = query.InsertInto("temporal_frequencies").Get();
 
-        //System.out.println(insertQuery);
-        long result = 0;
-
         try {
 
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createInsert(insertQuery)
                     .params(query.getParams())
                     .execute();
+            return CreateResultBuilder.build()
+                    .withRecords(records)
+                    .withNotification(TemporalFrequencyNotificationFactory.CreateTemporalFrequencySuccess())
+                    .get();
         } catch (Exception e) {
 
-            return TemporalFrequencyResultFactory.CreateFail();
+            return CreateResultBuilder.build()
+                    .withException(e)
+                    .withNotification(TemporalFrequencyNotificationFactory.CreateTemporalFrequencyFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return TemporalFrequencyResultFactory.CreateFail();
-        }
-
-        return TemporalFrequencyResultFactory.CreateSuccess(new TemporalFrequency());
-
     }
 
 }

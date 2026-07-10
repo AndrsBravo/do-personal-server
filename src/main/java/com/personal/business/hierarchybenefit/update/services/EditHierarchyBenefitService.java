@@ -6,7 +6,7 @@ import com.personal.business.hierarchybenefit.entities.HierarchyBenefit;
 import com.personal.business.hierarchybenefit.factories.HierarchyBenefitResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IEditService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 import io.helidon.dbclient.DbClient;
 

@@ -1,7 +1,7 @@
 package com.personal.management.financecategory.create.inputs;
 
+import com.personal.backoffice.shared.inputs.CountryInputBase;
 import com.personal.management.financecategory.entities.FinanceCategory;
-import com.personal.management.shared.inputs.CountryInputBase;
 
 public class FinanceCategoryInput extends CountryInputBase {
 

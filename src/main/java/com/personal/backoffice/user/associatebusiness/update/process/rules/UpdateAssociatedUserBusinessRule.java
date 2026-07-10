@@ -29,7 +29,7 @@ public class UpdateAssociatedUserBusinessRule implements IProcessRule<UpdateAsso
 
         var update = UserServiceFactory.UpdateAssociatedUserBusiness().edit(query);
 
-        if (update.getResult() == null) {
+        if (update.getRecords() < 1) {
             process.addLog(pLogger.ERROR("Modificar asociación Usuario y Cliente", "Error al asociar usuario a empresa: " + update.getNotification().message()));
             process.stopWithErrors();
             return;

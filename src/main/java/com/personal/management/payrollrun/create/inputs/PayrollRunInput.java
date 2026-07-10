@@ -2,7 +2,7 @@ package com.personal.management.payrollrun.create.inputs;
 
 import com.personal.management.payroll.entities.Payroll;
 import com.personal.management.payrollrun.entities.PayrollRun;
-import com.personal.management.shared.inputs.CountryInputBase;
+import com.personal.backoffice.shared.inputs.CountryInputBase;
 import com.personal.shared.entities.TypeEntityBase;
 
 public class PayrollRunInput extends CountryInputBase {

@@ -1,7 +1,7 @@
 package com.personal.management.benefitdeductionrelation.create.inputs;
 
 import com.personal.management.benefitdeductionrelation.entities.BenefitDeductionRelation;
-import com.personal.management.shared.inputs.CountryInputBase;
+import com.personal.backoffice.shared.inputs.CountryInputBase;
 import com.personal.shared.core.entities.SharedBenefit;
 import com.personal.shared.core.entities.SharedDeduction;
 

@@ -2,15 +2,16 @@ package com.personal.management.country.create.services;
 
 import java.util.Optional;
 
-import com.personal.management.country.entities.Country;
-import com.personal.management.country.factories.CountryResultFactory;
+import com.personal.management.country.notifications.CountryNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.CreateResult;
+import com.personal.shared.services.entities.CreateResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class CreateCountryService implements ICreateService<Country> {
+public class CreateCountryService implements ICreateService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,35 +20,32 @@ public class CreateCountryService implements ICreateService<Country> {
     }
 
     @Override
-    public ServiceResult<Country> create(Query query) {
+    public CreateResult create(Query query) {
         if (dbClient.isEmpty()) {
-            return CountryResultFactory.CreateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var insertQuery = query.InsertInto("countries").Get();
 
-        //System.out.println(insertQuery);
-        long result = 0;
-
         try {
 
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createInsert(insertQuery)
                     .params(query.getParams())
                     .execute();
+            return CreateResultBuilder.build()
+                    .withRecords(records)
+                    .withNotification(CountryNotificationFactory.CreateCountrySuccess())
+                    .get();
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al crear el tipo de cliente " + e.getMessage());
-            return CountryResultFactory.CreateFail();
+
+            return CreateResultBuilder.build()
+                    .withException(e)
+                    .withNotification(CountryNotificationFactory.CreateCountryFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return CountryResultFactory.CreateFail();
-        }
-
-        return CountryResultFactory.CreateSuccess(new Country());
-
     }
 
 }

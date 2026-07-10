@@ -1,7 +1,7 @@
 package com.personal.management.payrollruntype.create.routes;
 
+import com.personal.backoffice.shared.inputs.TypeInput;
 import com.personal.management.payrollruntype.create.process.CreatePayrollRunTypeProcessExecutor;
-import com.personal.management.shared.inputs.TypeInput;
 import com.personal.shared.process.ProcessState;
 
 import io.helidon.http.Status;

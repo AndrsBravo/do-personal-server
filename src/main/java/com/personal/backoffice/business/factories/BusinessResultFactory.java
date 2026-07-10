@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.personal.backoffice.business.entities.Business;
 import com.personal.backoffice.business.notifications.BusinessNotificationFactory;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 public class BusinessResultFactory {
 

@@ -1,6 +1,6 @@
 package com.personal.management.payrollrun.filter.inputs;
 
-import com.personal.management.shared.inputs.CountryFilterInputBase;
+import com.personal.backoffice.shared.inputs.CountryFilterInputBase;
 
 public class FilterPayrollRunInput extends CountryFilterInputBase {
 

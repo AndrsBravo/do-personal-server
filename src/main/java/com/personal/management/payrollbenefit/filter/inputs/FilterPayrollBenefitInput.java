@@ -1,6 +1,6 @@
 package com.personal.management.payrollbenefit.filter.inputs;
 
-import com.personal.management.shared.inputs.CountryFilterInputBase;
+import com.personal.backoffice.shared.inputs.CountryFilterInputBase;
 
 public class FilterPayrollBenefitInput extends CountryFilterInputBase {
 

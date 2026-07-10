@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.personal.management.orghierarchy.entities.OrgHierarchy;
 import com.personal.management.orghierarchy.notifications.OrgHierarchyNotificationFactory;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 public class OrgHierarchyResultFactory {
 

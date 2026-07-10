@@ -22,7 +22,7 @@ public class CreateUserRule implements IProcessRule<CreateUserProcess> {
 
         var create = UserServiceFactory.CreateUser(user.getBusiness().getDbName()).create(query);
 
-        if (create.getResult() == null) {
+        if (create.getRecords() < 1) {
             process.addLog(pLogger.ERROR("Crear usuario", "Failed to create user: " + create.getNotification().message()));
             process.stopWithErrors();
             return;

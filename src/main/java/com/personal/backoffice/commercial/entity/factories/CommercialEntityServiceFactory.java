@@ -1,16 +1,26 @@
 package com.personal.backoffice.commercial.entity.factories;
 
-import com.personal.backoffice.commercial.entity.create.services.CreateCommercialEntityService;
-import com.personal.backoffice.commercial.entity.delete.services.DeleteCommercialEntityService;
 import com.personal.backoffice.commercial.entity.filter.services.FilterCommercialEntityService;
-import com.personal.backoffice.commercial.entity.update.services.EditCommercialEntityService;
+import com.personal.backoffice.commercial.entity.notifications.CommercialEntityNotificationFactory;
 import com.personal.server.dbclient.DbClientMSSQLFactory;
+import com.personal.shared.factories.CreateService;
+import com.personal.shared.factories.CreateServiceBuilder;
+import com.personal.shared.factories.DeleteService;
+import com.personal.shared.factories.DeleteServiceBuilder;
+import com.personal.shared.factories.UpdateService;
+import com.personal.shared.factories.UpdateServiceBuilder;
 
 public class CommercialEntityServiceFactory {
 
-    public static CreateCommercialEntityService CreateCommercialEntity() {
+    private static final String TABLE_NAME = "commercial_entities";
 
-        return new CreateCommercialEntityService(DbClientMSSQLFactory.SystemMaster());
+    public static CreateService CreateCommercialEntity() {
+        return CreateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.SystemMaster())
+                .withSuccessNotification(CommercialEntityNotificationFactory.CreateCommercialEntitySuccess())
+                .withFailureNotification(CommercialEntityNotificationFactory.CreateCommercialEntityFail())
+                .build();
     }
 
     public static FilterCommercialEntityService FilterCommercialEntity() {
@@ -18,14 +28,24 @@ public class CommercialEntityServiceFactory {
         return new FilterCommercialEntityService(DbClientMSSQLFactory.SystemMaster());
     }
 
-    public static EditCommercialEntityService EditCommercialEntity() {
+    public static UpdateService EditCommercialEntity() {
 
-        return new EditCommercialEntityService(DbClientMSSQLFactory.SystemMaster());
+        return UpdateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.SystemMaster())
+                .withSuccessNotification(CommercialEntityNotificationFactory.UpdateCommercialEntitySuccess())
+                .withFailureNotification(CommercialEntityNotificationFactory.UpdateCommercialEntityFail())
+                .build();
     }
 
-    public static DeleteCommercialEntityService DeleteCommercialEntity() {
+    public static DeleteService DeleteCommercialEntity() {
 
-        return new DeleteCommercialEntityService(DbClientMSSQLFactory.SystemMaster());
+        return DeleteServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.SystemMaster())
+                .withSuccessNotification(CommercialEntityNotificationFactory.DeleteCommercialEntitySuccess())
+                .withFailureNotification(CommercialEntityNotificationFactory.DeleteCommercialEntityFail())
+                .build();
     }
 
 }

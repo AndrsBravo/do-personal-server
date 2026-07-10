@@ -8,20 +8,36 @@ public class ClientNotificationFactory {
         return new Notification("Ha ocurrido un error mientras se creaba el cliente ");
     }
 
+    public static Notification CreateClientSuccess() {
+        return new Notification("El cliente ha sido creado correctamente.");
+    }
+
     public static Notification UpdateClientFail() {
         return new Notification("Ha ocurrido un error mientras se actualizaba el cliente ");
+    }
+
+    public static Notification UpdateClientSuccess() {
+        return new Notification("El cliente ha sido actualizado correctamente.");
     }
 
     public static Notification DeleteClientFail() {
         return new Notification("Ha ocurrido un error mientras se eliminaba el cliente ");
     }
 
+    public static Notification DeleteClientSuccess() {
+        return new Notification("El cliente ha sido eliminado correctamente");
+    }
+
     public static Notification FetchNull() {
-        return new Notification("No se han encontrado tipos de usuario.");
+        return new Notification("No se han encontrado resultados.");
     }
 
     public static Notification AddCommercialPlanFail() {
         return new Notification("Ha ocurrido un error mientras se agregaba el plan del cliente ");
+    }
+
+    public static Notification AddCommercialPlanSuccessful() {
+        return new Notification("El plan del cliente ha sido agregado correctamente.");
     }
 
     public static Notification FilterCommercialPlanFail() {

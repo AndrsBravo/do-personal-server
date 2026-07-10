@@ -6,7 +6,7 @@ import com.personal.backoffice.commercial.entity.entities.CommercialEntity;
 import com.personal.backoffice.commercial.entity.factories.CommercialEntityResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 import io.helidon.dbclient.DbClient;
 

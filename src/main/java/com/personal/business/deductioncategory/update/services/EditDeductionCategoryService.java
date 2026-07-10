@@ -6,7 +6,7 @@ import com.personal.business.deductioncategory.entities.DeductionCategory;
 import com.personal.business.deductioncategory.factories.DeductionCategoryResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IEditService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 import io.helidon.dbclient.DbClient;
 

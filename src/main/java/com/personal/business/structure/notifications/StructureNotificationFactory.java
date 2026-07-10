@@ -5,19 +5,31 @@ import com.personal.shared.notifications.Notification;
 public class StructureNotificationFactory {
 
     public static Notification CreateStructureFail() {
-        return new Notification("Ha ocurrido un error mientras se creaba el tipo de usuario ");
+        return new Notification("Ha ocurrido un error mientras se creaba la estructura organizacional ");
+    }
+
+    public static Notification CreateStructureSuccess() {
+        return new Notification("La estructura organizacional se ha creado correctamente.");
     }
 
     public static Notification UpdateStructureFail() {
-        return new Notification("Ha ocurrido un error mientras se actualizaba el tipo de usuario ");
+        return new Notification("Ha ocurrido un error mientras se actualizaba la estructura organizacional ");
+    }
+
+    public static Notification UpdateStructureSuccess() {
+        return new Notification("La estructura organizacional se ha actualizado correctamente.");
     }
 
     public static Notification DeleteStructureFail() {
-        return new Notification("Ha ocurrido un error mientras se eliminaba el tipo de usuario ");
+        return new Notification("Ha ocurrido un error mientras se eliminaba la estructura organizacional ");
+    }
+
+    public static Notification DeleteStructureSuccess() {
+        return new Notification("La estructura organizacional se ha eliminado correctamente.");
     }
 
     public static Notification FetchNull() {
-        return new Notification("No se han encontrado tipos de usuario.");
+        return new Notification("No se han encontrado resultados.");
     }
 
 }

@@ -1,11 +1,11 @@
 package com.personal.management.benefitdeductionrelation.entities;
 
-import com.personal.management.country.entities.Country;
 import com.personal.shared.core.entities.SharedBenefitDeductionRelation;
+import com.personal.shared.core.entities.SharedCountry;
 
 public class BenefitDeductionRelation extends SharedBenefitDeductionRelation {
 
-    private Country country;
+    private SharedCountry country;
 
     public BenefitDeductionRelation() {
         super();
@@ -15,11 +15,11 @@ public class BenefitDeductionRelation extends SharedBenefitDeductionRelation {
         super(id);
     }
 
-    public Country getCountry() {
+    public SharedCountry getCountry() {
         return country;
     }
 
-    public void setCountry(Country country) {
+    public void setCountry(SharedCountry country) {
         this.country = country;
     }
 

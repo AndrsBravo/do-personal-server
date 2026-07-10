@@ -1,16 +1,26 @@
 package com.personal.management.payrollrundeduction.factories;
 
-import com.personal.management.payrollrundeduction.create.services.CreatePayrollRunDeductionService;
-import com.personal.management.payrollrundeduction.delete.services.DeletePayrollRunDeductionService;
 import com.personal.management.payrollrundeduction.filter.services.FilterPayrollRunDeductionService;
-import com.personal.management.payrollrundeduction.update.services.EditPayrollRunDeductionService;
+import com.personal.management.payrollrundeduction.notifications.PayrollRunDeductionNotificationFactory;
 import com.personal.server.dbclient.DbClientMSSQLFactory;
+import com.personal.shared.factories.CreateService;
+import com.personal.shared.factories.CreateServiceBuilder;
+import com.personal.shared.factories.DeleteService;
+import com.personal.shared.factories.DeleteServiceBuilder;
+import com.personal.shared.factories.UpdateService;
+import com.personal.shared.factories.UpdateServiceBuilder;
 
 public class PayrollRunDeductionServiceFactory {
 
-    public static CreatePayrollRunDeductionService CreatePayrollRunDeduction() {
+    private static final String TABLE_NAME = "payroll_runs_deductions";
 
-        return new CreatePayrollRunDeductionService(DbClientMSSQLFactory.Management());
+    public static CreateService CreatePayrollRunDeduction() {
+        return CreateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.Management())
+                .withSuccessNotification(PayrollRunDeductionNotificationFactory.CreatePayrollRunDeductionSuccess())
+                .withFailureNotification(PayrollRunDeductionNotificationFactory.CreatePayrollRunDeductionFail())
+                .build();
     }
 
     public static FilterPayrollRunDeductionService FilterPayrollRunDeduction() {
@@ -18,14 +28,24 @@ public class PayrollRunDeductionServiceFactory {
         return new FilterPayrollRunDeductionService(DbClientMSSQLFactory.Management());
     }
 
-    public static EditPayrollRunDeductionService EditPayrollRunDeduction() {
+    public static UpdateService EditPayrollRunDeduction() {
 
-        return new EditPayrollRunDeductionService(DbClientMSSQLFactory.Management());
+        return UpdateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.Management())
+                .withSuccessNotification(PayrollRunDeductionNotificationFactory.UpdatePayrollRunDeductionSuccess())
+                .withFailureNotification(PayrollRunDeductionNotificationFactory.UpdatePayrollRunDeductionFail())
+                .build();
     }
 
-    public static DeletePayrollRunDeductionService DeletePayrollRunDeduction() {
+    public static DeleteService DeletePayrollRunDeduction() {
 
-        return new DeletePayrollRunDeductionService(DbClientMSSQLFactory.Management());
+        return DeleteServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.Management())
+                .withSuccessNotification(PayrollRunDeductionNotificationFactory.DeletePayrollRunDeductionSuccess())
+                .withFailureNotification(PayrollRunDeductionNotificationFactory.DeletePayrollRunDeductionFail())
+                .build();
     }
 
 }

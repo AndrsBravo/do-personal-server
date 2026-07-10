@@ -3,8 +3,8 @@ package com.personal.backoffice.user.associatebusiness.add.inputs;
 import com.personal.backoffice.business.entities.Business;
 import com.personal.backoffice.user.associatebusiness.entities.AssociateUserBusiness;
 import com.personal.backoffice.user.entities.User;
-import com.personal.backoffice.user.entities.UserRelation;
-import com.personal.backoffice.user.entities.UserRole;
+import com.personal.backoffice.userrelation.entities.UserRelation;
+import com.personal.backoffice.userrole.entities.UserRole;
 import com.personal.shared.inputs.Input;
 
 public class AssociateUserBusinessInput extends Input {

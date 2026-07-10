@@ -1,8 +1,8 @@
 package com.personal.backoffice.user.associateclient.entities;
 
 import com.personal.backoffice.user.entities.User;
-import com.personal.backoffice.user.entities.UserRelation;
-import com.personal.backoffice.user.entities.UserRole;
+import com.personal.backoffice.userrelation.entities.UserRelation;
+import com.personal.backoffice.userrole.entities.UserRole;
 import com.personal.shared.entities.ClientEntity;
 
 public class AssociateUserClient extends ClientEntity {

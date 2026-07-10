@@ -1,11 +1,11 @@
 package com.personal.management.payrollrundeduction.entities;
 
-import com.personal.management.country.entities.Country;
+import com.personal.shared.core.entities.SharedCountry;
 import com.personal.shared.core.entities.SharedPayrollRunDeduction;
 
 public class PayrollRunDeduction extends SharedPayrollRunDeduction {
 
-    private Country country;
+    private SharedCountry country;
 
     public PayrollRunDeduction() {
         super();
@@ -15,11 +15,11 @@ public class PayrollRunDeduction extends SharedPayrollRunDeduction {
         super(id);
     }
 
-    public Country getCountry() {
+    public SharedCountry getCountry() {
         return country;
     }
 
-    public void setCountry(Country country) {
+    public void setCountry(SharedCountry country) {
         this.country = country;
     }
 

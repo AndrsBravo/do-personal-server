@@ -1,16 +1,26 @@
 package com.personal.business.payrollcalculationresult.factories;
 
-import com.personal.business.payrollcalculationresult.create.services.CreatePayrollCalculationResultService;
-import com.personal.business.payrollcalculationresult.delete.services.DeletePayrollCalculationResultService;
 import com.personal.business.payrollcalculationresult.filter.services.FilterPayrollCalculationResultService;
-import com.personal.business.payrollcalculationresult.update.services.EditPayrollCalculationResultService;
+import com.personal.business.payrollcalculationresult.notifications.PayrollCalculationResultNotificationFactory;
 import com.personal.server.dbclient.DbClientMSSQLFactory;
+import com.personal.shared.factories.CreateService;
+import com.personal.shared.factories.CreateServiceBuilder;
+import com.personal.shared.factories.DeleteService;
+import com.personal.shared.factories.DeleteServiceBuilder;
+import com.personal.shared.factories.UpdateService;
+import com.personal.shared.factories.UpdateServiceBuilder;
 
 public class PayrollCalculationResultServiceFactory {
 
-    public static CreatePayrollCalculationResultService CreatePayrollCalculationResult(String dbClient) {
+    private static final String TABLE_NAME = "payroll_calculations_results";
 
-        return new CreatePayrollCalculationResultService(DbClientMSSQLFactory.DbClient(dbClient));
+    public static CreateService CreatePayrollCalculationResult(String dbClient) {
+        return CreateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(PayrollCalculationResultNotificationFactory.CreatePayrollCalculationResultSuccess())
+                .withFailureNotification(PayrollCalculationResultNotificationFactory.CreatePayrollCalculationResultFail())
+                .build();
     }
 
     public static FilterPayrollCalculationResultService FilterPayrollCalculationResult(String dbClient) {
@@ -18,14 +28,24 @@ public class PayrollCalculationResultServiceFactory {
         return new FilterPayrollCalculationResultService(DbClientMSSQLFactory.DbClient(dbClient));
     }
 
-    public static EditPayrollCalculationResultService EditPayrollCalculationResult(String dbClient) {
+    public static UpdateService EditPayrollCalculationResult(String dbClient) {
 
-        return new EditPayrollCalculationResultService(DbClientMSSQLFactory.DbClient(dbClient));
+        return UpdateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(PayrollCalculationResultNotificationFactory.UpdatePayrollCalculationResultSuccess())
+                .withFailureNotification(PayrollCalculationResultNotificationFactory.UpdatePayrollCalculationResultFail())
+                .build();
     }
 
-    public static DeletePayrollCalculationResultService DeletePayrollCalculationResult(String dbClient) {
+    public static DeleteService DeletePayrollCalculationResult(String dbClient) {
 
-        return new DeletePayrollCalculationResultService(DbClientMSSQLFactory.DbClient(dbClient));
+        return DeleteServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(PayrollCalculationResultNotificationFactory.DeletePayrollCalculationResultSuccess())
+                .withFailureNotification(PayrollCalculationResultNotificationFactory.DeletePayrollCalculationResultFail())
+                .build();
     }
 
 }

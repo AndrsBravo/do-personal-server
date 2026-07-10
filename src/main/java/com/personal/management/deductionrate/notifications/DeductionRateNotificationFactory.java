@@ -5,19 +5,31 @@ import com.personal.shared.notifications.Notification;
 public class DeductionRateNotificationFactory {
 
     public static Notification CreateDeductionRateFail() {
-        return new Notification("Ha ocurrido un error mientras se creaba el tipo de usuario ");
+        return new Notification("Ha ocurrido un error mientras se creaba el valor de deducción ");
+    }
+
+    public static Notification CreateDeductionRateSuccess() {
+        return new Notification("El valor de deducción se ha creado correctamente.");
     }
 
     public static Notification UpdateDeductionRateFail() {
-        return new Notification("Ha ocurrido un error mientras se actualizaba el tipo de usuario ");
+        return new Notification("Ha ocurrido un error mientras se actualizaba el valor de deducción ");
+    }
+
+    public static Notification UpdateDeductionRateSuccess() {
+        return new Notification("El valor de deducción se ha actualizado correctamente.");
     }
 
     public static Notification DeleteDeductionRateFail() {
-        return new Notification("Ha ocurrido un error mientras se eliminaba el tipo de usuario ");
+        return new Notification("Ha ocurrido un error mientras se eliminaba el valor de deducción ");
+    }
+
+    public static Notification DeleteDeductionRateSuccess() {
+        return new Notification("El valor de deducción se ha eliminado correctamente.");
     }
 
     public static Notification FetchNull() {
-        return new Notification("No se han encontrado tipos de usuario.");
+        return new Notification("No se han encontrado resultados.");
     }
 
 }

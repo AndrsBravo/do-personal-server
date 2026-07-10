@@ -1,7 +1,7 @@
 package com.personal.backoffice.system.databases.process.migration.rules;
 
+import com.personal.backoffice.system.databases.factories.SystemServiceFactory;
 import com.personal.backoffice.system.databases.process.migration.MigrationProcess;
-import com.personal.backoffice.system.factories.SystemServiceFactory;
 import com.personal.server.config.AppConfig;
 import com.personal.shared.process.IProcessRule;
 import com.personal.shared.process.logs.LogFactory;
@@ -20,7 +20,7 @@ public class MigrateManagementDataBaseRule implements IProcessRule<MigrationProc
 
         var migrateDataBaseService = SystemServiceFactory.MigrateDataBaseService(dbName).create(query);
 
-        if (migrateDataBaseService.getResult() != null) {
+        if (migrateDataBaseService.getRecords() > 0) {
             process.addLog(pLogger.SUCCESS("Migrar Management Data Base", "Migración completada exitosamente!"));
         }
 

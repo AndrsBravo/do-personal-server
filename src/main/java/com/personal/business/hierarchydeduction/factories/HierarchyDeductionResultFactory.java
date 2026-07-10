@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.personal.business.hierarchydeduction.entities.HierarchyDeduction;
 import com.personal.business.hierarchydeduction.notifications.HierarchyDeductionNotificationFactory;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 public class HierarchyDeductionResultFactory {
 

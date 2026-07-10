@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.personal.backoffice.country.entities.Country;
 import com.personal.business.country.notifications.CountryNotificationFactory;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 public class CountryResultFactory {
 

@@ -1,7 +1,7 @@
 package com.personal.backoffice.business.process.create.rules;
 
 import com.personal.backoffice.business.process.create.CreateBusinessProcess;
-import com.personal.backoffice.system.factories.SystemServiceFactory;
+import com.personal.backoffice.system.databases.factories.SystemServiceFactory;
 import com.personal.shared.process.IProcessRule;
 import com.personal.shared.process.logs.LogFactory;
 import com.personal.shared.query.Query;
@@ -27,7 +27,7 @@ public class CreateBusinessDataBaseRule implements IProcessRule<CreateBusinessPr
 
         var createDataBaseService = SystemServiceFactory.CreateDataBaseService().create(query);
 
-        if (createDataBaseService.getResult() != null) {
+        if (createDataBaseService.getRecords() > 0) {
             process.addLog(pLogger.SUCCESS(shouldDo, "La Client Master Data Base fue creada exitosamente!"));
         }
 

@@ -6,7 +6,7 @@ import com.personal.management.origincategory.entities.OriginCategory;
 import com.personal.management.origincategory.factories.OriginCategoryResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IEditService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 import io.helidon.dbclient.DbClient;
 

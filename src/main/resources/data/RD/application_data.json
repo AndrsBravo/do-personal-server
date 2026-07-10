@@ -1,0 +1,424 @@
+{
+    "countries": [
+        {
+            "code": "RD",
+            "name": "Republica Dominicana"
+        }
+    ],
+    "structures": [
+        {
+            "title": "Junta de Accionistas",
+            "structure": "Junta",
+            "level": 1
+        },
+        {
+            "title": "Junta Directiva",
+            "structure": "Junta",
+            "level": 2
+        },
+        {
+            "title": "Dirección Ejecutiva",
+            "structure": "Dirección",
+            "level": 3
+        },
+        {
+            "title": "Dirección General/Regional",
+            "structure": "Dirección",
+            "level": 4
+        },
+        {
+            "title": "Dirección Capitulo",
+            "structure": "Dirección",
+            "level": 5
+        },
+        {
+            "title": "Gerencia General",
+            "structure": "Gerencia",
+            "level": 6
+        },
+        {
+            "title": "Gerencia Area",
+            "structure": "Gerencia",
+            "level": 7
+        },
+        {
+            "title": "Departamentos",
+            "structure": "Departamento",
+            "level": 8
+        },
+        {
+            "title": "Sección/Area",
+            "structure": "Sección",
+            "level": 9
+        },
+        {
+            "title": "sub-Sección/Sub-Area",
+            "structure": "Sub-sección",
+            "level": 10
+        }
+    ],
+    "hierarchies": [
+        {
+            "title": "Miembro de la Junta Acc",
+            "hierarchy": "Miembro",
+            "level": 1
+        },
+        {
+            "title": "Miembro de la Junta Dir",
+            "hierarchy": "Miembro",
+            "level": 2
+        },
+        {
+            "title": "Director Ejecutivo/a",
+            "hierarchy": "Director",
+            "level": 3
+        },
+        {
+            "title": "Director General/Regional",
+            "hierarchy": "Director",
+            "level": 4
+        },
+        {
+            "title": "Director Capitulo",
+            "hierarchy": "Director",
+            "level": 5
+        },
+        {
+            "title": "Gerente General",
+            "hierarchy": "Gerente",
+            "level": 6
+        },
+        {
+            "title": "Gerente de Area",
+            "hierarchy": "Gerente",
+            "level": 7
+        },
+        {
+            "title": "Jefe de Departamentos",
+            "hierarchy": "Jefe",
+            "level": 8
+        },
+        {
+            "title": "Coordinador de area",
+            "hierarchy": "Coordinador",
+            "level": 9
+        },
+        {
+            "title": "Supervisor de area",
+            "hierarchy": "Supervisor",
+            "level": 10
+        },
+        {
+            "title": "Analista de area",
+            "hierarchy": "Analista",
+            "level": 11
+        },
+        {
+            "title": "Asistente de area",
+            "hierarchy": "Asistente",
+            "level": 12
+        },
+        {
+            "title": "Auxiliar de area",
+            "hierarchy": "Auxiliar",
+            "level": 13
+        }
+    ],
+    "finance_category": [
+        {
+            "title": "Monetario",
+            "category": "MO",
+            "description": "Es un beneficio económico que entrega en efectivo al colaborador. Se calcula en la nomina"
+        },
+        {
+            "title": "No-Monetario",
+            "category": "NMO",
+            "description": "Es un beneficio económico que entrega en especie al colaborador"
+        },
+        {
+            "title": "Retencion",
+            "category": "RT",
+            "description": "Es un descuento que el empleador debe realizar al trabajador y pagar en su nombre"
+        },
+        {
+            "title": "Descuento",
+            "category": "DT",
+            "description": "Se realiza al trabajador mediante acuerdo previo."
+        },
+        {
+            "title": "Gasto",
+            "category": "GT",
+            "description": "Se calcula en base a la nomina y corresponde el pago completo por el empleador."
+        }
+    ],
+    "origin_categories": [
+        {
+            "title": "Legal",
+            "origin": "law",
+            "description": "Es un beneficio económico establecido por ley."
+        },
+        {
+            "title": "Propio",
+            "origin": "own",
+            "description": "Es un beneficio económico o no económico establecido por el empleador."
+        }
+    ],
+    "benefits_categories": [
+        {
+            "title": "Salario Ordinario",
+            "origin": "law",
+            "finance": "MO",
+            "description": "Salario principal convenido"
+        },
+        {
+            "title": "Salario Extraordinario",
+            "origin": "law",
+            "finance": "MO",
+            "description": "Horas extras pagadas"
+        },
+        {
+            "title": "Salario Especial",
+            "origin": "law",
+            "finance": "MO",
+            "description": "Salario de navidad y Vacaciones"
+        },
+        {
+            "title": "Bonificación",
+            "origin": "law",
+            "finance": "MO",
+            "description": "Participación en los beneficios"
+        },
+        {
+            "title": "Compensación de ley",
+            "origin": "law",
+            "finance": "MO",
+            "description": "Prestaciones laborales."
+        },
+        {
+            "title": "Beneficio Ordinario",
+            "origin": "own",
+            "finance": "MO",
+            "description": "Beneficio empresarial común"
+        },
+        {
+            "title": "Comisión por rendimiento",
+            "origin": "own",
+            "finance": "MO",
+            "description": "Beneficio empresarial"
+        },
+        {
+            "title": "Bono de cumplimiento",
+            "origin": "own",
+            "finance": "MO",
+            "description": "Beneficio empresarial"
+        },
+        {
+            "title": "Compensación por contingencia",
+            "origin": "own",
+            "finance": "MO",
+            "description": "Beneficio empresarial"
+        },
+        {
+            "title": "Asignación Ordinaria",
+            "origin": "own",
+            "finance": "NMO",
+            "description": "Asignación empresarial común"
+        },
+        {
+            "title": "Asignación Especial",
+            "origin": "own",
+            "finance": "NMO",
+            "description": "Asignación empresarial Especial"
+        }
+    ],
+    "business_benefits": [
+        {
+            "title": "Salario",
+            "origin": "law",
+            "finance": "MO",
+            "description": "Salario principal"
+        },
+        {
+            "title": "Horas Extraordinarias",
+            "origin": "law",
+            "finance": "MO",
+            "description": "Horas extras pagadas"
+        },
+        {
+            "title": "Salario Navidad",
+            "origin": "law",
+            "finance": "MO",
+            "description": "Salario numero 13"
+        },
+        {
+            "title": "Vacaciones Remuneradas",
+            "origin": "law",
+            "finance": "MO",
+            "description": "Salario de vacaciones"
+        },
+        {
+            "title": "Bonificación",
+            "origin": "law",
+            "finance": "MO",
+            "description": "Participación en los beneficios"
+        },
+        {
+            "title": "Preaviso",
+            "origin": "law",
+            "finance": "MO",
+            "description": "Cuando no se pre-avisa el despido"
+        },
+        {
+            "title": "Cesantía",
+            "origin": "law",
+            "finance": "MO",
+            "description": "Compensación por desahucio"
+        },
+        {
+            "title": "Beneficio Ordinario",
+            "origin": " own",
+            "finance": "MO",
+            "description": "Beneficio empresarial común"
+        },
+        {
+            "title": "Comisión por rendimiento",
+            "origin": " own",
+            "finance": "MO",
+            "description": "Beneficio empresarial"
+        },
+        {
+            "title": "Bono de cumplimiento",
+            "origin": " own",
+            "finance": "MO",
+            "description": "Beneficio empresarial"
+        },
+        {
+            "title": "Compensación por contingencia",
+            "origin": " own",
+            "finance": "MO",
+            "description": "Beneficio empresarial"
+        },
+        {
+            "title": "Asignación Ordinaria",
+            "origin": " own",
+            "finance": "NMO",
+            "description": "Asignación empresarial común"
+        },
+        {
+            "title": "Asignación Especial",
+            "origin": " own",
+            "finance": "NMO",
+            "description": "Asignación empresarial Especial"
+        }
+    ],
+    "business_deductions": [
+        {
+            "deduction": "ISR",
+            "origin": "law",
+            "finance": "RT",
+            "description": "Impuesto Sobre Las Rentas"
+        },
+        {
+            "deduction": "ARS",
+            "origin": "law",
+            "finance": "RT",
+            "description": "Seguro de Familiar de Salud"
+        },
+        {
+            "deduction": "AFP",
+            "origin": "law",
+            "finance": "RT",
+            "description": "Seguro de Pensiones"
+        },
+        {
+            "deduction": "INFOTEP",
+            "origin": "law",
+            "finance": "RT",
+            "description": "Aporte al INFOTEP"
+        },
+        {
+            "deduction": "ARS Patronal",
+            "origin": "law",
+            "finance": "GT",
+            "description": "Seguro de Familiar de Salud"
+        },
+        {
+            "deduction": "AFP Patronal",
+            "origin": "law",
+            "finance": "GT",
+            "description": "Seguro de Pensiones"
+        },
+        {
+            "deduction": "INFOTEP Patronal",
+            "origin": "law",
+            "finance": "GT",
+            "description": "Aporte al INFOTEP"
+        },
+        {
+            "deduction": "Descuento",
+            "origin": "propio",
+            "finance": "DT",
+            "description": "Descuento comida"
+        },
+        {
+            "deduction": "Gasto.",
+            "origin": "propio",
+            "finance": "GT",
+            "description": "Gasto comida"
+        }
+    ],
+    "temporal_frequencies": [
+        {
+            "frequency": "hourly",
+            "title": "Hora",
+            "description": "Describe una operación calculada cada Hora"
+        },
+        {
+            "frequency": "daily",
+            "title": "Diario",
+            "description": "Describe una operación calculada cada dia"
+        },
+        {
+            "frequency": "weekly",
+            "title": "Semanal",
+            "description": "Describe una operación calculada cada semana"
+        },
+        {
+            "frequency": "bi-weekly",
+            "title": "BiSemanal",
+            "description": "Describe una operación calculada cada 2 semana"
+        },
+        {
+            "frequency": "semi-weekly",
+            "title": "Quincenal",
+            "description": "Describe una operación calculada cada 15 días"
+        },
+        {
+            "frequency": "monthly",
+            "title": "Mensual",
+            "description": "Describe una operación calculada cada Mes"
+        },
+        {
+            "frequency": "yearly",
+            "title": "Anual",
+            "description": "Describe una operación calculada cada Ano"
+        }
+    ],
+    "payroll_run_types": [
+        {
+            "type": "partial",
+            "title": "Parcial",
+            "description": "Se pagara una porción de la nomina."
+        },
+        {
+            "type": "remind",
+            "title": "Restante",
+            "description": "Se pagara el remanente de la nomina."
+        },
+        {
+            "type": "total",
+            "title": "Total",
+            "description": "Se pagara el total de la nomina."
+        }
+    ]
+}

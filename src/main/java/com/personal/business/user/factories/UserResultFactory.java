@@ -5,7 +5,7 @@ import java.util.List;
 import com.personal.business.user.entities.User;
 import com.personal.business.user.notifications.UserNotificationFactory;
 import com.personal.shared.notifications.Notification;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 public class UserResultFactory {
 

@@ -1,11 +1,11 @@
 package com.personal.management.origincategory.entities;
 
-import com.personal.management.country.entities.Country;
+import com.personal.shared.core.entities.SharedCountry;
 import com.personal.shared.core.entities.SharedOriginCategory;
 
 public class OriginCategory extends SharedOriginCategory {
 
-    private Country country;
+    private SharedCountry country;
 
     public OriginCategory() {
         super();
@@ -15,11 +15,11 @@ public class OriginCategory extends SharedOriginCategory {
         super(id);
     }
 
-    public Country getCountry() {
+    public SharedCountry getCountry() {
         return country;
     }
 
-    public void setCountry(Country country) {
+    public void setCountry(SharedCountry country) {
         this.country = country;
     }
 

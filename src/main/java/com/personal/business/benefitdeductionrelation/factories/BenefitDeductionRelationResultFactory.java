@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.personal.business.benefitdeductionrelation.entities.BenefitDeductionRelation;
 import com.personal.business.benefitdeductionrelation.notifications.BenefitDeductionRelationNotificationFactory;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 public class BenefitDeductionRelationResultFactory {
 

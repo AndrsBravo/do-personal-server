@@ -1,16 +1,26 @@
 package com.personal.management.orgstructure.factories;
 
-import com.personal.management.orgstructure.create.services.CreateOrgStructureService;
-import com.personal.management.orgstructure.delete.services.DeleteOrgStructureService;
 import com.personal.management.orgstructure.filter.services.FilterOrgStructureService;
-import com.personal.management.orgstructure.update.services.EditOrgStructureService;
+import com.personal.management.orgstructure.notifications.OrgStructureNotificationFactory;
 import com.personal.server.dbclient.DbClientMSSQLFactory;
+import com.personal.shared.factories.CreateService;
+import com.personal.shared.factories.CreateServiceBuilder;
+import com.personal.shared.factories.DeleteService;
+import com.personal.shared.factories.DeleteServiceBuilder;
+import com.personal.shared.factories.UpdateService;
+import com.personal.shared.factories.UpdateServiceBuilder;
 
 public class OrgStructureServiceFactory {
 
-    public static CreateOrgStructureService CreateOrgStructure() {
+    private static final String TABLE_NAME = "organization_structures";
 
-        return new CreateOrgStructureService(DbClientMSSQLFactory.Management());
+    public static CreateService CreateOrgStructure() {
+        return CreateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.Management())
+                .withSuccessNotification(OrgStructureNotificationFactory.CreateOrgStructureSuccess())
+                .withFailureNotification(OrgStructureNotificationFactory.CreateOrgStructureFail())
+                .build();
     }
 
     public static FilterOrgStructureService FilterOrgStructure() {
@@ -18,14 +28,23 @@ public class OrgStructureServiceFactory {
         return new FilterOrgStructureService(DbClientMSSQLFactory.Management());
     }
 
-    public static EditOrgStructureService EditOrgStructure() {
-
-        return new EditOrgStructureService(DbClientMSSQLFactory.Management());
+    public static UpdateService EditOrgStructure() {
+        return UpdateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.Management())
+                .withSuccessNotification(OrgStructureNotificationFactory.UpdateOrgStructureSuccess())
+                .withFailureNotification(OrgStructureNotificationFactory.UpdateOrgStructureFail())
+                .build();
     }
 
-    public static DeleteOrgStructureService DeleteOrgStructure() {
+    public static DeleteService DeleteOrgStructure() {
 
-        return new DeleteOrgStructureService(DbClientMSSQLFactory.Management());
+        return DeleteServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.Management())
+                .withSuccessNotification(OrgStructureNotificationFactory.DeleteOrgStructureSuccess())
+                .withFailureNotification(OrgStructureNotificationFactory.DeleteOrgStructureFail())
+                .build();
     }
 
 }

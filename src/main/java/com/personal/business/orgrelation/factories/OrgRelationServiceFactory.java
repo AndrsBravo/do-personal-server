@@ -1,16 +1,26 @@
 package com.personal.business.orgrelation.factories;
 
-import com.personal.business.orgrelation.create.services.CreateOrgRelationService;
-import com.personal.business.orgrelation.delete.services.DeleteOrgRelationService;
 import com.personal.business.orgrelation.filter.services.FilterOrgRelationService;
-import com.personal.business.orgrelation.update.services.EditOrgRelationService;
+import com.personal.business.orgrelation.notifications.OrgRelationNotificationFactory;
 import com.personal.server.dbclient.DbClientMSSQLFactory;
+import com.personal.shared.factories.CreateService;
+import com.personal.shared.factories.CreateServiceBuilder;
+import com.personal.shared.factories.DeleteService;
+import com.personal.shared.factories.DeleteServiceBuilder;
+import com.personal.shared.factories.UpdateService;
+import com.personal.shared.factories.UpdateServiceBuilder;
 
 public class OrgRelationServiceFactory {
 
-    public static CreateOrgRelationService CreateOrgRelation(String dbClient) {
+    private static final String TABLE_NAME = "organization_relations";
 
-        return new CreateOrgRelationService(DbClientMSSQLFactory.DbClient(dbClient));
+    public static CreateService CreateOrgRelation(String dbClient) {
+        return CreateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(OrgRelationNotificationFactory.CreateOrgRelationSuccess())
+                .withFailureNotification(OrgRelationNotificationFactory.CreateOrgRelationFail())
+                .build();
     }
 
     public static FilterOrgRelationService FilterOrgRelation(String dbClient) {
@@ -18,14 +28,24 @@ public class OrgRelationServiceFactory {
         return new FilterOrgRelationService(DbClientMSSQLFactory.DbClient(dbClient));
     }
 
-    public static EditOrgRelationService EditOrgRelation(String dbClient) {
+    public static UpdateService EditOrgRelation(String dbClient) {
 
-        return new EditOrgRelationService(DbClientMSSQLFactory.DbClient(dbClient));
+        return UpdateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(OrgRelationNotificationFactory.UpdateOrgRelationSuccess())
+                .withFailureNotification(OrgRelationNotificationFactory.UpdateOrgRelationFail())
+                .build();
     }
 
-    public static DeleteOrgRelationService DeleteOrgRelation(String dbClient) {
+    public static DeleteService DeleteOrgRelation(String dbClient) {
 
-        return new DeleteOrgRelationService(DbClientMSSQLFactory.DbClient(dbClient));
+        return DeleteServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(OrgRelationNotificationFactory.DeleteOrgRelationSuccess())
+                .withFailureNotification(OrgRelationNotificationFactory.DeleteOrgRelationFail())
+                .build();
     }
 
 }

@@ -1,6 +1,6 @@
 package com.personal.management.temporalfrequency.create.inputs;
 
-import com.personal.management.shared.inputs.CountryInputBase;
+import com.personal.backoffice.shared.inputs.CountryInputBase;
 import com.personal.management.temporalfrequency.entities.TemporalFrequency;
 
 public class TemporalFrequencyInput extends CountryInputBase {

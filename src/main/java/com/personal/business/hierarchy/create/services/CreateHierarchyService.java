@@ -2,15 +2,16 @@ package com.personal.business.hierarchy.create.services;
 
 import java.util.Optional;
 
-import com.personal.business.hierarchy.entities.Hierarchy;
-import com.personal.business.hierarchy.factories.HierarchyResultFactory;
+import com.personal.business.hierarchy.notifications.HierarchyNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.CreateResult;
+import com.personal.shared.services.entities.CreateResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class CreateHierarchyService implements ICreateService<Hierarchy> {
+public class CreateHierarchyService implements ICreateService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,34 +20,32 @@ public class CreateHierarchyService implements ICreateService<Hierarchy> {
     }
 
     @Override
-    public ServiceResult<Hierarchy> create(Query query) {
+    public CreateResult create(Query query) {
         if (dbClient.isEmpty()) {
-            return HierarchyResultFactory.CreateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var insertQuery = query.InsertInto("business_hierarchies").Get();
 
-        //System.out.println(insertQuery);
-        long result = 0;
-
         try {
 
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createInsert(insertQuery)
                     .params(query.getParams())
                     .execute();
+            return CreateResultBuilder.build()
+                    .withRecords(records)
+                    .withNotification(HierarchyNotificationFactory.CreateHierarchySuccess())
+                    .get();
         } catch (Exception e) {
 
-            return HierarchyResultFactory.CreateFail();
+            return CreateResultBuilder.build()
+                    .withException(e)
+                    .withNotification(HierarchyNotificationFactory.CreateHierarchyFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return HierarchyResultFactory.CreateFail();
-        }
-
-        return HierarchyResultFactory.CreateSuccess(new Hierarchy());
 
     }
 

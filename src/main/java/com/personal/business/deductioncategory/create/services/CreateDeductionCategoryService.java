@@ -2,15 +2,16 @@ package com.personal.business.deductioncategory.create.services;
 
 import java.util.Optional;
 
-import com.personal.business.deductioncategory.entities.DeductionCategory;
-import com.personal.business.deductioncategory.factories.DeductionCategoryResultFactory;
+import com.personal.business.deductioncategory.notifications.DeductionCategoryNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.CreateResult;
+import com.personal.shared.services.entities.CreateResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class CreateDeductionCategoryService implements ICreateService<DeductionCategory> {
+public class CreateDeductionCategoryService implements ICreateService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,34 +20,32 @@ public class CreateDeductionCategoryService implements ICreateService<DeductionC
     }
 
     @Override
-    public ServiceResult<DeductionCategory> create(Query query) {
+    public CreateResult create(Query query) {
         if (dbClient.isEmpty()) {
-            return DeductionCategoryResultFactory.CreateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var insertQuery = query.InsertInto("deductions_categories").Get();
 
-        //System.out.println(insertQuery);
-        long result = 0;
-
         try {
 
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createInsert(insertQuery)
                     .params(query.getParams())
                     .execute();
+            return CreateResultBuilder.build()
+                    .withRecords(records)
+                    .withNotification(DeductionCategoryNotificationFactory.CreateDeductionCategorySuccess())
+                    .get();
         } catch (Exception e) {
 
-            return DeductionCategoryResultFactory.CreateFail();
+            return CreateResultBuilder.build()
+                    .withException(e)
+                    .withNotification(DeductionCategoryNotificationFactory.CreateDeductionCategoryFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return DeductionCategoryResultFactory.CreateFail();
-        }
-
-        return DeductionCategoryResultFactory.CreateSuccess(new DeductionCategory());
 
     }
 

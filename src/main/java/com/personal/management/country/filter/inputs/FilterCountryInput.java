@@ -1,6 +1,6 @@
 package com.personal.management.country.filter.inputs;
 
-import com.personal.management.shared.inputs.CountryFilterInputBase;
+import com.personal.backoffice.shared.inputs.CountryFilterInputBase;
 
 public class FilterCountryInput extends CountryFilterInputBase {
 

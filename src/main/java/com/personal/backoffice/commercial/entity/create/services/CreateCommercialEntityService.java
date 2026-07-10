@@ -2,15 +2,16 @@ package com.personal.backoffice.commercial.entity.create.services;
 
 import java.util.Optional;
 
-import com.personal.backoffice.commercial.entity.entities.CommercialEntity;
-import com.personal.backoffice.commercial.entity.factories.CommercialEntityResultFactory;
+import com.personal.backoffice.commercial.entity.notifications.CommercialEntityNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.CreateResult;
+import com.personal.shared.services.entities.CreateResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class CreateCommercialEntityService implements ICreateService<CommercialEntity> {
+public class CreateCommercialEntityService implements ICreateService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,35 +20,32 @@ public class CreateCommercialEntityService implements ICreateService<CommercialE
     }
 
     @Override
-    public ServiceResult<CommercialEntity> create(Query query) {
+    public CreateResult create(Query query) {
         if (dbClient.isEmpty()) {
-            return CommercialEntityResultFactory.CreateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var insertQuery = query.InsertInto("commercial_entities").Get();
 
-        //System.out.println(insertQuery);
-        long result = 0;
-
         try {
 
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createInsert(insertQuery)
                     .params(query.getParams())
                     .execute();
+            return CreateResultBuilder.build()
+                    .withRecords(records)
+                    .withNotification(CommercialEntityNotificationFactory.CreateCommercialEntitySuccess())
+                    .get();
         } catch (Exception e) {
 
-            return CommercialEntityResultFactory.CreateFail();
+            return CreateResultBuilder.build()
+                    .withException(e)
+                    .withNotification(CommercialEntityNotificationFactory.CreateCommercialEntityFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return CommercialEntityResultFactory.CreateFail();
-        }
-
-        return CommercialEntityResultFactory.CreateSuccess(new CommercialEntity());
-
     }
 
 }

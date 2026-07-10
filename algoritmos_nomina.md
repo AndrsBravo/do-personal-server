@@ -250,7 +250,7 @@ La liquidación es la porción de la nomina que se va a pagar en un periodo dado
 
 | Liquidación      |Titulo   | tipo     |  Descripción                                   |
 | ---------------- |---------|--------- | ---------------------------------------------- |
-| partial          |Parcial  | partial  | Se pagara una porcion de la nomina.            |
+| partial          |Parcial  | partial  | Se pagara una porción de la nomina.            |
 | reminded         |Restante | remind   | Se pagara el remanente de la nomina.           |
 | total            |Total    | total    | Se pagara el total de la nomina.               |
 

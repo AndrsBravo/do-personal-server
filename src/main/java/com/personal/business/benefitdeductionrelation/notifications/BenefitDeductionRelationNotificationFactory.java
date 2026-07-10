@@ -5,19 +5,31 @@ import com.personal.shared.notifications.Notification;
 public class BenefitDeductionRelationNotificationFactory {
 
     public static Notification CreateBenefitDeductionRelationFail() {
-        return new Notification("Ha ocurrido un error mientras se creaba el tipo de usuario ");
+        return new Notification("Ha ocurrido un error mientras se creaba la relación deducción beneficio ");
+    }
+
+    public static Notification CreateBenefitDeductionRelationSuccess() {
+        return new Notification("La relación deducción beneficio se ha creado correctamente ");
     }
 
     public static Notification UpdateBenefitDeductionRelationFail() {
-        return new Notification("Ha ocurrido un error mientras se actualizaba el tipo de usuario ");
+        return new Notification("Ha ocurrido un error mientras se actualizaba la relación deducción beneficio ");
+    }
+
+    public static Notification UpdateBenefitDeductionRelationSuccess() {
+        return new Notification("La relación deducción beneficio se ha actualizado correctamente ");
     }
 
     public static Notification DeleteBenefitDeductionRelationFail() {
-        return new Notification("Ha ocurrido un error mientras se eliminaba el tipo de usuario ");
+        return new Notification("Ha ocurrido un error mientras se eliminaba la relación deducción beneficio ");
+    }
+
+    public static Notification DeleteBenefitDeductionRelationSuccess() {
+        return new Notification("La relación deducción beneficio se ha eliminado correctamente ");
     }
 
     public static Notification FetchNull() {
-        return new Notification("No se han encontrado tipos de usuario.");
+        return new Notification("No se han encontrado resultados.");
     }
 
 }

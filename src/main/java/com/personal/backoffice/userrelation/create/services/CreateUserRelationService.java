@@ -2,15 +2,16 @@ package com.personal.backoffice.userrelation.create.services;
 
 import java.util.Optional;
 
-import com.personal.backoffice.userrelation.entities.UserRelation;
-import com.personal.backoffice.userrelation.factories.UserRelationResultFactory;
+import com.personal.backoffice.userrelation.notifications.UserRelationNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.CreateResult;
+import com.personal.shared.services.entities.CreateResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class CreateUserRelationService implements ICreateService<UserRelation> {
+public class CreateUserRelationService implements ICreateService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,35 +20,32 @@ public class CreateUserRelationService implements ICreateService<UserRelation> {
     }
 
     @Override
-    public ServiceResult<UserRelation> create(Query query) {
+    public CreateResult create(Query query) {
         if (dbClient.isEmpty()) {
-            return UserRelationResultFactory.CreateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var insertQuery = query.InsertInto("user_relation").Get();
 
-        //System.out.println(insertQuery);
-        long result = 0;
-
         try {
 
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createInsert(insertQuery)
                     .params(query.getParams())
                     .execute();
+            return CreateResultBuilder.build()
+                    .withRecords(records)
+                    .withNotification(UserRelationNotificationFactory.CreateUserRelationSuccess())
+                    .get();
         } catch (Exception e) {
 
-            return UserRelationResultFactory.CreateFail();
+            return CreateResultBuilder.build()
+                    .withException(e)
+                    .withNotification(UserRelationNotificationFactory.CreateUserRelationFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return UserRelationResultFactory.CreateFail();
-        }
-
-        return UserRelationResultFactory.CreateSuccess(new UserRelation());
-
     }
 
 }

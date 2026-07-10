@@ -2,15 +2,16 @@ package com.personal.business.benefit.create.services;
 
 import java.util.Optional;
 
-import com.personal.business.benefit.entities.Benefit;
-import com.personal.business.benefit.factories.BenefitResultFactory;
+import com.personal.business.benefit.notifications.BenefitNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.CreateResult;
+import com.personal.shared.services.entities.CreateResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class CreateBenefitService implements ICreateService<Benefit> {
+public class CreateBenefitService implements ICreateService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,34 +20,32 @@ public class CreateBenefitService implements ICreateService<Benefit> {
     }
 
     @Override
-    public ServiceResult<Benefit> create(Query query) {
+    public CreateResult create(Query query) {
         if (dbClient.isEmpty()) {
-            return BenefitResultFactory.CreateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var insertQuery = query.InsertInto("business_benefits").Get();
 
-        //System.out.println(insertQuery);
-        long result = 0;
-
         try {
 
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createInsert(insertQuery)
                     .params(query.getParams())
                     .execute();
+            return CreateResultBuilder.build()
+                    .withRecords(records)
+                    .withNotification(BenefitNotificationFactory.CreateBenefitSuccess())
+                    .get();
         } catch (Exception e) {
 
-            return BenefitResultFactory.CreateFail();
+            return CreateResultBuilder.build()
+                    .withException(e)
+                    .withNotification(BenefitNotificationFactory.CreateBenefitFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return BenefitResultFactory.CreateFail();
-        }
-
-        return BenefitResultFactory.CreateSuccess(new Benefit());
 
     }
 

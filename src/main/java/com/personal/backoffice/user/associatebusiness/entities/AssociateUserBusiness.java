@@ -1,8 +1,8 @@
 package com.personal.backoffice.user.associatebusiness.entities;
 
 import com.personal.backoffice.user.entities.User;
-import com.personal.backoffice.user.entities.UserRelation;
-import com.personal.backoffice.user.entities.UserRole;
+import com.personal.backoffice.userrelation.entities.UserRelation;
+import com.personal.backoffice.userrole.entities.UserRole;
 import com.personal.shared.entities.BusinessEntity;
 
 public class AssociateUserBusiness extends BusinessEntity {

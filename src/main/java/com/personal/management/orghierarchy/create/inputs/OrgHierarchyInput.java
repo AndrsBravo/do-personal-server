@@ -1,7 +1,7 @@
 package com.personal.management.orghierarchy.create.inputs;
 
 import com.personal.management.orghierarchy.entities.OrgHierarchy;
-import com.personal.management.shared.inputs.CountryInputBase;
+import com.personal.backoffice.shared.inputs.CountryInputBase;
 
 public class OrgHierarchyInput extends CountryInputBase {
 

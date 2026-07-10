@@ -1,11 +1,11 @@
 package com.personal.management.payrollbenefit.entities;
 
-import com.personal.management.country.entities.Country;
+import com.personal.shared.core.entities.SharedCountry;
 import com.personal.shared.core.entities.SharedPayrollBenefit;
 
 public class PayrollBenefit extends SharedPayrollBenefit {
 
-    private Country country;
+    private SharedCountry country;
 
     public PayrollBenefit() {
         super();
@@ -15,11 +15,11 @@ public class PayrollBenefit extends SharedPayrollBenefit {
         super(id);
     }
 
-    public Country getCountry() {
+    public SharedCountry getCountry() {
         return country;
     }
 
-    public void setCountry(Country country) {
+    public void setCountry(SharedCountry country) {
         this.country = country;
     }
 

@@ -1,16 +1,26 @@
 package com.personal.management.deductioncategory.factories;
 
-import com.personal.management.deductioncategory.create.services.CreateDeductionCategoryService;
-import com.personal.management.deductioncategory.delete.services.DeleteDeductionCategoryService;
 import com.personal.management.deductioncategory.filter.services.FilterDeductionCategoryService;
-import com.personal.management.deductioncategory.update.services.EditDeductionCategoryService;
+import com.personal.management.deductioncategory.notifications.DeductionCategoryNotificationFactory;
 import com.personal.server.dbclient.DbClientMSSQLFactory;
+import com.personal.shared.factories.CreateService;
+import com.personal.shared.factories.CreateServiceBuilder;
+import com.personal.shared.factories.DeleteService;
+import com.personal.shared.factories.DeleteServiceBuilder;
+import com.personal.shared.factories.UpdateService;
+import com.personal.shared.factories.UpdateServiceBuilder;
 
 public class DeductionCategoryServiceFactory {
 
-    public static CreateDeductionCategoryService CreateDeductionCategory() {
+    private static final String TABLE_NAME = "deductions_categories";
 
-        return new CreateDeductionCategoryService(DbClientMSSQLFactory.Management());
+    public static CreateService CreateDeductionCategory() {
+        return CreateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.Management())
+                .withSuccessNotification(DeductionCategoryNotificationFactory.CreateDeductionCategorySuccess())
+                .withFailureNotification(DeductionCategoryNotificationFactory.CreateDeductionCategoryFail())
+                .build();
     }
 
     public static FilterDeductionCategoryService FilterDeductionCategory() {
@@ -18,14 +28,24 @@ public class DeductionCategoryServiceFactory {
         return new FilterDeductionCategoryService(DbClientMSSQLFactory.Management());
     }
 
-    public static EditDeductionCategoryService EditDeductionCategory() {
+    public static UpdateService EditDeductionCategory() {
 
-        return new EditDeductionCategoryService(DbClientMSSQLFactory.Management());
+        return UpdateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.Management())
+                .withSuccessNotification(DeductionCategoryNotificationFactory.UpdateDeductionCategorySuccess())
+                .withFailureNotification(DeductionCategoryNotificationFactory.UpdateDeductionCategoryFail())
+                .build();
     }
 
-    public static DeleteDeductionCategoryService DeleteDeductionCategory() {
+    public static DeleteService DeleteDeductionCategory() {
 
-        return new DeleteDeductionCategoryService(DbClientMSSQLFactory.Management());
+        return DeleteServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.Management())
+                .withSuccessNotification(DeductionCategoryNotificationFactory.DeleteDeductionCategorySuccess())
+                .withFailureNotification(DeductionCategoryNotificationFactory.DeleteDeductionCategoryFail())
+                .build();
     }
 
 }

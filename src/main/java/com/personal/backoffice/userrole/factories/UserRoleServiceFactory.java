@@ -1,16 +1,27 @@
 package com.personal.backoffice.userrole.factories;
 
-import com.personal.backoffice.userrole.create.services.CreateUserRoleService;
-import com.personal.backoffice.userrole.delete.services.DeleteUserRoleService;
 import com.personal.backoffice.userrole.filter.services.FilterUserRoleService;
-import com.personal.backoffice.userrole.update.services.EditUserRoleService;
+import com.personal.backoffice.userrole.notifications.UserRoleNotificationFactory;
 import com.personal.server.dbclient.DbClientMSSQLFactory;
+import com.personal.shared.factories.CreateService;
+import com.personal.shared.factories.CreateServiceBuilder;
+import com.personal.shared.factories.DeleteService;
+import com.personal.shared.factories.DeleteServiceBuilder;
+import com.personal.shared.factories.UpdateService;
+import com.personal.shared.factories.UpdateServiceBuilder;
 
 public class UserRoleServiceFactory {
 
-    public static CreateUserRoleService CreateUserRole() {
+    private static final String TABLE_NAME = "user_role";
 
-        return new CreateUserRoleService(DbClientMSSQLFactory.SystemMaster());
+    public static CreateService CreateUserRole() {
+        return CreateServiceBuilder
+                .builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.SystemMaster())
+                .withSuccessNotification(UserRoleNotificationFactory.CreateUserRoleSuccess())
+                .withFailureNotification(UserRoleNotificationFactory.CreateUserRoleFail())
+                .build();
     }
 
     public static FilterUserRoleService FilterUserRoles() {
@@ -18,14 +29,24 @@ public class UserRoleServiceFactory {
         return new FilterUserRoleService(DbClientMSSQLFactory.SystemMaster());
     }
 
-    public static EditUserRoleService EditUserRole() {
+    public static UpdateService EditUserRole() {
 
-        return new EditUserRoleService(DbClientMSSQLFactory.SystemMaster());
+        return UpdateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.SystemMaster())
+                .withSuccessNotification(UserRoleNotificationFactory.UpdateUserRoleSuccess())
+                .withFailureNotification(UserRoleNotificationFactory.UpdateUserRoleFail())
+                .build();
     }
 
-    public static DeleteUserRoleService DeleteUserRole() {
+    public static DeleteService DeleteUserRole() {
 
-        return new DeleteUserRoleService(DbClientMSSQLFactory.SystemMaster());
+        return DeleteServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.SystemMaster())
+                .withSuccessNotification(UserRoleNotificationFactory.DeleteUserRoleSuccess())
+                .withFailureNotification(UserRoleNotificationFactory.DeleteUserRoleFail())
+                .build();
     }
 
 }

@@ -9,9 +9,10 @@ import com.personal.backoffice.country.entities.Country;
 import com.personal.backoffice.country.factories.CountryResultFactory;
 import com.personal.backoffice.user.entities.User;
 import com.personal.shared.entities.EntityBuilder;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 import io.helidon.dbclient.DbClient;
 
@@ -27,7 +28,7 @@ public class FilterCountryService implements IFilterService<Country> {
     public ServiceResult<List<Country>> filter(Query query) {
 
         if (dbClient.isEmpty()) {
-            return CountryResultFactory.FetchNull();
+            return ServicesResultFactory.<List<Country>>DbNotAvailable();
         }
 
         var queryString = query.Select("countries",
@@ -52,7 +53,7 @@ public class FilterCountryService implements IFilterService<Country> {
                 .collect(Collectors.toList());
 
         if (result.isEmpty()) {
-            return CountryResultFactory.FetchNull();
+            return CountryResultFactory.FetchNull(query.getKeyPair());
         }
 
         return CountryResultFactory.FetchResult(result);

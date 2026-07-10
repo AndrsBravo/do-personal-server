@@ -1,16 +1,27 @@
 package com.personal.backoffice.clienttype.factories;
 
-import com.personal.backoffice.clienttype.create.services.CreateClientTypeService;
-import com.personal.backoffice.clienttype.delete.services.DeleteClientTypeService;
 import com.personal.backoffice.clienttype.filter.services.FilterClientTypeService;
-import com.personal.backoffice.clienttype.update.services.EditClientTypeService;
+import com.personal.backoffice.clienttype.notifications.ClientTypeNotificationFactory;
 import com.personal.server.dbclient.DbClientMSSQLFactory;
+import com.personal.shared.factories.CreateService;
+import com.personal.shared.factories.CreateServiceBuilder;
+import com.personal.shared.factories.DeleteService;
+import com.personal.shared.factories.DeleteServiceBuilder;
+import com.personal.shared.factories.UpdateService;
+import com.personal.shared.factories.UpdateServiceBuilder;
 
 public class ClientTypeServiceFactory {
 
-    public static CreateClientTypeService CreateClientType() {
+    private static final String TABLE_NAME = "client_types";
 
-        return new CreateClientTypeService(DbClientMSSQLFactory.SystemMaster());
+    public static CreateService CreateClientType() {
+
+        return CreateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.SystemMaster())
+                .withSuccessNotification(ClientTypeNotificationFactory.CreateClientTypeSuccess())
+                .withFailureNotification(ClientTypeNotificationFactory.CreateClientTypeFail())
+                .build();
     }
 
     public static FilterClientTypeService FilterClientTypes() {
@@ -18,14 +29,23 @@ public class ClientTypeServiceFactory {
         return new FilterClientTypeService(DbClientMSSQLFactory.SystemMaster());
     }
 
-    public static EditClientTypeService EditClientType() {
-
-        return new EditClientTypeService(DbClientMSSQLFactory.SystemMaster());
+    public static UpdateService EditClientType() {
+        return UpdateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.SystemMaster())
+                .withSuccessNotification(ClientTypeNotificationFactory.UpdateClientTypeSuccess())
+                .withFailureNotification(ClientTypeNotificationFactory.UpdateClientTypeFail())
+                .build();
     }
 
-    public static DeleteClientTypeService DeleteClientType() {
+    public static DeleteService DeleteClientType() {
 
-        return new DeleteClientTypeService(DbClientMSSQLFactory.SystemMaster());
+        return DeleteServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.SystemMaster())
+                .withSuccessNotification(ClientTypeNotificationFactory.DeleteClientTypeSuccess())
+                .withFailureNotification(ClientTypeNotificationFactory.DeleteClientTypeFail())
+                .build();
     }
 
 }

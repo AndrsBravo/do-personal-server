@@ -5,7 +5,7 @@ import java.util.List;
 import com.personal.backoffice.client.entities.Client;
 import com.personal.backoffice.client.entities.ClientCommercialPlan;
 import com.personal.backoffice.client.notifications.ClientNotificationFactory;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 public class ClientResultFactory {
 

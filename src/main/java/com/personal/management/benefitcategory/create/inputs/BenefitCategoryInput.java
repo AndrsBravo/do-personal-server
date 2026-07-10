@@ -1,7 +1,7 @@
 package com.personal.management.benefitcategory.create.inputs;
 
+import com.personal.backoffice.shared.inputs.CountryInputBase;
 import com.personal.management.benefitcategory.entities.BenefitCategory;
-import com.personal.management.shared.inputs.CountryInputBase;
 
 public class BenefitCategoryInput extends CountryInputBase {
 

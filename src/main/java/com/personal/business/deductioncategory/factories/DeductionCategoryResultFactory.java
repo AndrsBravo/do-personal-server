@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.personal.business.deductioncategory.entities.DeductionCategory;
 import com.personal.business.deductioncategory.notifications.DeductionCategoryNotificationFactory;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 public class DeductionCategoryResultFactory {
 

@@ -2,15 +2,16 @@ package com.personal.business.user.create.services;
 
 import java.util.Optional;
 
-import com.personal.business.user.entities.User;
-import com.personal.business.user.factories.UserResultFactory;
+import com.personal.business.user.notifications.UserNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.CreateResult;
+import com.personal.shared.services.entities.CreateResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class CreateUserService implements ICreateService<User> {
+public class CreateUserService implements ICreateService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,26 +20,32 @@ public class CreateUserService implements ICreateService<User> {
     }
 
     @Override
-    public ServiceResult<User> create(Query query) {
+    public CreateResult create(Query query) {
 
         if (dbClient.isEmpty()) {
-            return UserResultFactory.CreateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var userQuery = query.InsertInto("users").Get();
 
-        //System.out.println(userQuery);
-        var userResult = dbclient.execute()
-                .createInsert(userQuery)
-                .params(query.getParams())
-                .execute();
+        try {
 
-        if (userResult == 0) {
-            return UserResultFactory.CreateFail();
+            var records = dbclient.execute()
+                    .createInsert(userQuery)
+                    .params(query.getParams())
+                    .execute();
+            return CreateResultBuilder.build()
+                    .withRecords(records)
+                    .withNotification(UserNotificationFactory.CreateUserSuccess())
+                    .get();
+        } catch (Exception e) {
+
+            return CreateResultBuilder.build()
+                    .withException(e)
+                    .withNotification(UserNotificationFactory.CreateUserFail())
+                    .get();
         }
-        return UserResultFactory.UserCreated(new User(query.getParams().get("id")));
-
     }
 }

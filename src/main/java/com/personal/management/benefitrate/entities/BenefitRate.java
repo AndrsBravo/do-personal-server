@@ -1,11 +1,11 @@
 package com.personal.management.benefitrate.entities;
 
-import com.personal.management.country.entities.Country;
 import com.personal.shared.core.entities.SharedBenefitRate;
+import com.personal.shared.core.entities.SharedCountry;
 
 public class BenefitRate extends SharedBenefitRate {
 
-    private Country country;
+    private SharedCountry country;
 
     public BenefitRate() {
         super();
@@ -15,11 +15,11 @@ public class BenefitRate extends SharedBenefitRate {
         super(id);
     }
 
-    public Country getCountry() {
+    public SharedCountry getCountry() {
         return country;
     }
 
-    public void setCountry(Country country) {
+    public void setCountry(SharedCountry country) {
         this.country = country;
     }
 

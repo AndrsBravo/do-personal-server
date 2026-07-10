@@ -6,7 +6,7 @@ import com.personal.business.payrollbenefit.entities.PayrollBenefit;
 import com.personal.business.payrollbenefit.factories.PayrollBenefitResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 import io.helidon.dbclient.DbClient;
 

@@ -2,15 +2,16 @@ package com.personal.management.financecategory.create.services;
 
 import java.util.Optional;
 
-import com.personal.management.financecategory.entities.FinanceCategory;
-import com.personal.management.financecategory.factories.FinanceCategoryResultFactory;
+import com.personal.management.financecategory.notifications.FinanceCategoryNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.CreateResult;
+import com.personal.shared.services.entities.CreateResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class CreateFinanceCategoryService implements ICreateService<FinanceCategory> {
+public class CreateFinanceCategoryService implements ICreateService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,34 +20,32 @@ public class CreateFinanceCategoryService implements ICreateService<FinanceCateg
     }
 
     @Override
-    public ServiceResult<FinanceCategory> create(Query query) {
+    public CreateResult create(Query query) {
         if (dbClient.isEmpty()) {
-            return FinanceCategoryResultFactory.CreateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var insertQuery = query.InsertInto("finance_categories").Get();
 
-        //System.out.println(insertQuery);
-        long result = 0;
-
         try {
 
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createInsert(insertQuery)
                     .params(query.getParams())
                     .execute();
+            return CreateResultBuilder.build()
+                    .withRecords(records)
+                    .withNotification(FinanceCategoryNotificationFactory.CreateFinanceCategorySuccess())
+                    .get();
         } catch (Exception e) {
 
-            return FinanceCategoryResultFactory.CreateFail();
+            return CreateResultBuilder.build()
+                    .withException(e)
+                    .withNotification(FinanceCategoryNotificationFactory.CreateFinanceCategoryFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return FinanceCategoryResultFactory.CreateFail();
-        }
-
-        return FinanceCategoryResultFactory.CreateSuccess(new FinanceCategory());
 
     }
 

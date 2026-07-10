@@ -6,7 +6,7 @@ import com.personal.business.benefitcategory.entities.BenefitCategory;
 import com.personal.business.benefitcategory.factories.BenefitCategoryResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 import io.helidon.dbclient.DbClient;
 

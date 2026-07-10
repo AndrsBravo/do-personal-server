@@ -5,19 +5,31 @@ import com.personal.shared.notifications.Notification;
 public class PayrollRunTypeNotificationFactory {
 
     public static Notification CreatePayrollRunTypeFail() {
-        return new Notification("Ha ocurrido un error mientras se creaba el tipo de cliente ");
+        return new Notification("Ha ocurrido un error mientras se creaba el tipo de calculo de nomina ");
+    }
+
+    public static Notification CreatePayrollRunTypeSuccess() {
+        return new Notification("El tipo de calculo de nomina se ha creado correctamente.");
     }
 
     public static Notification UpdatePayrollRunTypeFail() {
-        return new Notification("Ha ocurrido un error mientras se actualizaba el tipo de cliente ");
+        return new Notification("Ha ocurrido un error mientras se actualizaba el tipo de calculo de nomina ");
+    }
+
+    public static Notification UpdatePayrollRunTypeSuccess() {
+        return new Notification("El tipo de calculo de nomina se ha actualizado correctamente.");
     }
 
     public static Notification DeletePayrollRunTypeFail() {
-        return new Notification("Ha ocurrido un error mientras se eliminaba el tipo de cliente ");
+        return new Notification("Ha ocurrido un error mientras se eliminaba el tipo de calculo de nomina ");
+    }
+
+    public static Notification DeletePayrollRunTypeSuccess() {
+        return new Notification("El tipo de calculo de nomina ha sido eliminada exitosamente. ");
     }
 
     public static Notification FetchNull() {
-        return new Notification("No se han encontrado tipos de usuario.");
+        return new Notification("No se han encontrado resultados.");
     }
 
 }

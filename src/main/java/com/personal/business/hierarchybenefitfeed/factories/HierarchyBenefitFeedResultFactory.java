@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.personal.business.hierarchybenefitfeed.entities.HierarchyBenefitFeed;
 import com.personal.business.hierarchybenefitfeed.notifications.HierarchyBenefitFeedNotificationFactory;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 public class HierarchyBenefitFeedResultFactory {
 

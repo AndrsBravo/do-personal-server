@@ -4,9 +4,10 @@ import java.util.Optional;
 
 import com.personal.backoffice.country.entities.Country;
 import com.personal.backoffice.country.factories.CountryResultFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 import io.helidon.dbclient.DbClient;
 
@@ -21,7 +22,7 @@ public class DeleteCountryService implements IDeleteService<Country> {
     @Override
     public ServiceResult<Country> delete(Query query) {
         if (dbClient.isEmpty()) {
-            return CountryResultFactory.DeleteFail();
+            return ServicesResultFactory.<Country>DbNotAvailable();
         }
 
         var dbclient = dbClient.get();
@@ -39,11 +40,11 @@ public class DeleteCountryService implements IDeleteService<Country> {
 
         } catch (Exception e) {
             //System.out.println("Hubo una excepción al eliminar el tipo de cliente " + e.getMessage());
-            return CountryResultFactory.DeleteFail();
+            return CountryResultFactory.DeleteFail(e.getMessage());
         }
 
         if (result == 0) {
-            return CountryResultFactory.DeleteFail();
+            return CountryResultFactory.DeleteFail("No se pudo eliminar el país.");
         }
 
         return CountryResultFactory.DeleteSuccess(new Country(query.getParams().get("id")));

@@ -2,15 +2,16 @@ package com.personal.backoffice.register.login.services;
 
 import java.util.Optional;
 
-import com.personal.backoffice.user.entities.User;
-import com.personal.backoffice.user.factories.UserResultFactory;
+import com.personal.backoffice.user.notifications.UserNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.CreateResult;
+import com.personal.shared.services.entities.CreateResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class CreateUserCredentialsService implements ICreateService<User> {
+public class CreateUserCredentialsService implements ICreateService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,29 +20,34 @@ public class CreateUserCredentialsService implements ICreateService<User> {
     }
 
     @Override
-    public ServiceResult<User> create(Query query) {
+    public CreateResult create(Query query) {
 
         var oldCreadentialsQuery = "INSERT INTO credentials (id,user_id,password,salt,created_at,updated_at,created_by) VALUES (:id,:user_id,:password,:salt,:created_at,:updated_at,:created_by)";
 
         if (dbClient.isEmpty()) {
-            return UserResultFactory.CreateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var credentialsQuery = query.InsertInto("credentials").Get();
 
-        var credentialResult = dbclient.execute()
-                .createInsert(credentialsQuery)
-                .params(query.getParams())
-                .execute();
+        try {
 
-        if (credentialResult == 0) {
-            return UserResultFactory.CreateFail();
+            var records = dbclient.execute()
+                    .createInsert(credentialsQuery)
+                    .params(query.getParams())
+                    .execute();
+            return CreateResultBuilder.build()
+                    .withRecords(records)
+                    .withNotification(UserNotificationFactory.CreateUserCredentialsSuccess())
+                    .get();
+        } catch (Exception e) {
+
+            return CreateResultBuilder.build()
+                    .withException(e)
+                    .withNotification(UserNotificationFactory.CreateUserCredentialsFail())
+                    .get();
         }
-
-        // return new UserServiceResult(null, insertRepositoryResult.getResult());
-        return UserResultFactory.UserCreated(new User(query.getParams().get("id")));
-
     }
 }

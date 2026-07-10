@@ -5,19 +5,31 @@ import com.personal.shared.notifications.Notification;
 public class UserRoleNotificationFactory {
 
     public static Notification CreateUserRoleFail() {
-        return new Notification("Ha ocurrido un error mientras se creaba el tipo de usuario ");
+        return new Notification("Ha ocurrido un error mientras se creaba el role de usuario ");
+    }
+
+    public static Notification CreateUserRoleSuccess() {
+        return new Notification("El role de usuario se ha creado exitosamente.");
     }
 
     public static Notification UpdateUserRoleFail() {
-        return new Notification("Ha ocurrido un error mientras se actualizaba el tipo de usuario ");
+        return new Notification("Ha ocurrido un error mientras se actualizaba el role de usuario ");
+    }
+
+    public static Notification UpdateUserRoleSuccess() {
+        return new Notification("El role de usuario se ha actualizado exitosamente.");
     }
 
     public static Notification DeleteUserRoleFail() {
-        return new Notification("Ha ocurrido un error mientras se eliminaba el tipo de usuario ");
+        return new Notification("Ha ocurrido un error mientras se eliminaba el role de usuario ");
+    }
+
+    public static Notification DeleteUserRoleSuccess() {
+        return new Notification("El role de usuario se ha eliminado exitosamente.");
     }
 
     public static Notification FetchNull() {
-        return new Notification("No se han encontrado tipos de usuario.");
+        return new Notification("No se han encontrado resultados.");
     }
 
 }

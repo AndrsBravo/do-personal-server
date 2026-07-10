@@ -1,11 +1,11 @@
 package com.personal.management.orghierarchy.entities;
 
-import com.personal.management.country.entities.Country;
+import com.personal.shared.core.entities.SharedCountry;
 import com.personal.shared.core.entities.SharedOrgHierarchy;
 
 public class OrgHierarchy extends SharedOrgHierarchy {
 
-    private Country country;
+    private SharedCountry country;
 
     public OrgHierarchy() {
         super();
@@ -15,11 +15,11 @@ public class OrgHierarchy extends SharedOrgHierarchy {
         super(id);
     }
 
-    public Country getCountry() {
+    public SharedCountry getCountry() {
         return country;
     }
 
-    public void setCountry(Country country) {
+    public void setCountry(SharedCountry country) {
         this.country = country;
     }
 

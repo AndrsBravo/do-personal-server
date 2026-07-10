@@ -2,15 +2,16 @@ package com.personal.business.orghierarchy.create.services;
 
 import java.util.Optional;
 
-import com.personal.business.orghierarchy.entities.OrgHierarchy;
-import com.personal.business.orghierarchy.factories.OrgHierarchyResultFactory;
+import com.personal.business.orghierarchy.notifications.OrgHierarchyNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.CreateResult;
+import com.personal.shared.services.entities.CreateResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class CreateOrgHierarchyService implements ICreateService<OrgHierarchy> {
+public class CreateOrgHierarchyService implements ICreateService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,34 +20,32 @@ public class CreateOrgHierarchyService implements ICreateService<OrgHierarchy> {
     }
 
     @Override
-    public ServiceResult<OrgHierarchy> create(Query query) {
+    public CreateResult create(Query query) {
         if (dbClient.isEmpty()) {
-            return OrgHierarchyResultFactory.CreateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var insertQuery = query.InsertInto("organization_hierarchies").Get();
 
-        //System.out.println(insertQuery);
-        long result = 0;
-
         try {
 
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createInsert(insertQuery)
                     .params(query.getParams())
                     .execute();
+            return CreateResultBuilder.build()
+                    .withRecords(records)
+                    .withNotification(OrgHierarchyNotificationFactory.CreateOrgHierarchySuccess())
+                    .get();
         } catch (Exception e) {
 
-            return OrgHierarchyResultFactory.CreateFail();
+            return CreateResultBuilder.build()
+                    .withException(e)
+                    .withNotification(OrgHierarchyNotificationFactory.CreateOrgHierarchyFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return OrgHierarchyResultFactory.CreateFail();
-        }
-
-        return OrgHierarchyResultFactory.CreateSuccess(new OrgHierarchy());
 
     }
 

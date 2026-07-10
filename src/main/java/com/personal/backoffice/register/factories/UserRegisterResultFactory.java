@@ -2,7 +2,7 @@ package com.personal.backoffice.register.factories;
 
 import com.personal.backoffice.user.entities.User;
 import com.personal.backoffice.user.notifications.UserNotificationFactory;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 public class UserRegisterResultFactory {
 

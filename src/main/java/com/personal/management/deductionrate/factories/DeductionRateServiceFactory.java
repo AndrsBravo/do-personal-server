@@ -1,16 +1,26 @@
 package com.personal.management.deductionrate.factories;
 
-import com.personal.management.deductionrate.create.services.CreateDeductionRateService;
-import com.personal.management.deductionrate.delete.services.DeleteDeductionRateService;
 import com.personal.management.deductionrate.filter.services.FilterDeductionRateService;
-import com.personal.management.deductionrate.update.services.EditDeductionRateService;
+import com.personal.management.deductionrate.notifications.DeductionRateNotificationFactory;
 import com.personal.server.dbclient.DbClientMSSQLFactory;
+import com.personal.shared.factories.CreateService;
+import com.personal.shared.factories.CreateServiceBuilder;
+import com.personal.shared.factories.DeleteService;
+import com.personal.shared.factories.DeleteServiceBuilder;
+import com.personal.shared.factories.UpdateService;
+import com.personal.shared.factories.UpdateServiceBuilder;
 
 public class DeductionRateServiceFactory {
 
-    public static CreateDeductionRateService CreateDeductionRate() {
+    private static final String TABLE_NAME = "business_deductions_rates";
 
-        return new CreateDeductionRateService(DbClientMSSQLFactory.Management());
+    public static CreateService CreateDeductionRate() {
+        return CreateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.Management())
+                .withSuccessNotification(DeductionRateNotificationFactory.CreateDeductionRateSuccess())
+                .withFailureNotification(DeductionRateNotificationFactory.CreateDeductionRateFail())
+                .build();
     }
 
     public static FilterDeductionRateService FilterDeductionRate() {
@@ -18,14 +28,24 @@ public class DeductionRateServiceFactory {
         return new FilterDeductionRateService(DbClientMSSQLFactory.Management());
     }
 
-    public static EditDeductionRateService EditDeductionRate() {
+    public static UpdateService EditDeductionRate() {
 
-        return new EditDeductionRateService(DbClientMSSQLFactory.Management());
+        return UpdateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.Management())
+                .withSuccessNotification(DeductionRateNotificationFactory.UpdateDeductionRateSuccess())
+                .withFailureNotification(DeductionRateNotificationFactory.UpdateDeductionRateFail())
+                .build();
     }
 
-    public static DeleteDeductionRateService DeleteDeductionRate() {
+    public static DeleteService DeleteDeductionRate() {
 
-        return new DeleteDeductionRateService(DbClientMSSQLFactory.Management());
+        return DeleteServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.Management())
+                .withSuccessNotification(DeductionRateNotificationFactory.DeleteDeductionRateSuccess())
+                .withFailureNotification(DeductionRateNotificationFactory.DeleteDeductionRateFail())
+                .build();
     }
 
 }

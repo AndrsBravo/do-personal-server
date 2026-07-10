@@ -1,7 +1,7 @@
 package com.personal.management.orgrelation.create.inputs;
 
 import com.personal.management.orgrelation.entities.OrgRelation;
-import com.personal.management.shared.inputs.CountryInputBase;
+import com.personal.backoffice.shared.inputs.CountryInputBase;
 import com.personal.shared.core.entities.SharedOrgHierarchy;
 import com.personal.shared.core.entities.SharedOrgStructure;
 

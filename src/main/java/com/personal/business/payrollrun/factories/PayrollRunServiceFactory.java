@@ -1,16 +1,26 @@
 package com.personal.business.payrollrun.factories;
 
-import com.personal.business.payrollrun.create.services.CreatePayrollRunService;
-import com.personal.business.payrollrun.delete.services.DeletePayrollRunService;
 import com.personal.business.payrollrun.filter.services.FilterPayrollRunService;
-import com.personal.business.payrollrun.update.services.EditPayrollRunService;
+import com.personal.business.payrollrun.notifications.PayrollRunNotificationFactory;
 import com.personal.server.dbclient.DbClientMSSQLFactory;
+import com.personal.shared.factories.CreateService;
+import com.personal.shared.factories.CreateServiceBuilder;
+import com.personal.shared.factories.DeleteService;
+import com.personal.shared.factories.DeleteServiceBuilder;
+import com.personal.shared.factories.UpdateService;
+import com.personal.shared.factories.UpdateServiceBuilder;
 
 public class PayrollRunServiceFactory {
 
-    public static CreatePayrollRunService CreatePayrollRun(String dbClient) {
+    private static final String TABLE_NAME = "payroll_runs";
 
-        return new CreatePayrollRunService(DbClientMSSQLFactory.DbClient(dbClient));
+    public static CreateService CreatePayrollRun(String dbClient) {
+        return CreateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(PayrollRunNotificationFactory.CreatePayrollRunSuccess())
+                .withFailureNotification(PayrollRunNotificationFactory.CreatePayrollRunFail())
+                .build();
     }
 
     public static FilterPayrollRunService FilterPayrollRun(String dbClient) {
@@ -18,14 +28,24 @@ public class PayrollRunServiceFactory {
         return new FilterPayrollRunService(DbClientMSSQLFactory.DbClient(dbClient));
     }
 
-    public static EditPayrollRunService EditPayrollRun(String dbClient) {
+    public static UpdateService EditPayrollRun(String dbClient) {
 
-        return new EditPayrollRunService(DbClientMSSQLFactory.DbClient(dbClient));
+        return UpdateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(PayrollRunNotificationFactory.UpdatePayrollRunSuccess())
+                .withFailureNotification(PayrollRunNotificationFactory.UpdatePayrollRunFail())
+                .build();
     }
 
-    public static DeletePayrollRunService DeletePayrollRun(String dbClient) {
+    public static DeleteService DeletePayrollRun(String dbClient) {
 
-        return new DeletePayrollRunService(DbClientMSSQLFactory.DbClient(dbClient));
+        return DeleteServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(PayrollRunNotificationFactory.DeletePayrollRunSuccess())
+                .withFailureNotification(PayrollRunNotificationFactory.DeletePayrollRunFail())
+                .build();
     }
 
 }

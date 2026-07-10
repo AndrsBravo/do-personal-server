@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.personal.business.temporalfrequency.entities.TemporalFrequency;
 import com.personal.business.temporalfrequency.notifications.TemporalFrequencyNotificationFactory;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 public class TemporalFrequencyResultFactory {
 

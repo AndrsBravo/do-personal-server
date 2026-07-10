@@ -1,11 +1,11 @@
 package com.personal.management.deduction.entities;
 
-import com.personal.management.country.entities.Country;
+import com.personal.shared.core.entities.SharedCountry;
 import com.personal.shared.core.entities.SharedDeduction;
 
 public class Deduction extends SharedDeduction {
 
-    private Country country;
+    private SharedCountry country;
 
     public Deduction() {
         super();
@@ -15,11 +15,11 @@ public class Deduction extends SharedDeduction {
         super(id);
     }
 
-    public Country getCountry() {
+    public SharedCountry getCountry() {
         return country;
     }
 
-    public void setCountry(Country country) {
+    public void setCountry(SharedCountry country) {
         this.country = country;
     }
 

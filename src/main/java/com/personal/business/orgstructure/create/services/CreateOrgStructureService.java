@@ -2,15 +2,16 @@ package com.personal.business.orgstructure.create.services;
 
 import java.util.Optional;
 
-import com.personal.business.orgstructure.entities.OrgStructure;
-import com.personal.business.orgstructure.factories.OrgStructureResultFactory;
+import com.personal.business.orgstructure.notifications.OrgStructureNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.CreateResult;
+import com.personal.shared.services.entities.CreateResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class CreateOrgStructureService implements ICreateService<OrgStructure> {
+public class CreateOrgStructureService implements ICreateService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,34 +20,32 @@ public class CreateOrgStructureService implements ICreateService<OrgStructure> {
     }
 
     @Override
-    public ServiceResult<OrgStructure> create(Query query) {
+    public CreateResult create(Query query) {
         if (dbClient.isEmpty()) {
-            return OrgStructureResultFactory.CreateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var insertQuery = query.InsertInto("organization_structures").Get();
 
-        //System.out.println(insertQuery);
-        long result = 0;
-
         try {
 
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createInsert(insertQuery)
                     .params(query.getParams())
                     .execute();
+            return CreateResultBuilder.build()
+                    .withRecords(records)
+                    .withNotification(OrgStructureNotificationFactory.CreateOrgStructureSuccess())
+                    .get();
         } catch (Exception e) {
 
-            return OrgStructureResultFactory.CreateFail();
+            return CreateResultBuilder.build()
+                    .withException(e)
+                    .withNotification(OrgStructureNotificationFactory.CreateOrgStructureFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return OrgStructureResultFactory.CreateFail();
-        }
-
-        return OrgStructureResultFactory.CreateSuccess(new OrgStructure());
 
     }
 

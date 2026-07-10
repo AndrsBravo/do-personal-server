@@ -1,11 +1,11 @@
 package com.personal.management.temporalfrequency.entities;
 
-import com.personal.management.country.entities.Country;
+import com.personal.shared.core.entities.SharedCountry;
 import com.personal.shared.core.entities.SharedTemporalFrequency;
 
 public class TemporalFrequency extends SharedTemporalFrequency {
 
-    private Country country;
+    private SharedCountry country;
 
     public TemporalFrequency() {
         super();
@@ -15,11 +15,11 @@ public class TemporalFrequency extends SharedTemporalFrequency {
         super(id);
     }
 
-    public Country getCountry() {
+    public SharedCountry getCountry() {
         return country;
     }
 
-    public void setCountry(Country country) {
+    public void setCountry(SharedCountry country) {
         this.country = country;
     }
 

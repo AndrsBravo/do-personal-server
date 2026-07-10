@@ -5,19 +5,31 @@ import com.personal.shared.notifications.Notification;
 public class CommercialPlanNotificationFactory {
 
     public static Notification CreateCommercialPlanFail() {
-        return new Notification("Ha ocurrido un error mientras se creaba el tipo de usuario ");
+        return new Notification("Ha ocurrido un error mientras se creaba el plan comercial ");
+    }
+
+    public static Notification CreateCommercialPlanSuccess() {
+        return new Notification("El plan comercial se ha creado correctamente.");
     }
 
     public static Notification UpdateCommercialPlanFail() {
-        return new Notification("Ha ocurrido un error mientras se actualizaba el tipo de usuario ");
+        return new Notification("Ha ocurrido un error mientras se actualizaba el plan comercial ");
+    }
+
+    public static Notification UpdateCommercialPlanSuccess() {
+        return new Notification("El plan comercial se ha actualizado correctamente.");
     }
 
     public static Notification DeleteCommercialPlanFail() {
-        return new Notification("Ha ocurrido un error mientras se eliminaba el tipo de usuario ");
+        return new Notification("Ha ocurrido un error mientras se eliminaba el plan comercial ");
+    }
+
+    public static Notification DeleteCommercialPlanSuccess() {
+        return new Notification("El plan comercial se ha eliminado exitosamente. ");
     }
 
     public static Notification FetchNull() {
-        return new Notification("No se han encontrado tipos de usuario.");
+        return new Notification("No se han encontrado resultados.");
     }
 
 }

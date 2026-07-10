@@ -2,15 +2,16 @@ package com.personal.business.payroll.create.services;
 
 import java.util.Optional;
 
-import com.personal.business.payroll.entities.Payroll;
-import com.personal.business.payroll.factories.PayrollResultFactory;
+import com.personal.business.payroll.notifications.PayrollNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.CreateResult;
+import com.personal.shared.services.entities.CreateResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class CreatePayrollService implements ICreateService<Payroll> {
+public class CreatePayrollService implements ICreateService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,34 +20,32 @@ public class CreatePayrollService implements ICreateService<Payroll> {
     }
 
     @Override
-    public ServiceResult<Payroll> create(Query query) {
+    public CreateResult create(Query query) {
         if (dbClient.isEmpty()) {
-            return PayrollResultFactory.CreateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var insertQuery = query.InsertInto("payrolls").Get();
 
-        //System.out.println(insertQuery);
-        long result = 0;
-
         try {
 
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createInsert(insertQuery)
                     .params(query.getParams())
                     .execute();
+            return CreateResultBuilder.build()
+                    .withRecords(records)
+                    .withNotification(PayrollNotificationFactory.CreatePayrollSuccess())
+                    .get();
         } catch (Exception e) {
 
-            return PayrollResultFactory.CreateFail();
+            return CreateResultBuilder.build()
+                    .withException(e)
+                    .withNotification(PayrollNotificationFactory.CreatePayrollFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return PayrollResultFactory.CreateFail();
-        }
-
-        return PayrollResultFactory.CreateSuccess(new Payroll());
 
     }
 

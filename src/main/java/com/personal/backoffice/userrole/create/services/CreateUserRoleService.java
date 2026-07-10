@@ -2,15 +2,16 @@ package com.personal.backoffice.userrole.create.services;
 
 import java.util.Optional;
 
-import com.personal.backoffice.userrole.entities.UserRole;
-import com.personal.backoffice.userrole.factories.UserRoleResultFactory;
+import com.personal.backoffice.userrole.notifications.UserRoleNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.CreateResult;
+import com.personal.shared.services.entities.CreateResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class CreateUserRoleService implements ICreateService<UserRole> {
+public class CreateUserRoleService implements ICreateService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,9 +20,9 @@ public class CreateUserRoleService implements ICreateService<UserRole> {
     }
 
     @Override
-    public ServiceResult<UserRole> create(Query query) {
+    public CreateResult create(Query query) {
         if (dbClient.isEmpty()) {
-            return UserRoleResultFactory.CreateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
@@ -29,26 +30,23 @@ public class CreateUserRoleService implements ICreateService<UserRole> {
         var insertQuery = query.InsertInto("user_role").Get();
 
         System.out.println(insertQuery);
-        long result = 0;
-
-        result = dbclient.execute()
-                .createInsert(insertQuery)
-                .params(query.getParams())
-                .execute();
-
         try {
 
+            var records = dbclient.execute()
+                    .createInsert(insertQuery)
+                    .params(query.getParams())
+                    .execute();
+            return CreateResultBuilder.build()
+                    .withRecords(records)
+                    .withNotification(UserRoleNotificationFactory.CreateUserRoleSuccess())
+                    .get();
         } catch (Exception e) {
 
-            return UserRoleResultFactory.CreateFail();
+            return CreateResultBuilder.build()
+                    .withException(e)
+                    .withNotification(UserRoleNotificationFactory.CreateUserRoleFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return UserRoleResultFactory.CreateFail();
-        }
-
-        return UserRoleResultFactory.CreateSuccess(new UserRole());
-
     }
 
 }

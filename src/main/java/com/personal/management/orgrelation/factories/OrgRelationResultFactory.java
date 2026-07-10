@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.personal.management.orgrelation.entities.OrgRelation;
 import com.personal.management.orgrelation.notifications.OrgRelationNotificationFactory;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 public class OrgRelationResultFactory {
 

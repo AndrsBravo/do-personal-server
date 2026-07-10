@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.personal.business.payrollbenefit.entities.PayrollBenefit;
 import com.personal.business.payrollbenefit.notifications.PayrollBenefitNotificationFactory;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 public class PayrollBenefitResultFactory {
 

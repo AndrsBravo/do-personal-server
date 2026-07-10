@@ -2,15 +2,16 @@ package com.personal.business.employee.create.services;
 
 import java.util.Optional;
 
-import com.personal.business.employee.entities.Employee;
-import com.personal.business.employee.factories.EmployeeResultFactory;
+import com.personal.business.employee.notifications.EmployeeNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.CreateResult;
+import com.personal.shared.services.entities.CreateResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class CreateEmployeeService implements ICreateService<Employee> {
+public class CreateEmployeeService implements ICreateService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,34 +20,32 @@ public class CreateEmployeeService implements ICreateService<Employee> {
     }
 
     @Override
-    public ServiceResult<Employee> create(Query query) {
+    public CreateResult create(Query query) {
         if (dbClient.isEmpty()) {
-            return EmployeeResultFactory.CreateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var insertQuery = query.InsertInto("employees").Get();
 
-        //System.out.println(insertQuery);
-        long result = 0;
-
         try {
 
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createInsert(insertQuery)
                     .params(query.getParams())
                     .execute();
+            return CreateResultBuilder.build()
+                    .withRecords(records)
+                    .withNotification(EmployeeNotificationFactory.CreateEmployeeSuccess())
+                    .get();
         } catch (Exception e) {
 
-            return EmployeeResultFactory.CreateFail();
+            return CreateResultBuilder.build()
+                    .withException(e)
+                    .withNotification(EmployeeNotificationFactory.CreateEmployeeFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return EmployeeResultFactory.CreateFail();
-        }
-
-        return EmployeeResultFactory.CreateSuccess(new Employee());
 
     }
 

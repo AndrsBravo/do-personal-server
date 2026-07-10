@@ -1,16 +1,26 @@
 package com.personal.business.payrolldeduction.factories;
 
-import com.personal.business.payrolldeduction.create.services.CreatePayrollDeductionService;
-import com.personal.business.payrolldeduction.delete.services.DeletePayrollDeductionService;
 import com.personal.business.payrolldeduction.filter.services.FilterPayrollDeductionService;
-import com.personal.business.payrolldeduction.update.services.EditPayrollDeductionService;
+import com.personal.business.payrolldeduction.notifications.PayrollDeductionNotificationFactory;
 import com.personal.server.dbclient.DbClientMSSQLFactory;
+import com.personal.shared.factories.CreateService;
+import com.personal.shared.factories.CreateServiceBuilder;
+import com.personal.shared.factories.DeleteService;
+import com.personal.shared.factories.DeleteServiceBuilder;
+import com.personal.shared.factories.UpdateService;
+import com.personal.shared.factories.UpdateServiceBuilder;
 
 public class PayrollDeductionServiceFactory {
 
-    public static CreatePayrollDeductionService CreatePayrollDeduction(String dbClient) {
+    private static final String TABLE_NAME = "payroll_deductions";
 
-        return new CreatePayrollDeductionService(DbClientMSSQLFactory.DbClient(dbClient));
+    public static CreateService CreatePayrollDeduction(String dbClient) {
+        return CreateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(PayrollDeductionNotificationFactory.CreatePayrollDeductionSuccess())
+                .withFailureNotification(PayrollDeductionNotificationFactory.CreatePayrollDeductionFail())
+                .build();
     }
 
     public static FilterPayrollDeductionService FilterPayrollDeduction(String dbClient) {
@@ -18,14 +28,24 @@ public class PayrollDeductionServiceFactory {
         return new FilterPayrollDeductionService(DbClientMSSQLFactory.DbClient(dbClient));
     }
 
-    public static EditPayrollDeductionService EditPayrollDeduction(String dbClient) {
+    public static UpdateService EditPayrollDeduction(String dbClient) {
 
-        return new EditPayrollDeductionService(DbClientMSSQLFactory.DbClient(dbClient));
+        return UpdateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(PayrollDeductionNotificationFactory.UpdatePayrollDeductionSuccess())
+                .withFailureNotification(PayrollDeductionNotificationFactory.UpdatePayrollDeductionFail())
+                .build();
     }
 
-    public static DeletePayrollDeductionService DeletePayrollDeduction(String dbClient) {
+    public static DeleteService DeletePayrollDeduction(String dbClient) {
 
-        return new DeletePayrollDeductionService(DbClientMSSQLFactory.DbClient(dbClient));
+        return DeleteServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.DbClient(dbClient))
+                .withSuccessNotification(PayrollDeductionNotificationFactory.DeletePayrollDeductionSuccess())
+                .withFailureNotification(PayrollDeductionNotificationFactory.DeletePayrollDeductionFail())
+                .build();
     }
 
 }

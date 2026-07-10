@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.personal.business.hierarchy.entities.Hierarchy;
 import com.personal.business.hierarchy.notifications.HierarchyNotificationFactory;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 public class HierarchyResultFactory {
 

@@ -2,17 +2,18 @@ package com.personal.backoffice.system.databases.services;
 
 import java.util.Optional;
 
-import com.personal.backoffice.system.entities.DataBase;
-import com.personal.backoffice.system.factories.SystemResultFactory;
+import com.personal.backoffice.system.appdata.notifications.SystemNotificationsFactory;
 import com.personal.server.config.AppConfig;
 import com.personal.server.flyway.FlyWayMigrationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.CreateResult;
+import com.personal.shared.services.entities.CreateResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class MigrateDataBaseService implements ICreateService<DataBase> {
+public class MigrateDataBaseService implements ICreateService {
 
     private final Optional<DbClient> dbClient;
 
@@ -21,23 +22,32 @@ public class MigrateDataBaseService implements ICreateService<DataBase> {
     }
 
     @Override
-    public ServiceResult<DataBase> create(Query query) {
+    public CreateResult create(Query query) {
 
         var dbName = query.getParams().get("dbName");
 
         //If not connection with db
-        if (!dbClient.isPresent()) {
-            return SystemResultFactory.MigrateDataBaseFail(dbName);
+        if (dbClient.isEmpty()) {
+            return ServicesResultFactory.NotAvailable();
         }
 
-        var migrate_location = AppConfig.get(query.getParams().get("migrate_location"));
-        var result = FlyWayMigrationFactory.migrate(dbName, migrate_location);
+        try {
 
-        if (result.success) {
-            return SystemResultFactory.DataBaseCreated(new DataBase(dbName));
+            var migrate_location = AppConfig.get(query.getParams().get("migrate_location"));
+
+            var result = FlyWayMigrationFactory.migrate(dbName, migrate_location);
+
+            return CreateResultBuilder.build()
+                    .withRecords(Boolean.compare(result.success, false))
+                    .withNotification(SystemNotificationsFactory.MigrateDataBaseSuccess())
+                    .get();
+        } catch (Exception e) {
+
+            return CreateResultBuilder.build()
+                    .withException(e)
+                    .withNotification(SystemNotificationsFactory.MigrateDataBaseFail())
+                    .get();
         }
-
-        return SystemResultFactory.MigrateDataBaseFail(dbName);
 
     }
 

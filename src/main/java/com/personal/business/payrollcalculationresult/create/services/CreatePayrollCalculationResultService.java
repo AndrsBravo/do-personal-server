@@ -2,15 +2,16 @@ package com.personal.business.payrollcalculationresult.create.services;
 
 import java.util.Optional;
 
-import com.personal.business.payrollcalculationresult.entities.PayrollCalculationResult;
-import com.personal.business.payrollcalculationresult.factories.PayrollCalculationResultResultFactory;
+import com.personal.business.payrollcalculationresult.notifications.PayrollCalculationResultNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.CreateResult;
+import com.personal.shared.services.entities.CreateResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class CreatePayrollCalculationResultService implements ICreateService<PayrollCalculationResult> {
+public class CreatePayrollCalculationResultService implements ICreateService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,34 +20,32 @@ public class CreatePayrollCalculationResultService implements ICreateService<Pay
     }
 
     @Override
-    public ServiceResult<PayrollCalculationResult> create(Query query) {
+    public CreateResult create(Query query) {
         if (dbClient.isEmpty()) {
-            return PayrollCalculationResultResultFactory.CreateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var insertQuery = query.InsertInto("payroll_calculations_results").Get();
 
-        //System.out.println(insertQuery);
-        long result = 0;
-
         try {
 
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createInsert(insertQuery)
                     .params(query.getParams())
                     .execute();
+            return CreateResultBuilder.build()
+                    .withRecords(records)
+                    .withNotification(PayrollCalculationResultNotificationFactory.CreatePayrollCalculationResultSuccess())
+                    .get();
         } catch (Exception e) {
 
-            return PayrollCalculationResultResultFactory.CreateFail();
+            return CreateResultBuilder.build()
+                    .withException(e)
+                    .withNotification(PayrollCalculationResultNotificationFactory.CreatePayrollCalculationResultFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return PayrollCalculationResultResultFactory.CreateFail();
-        }
-
-        return PayrollCalculationResultResultFactory.CreateSuccess(new PayrollCalculationResult());
 
     }
 

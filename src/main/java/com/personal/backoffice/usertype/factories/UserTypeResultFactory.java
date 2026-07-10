@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.personal.backoffice.usertype.notifications.UserTypeNotificationFactory;
 import com.personal.shared.entities.TypeEntityBase;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 public class UserTypeResultFactory {
 

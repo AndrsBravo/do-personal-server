@@ -1,16 +1,27 @@
 package com.personal.backoffice.commercial.plan.factories;
 
-import com.personal.backoffice.commercial.plan.create.services.CreateCommercialPlanService;
-import com.personal.backoffice.commercial.plan.delete.services.DeleteCommercialPlanService;
 import com.personal.backoffice.commercial.plan.filter.services.FilterCommercialPlanService;
-import com.personal.backoffice.commercial.plan.update.services.EditCommercialPlanService;
+import com.personal.backoffice.commercial.plan.notifications.CommercialPlanNotificationFactory;
 import com.personal.server.dbclient.DbClientMSSQLFactory;
+import com.personal.shared.factories.CreateService;
+import com.personal.shared.factories.CreateServiceBuilder;
+import com.personal.shared.factories.DeleteService;
+import com.personal.shared.factories.DeleteServiceBuilder;
+import com.personal.shared.factories.UpdateService;
+import com.personal.shared.factories.UpdateServiceBuilder;
 
 public class CommercialPlanServiceFactory {
 
-    public static CreateCommercialPlanService CreateCommercialPlan() {
+    private static final String TABLE_NAME = "commercial_plan";
 
-        return new CreateCommercialPlanService(DbClientMSSQLFactory.SystemMaster());
+    public static CreateService CreateCommercialPlan() {
+
+        return CreateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.SystemMaster())
+                .withSuccessNotification(CommercialPlanNotificationFactory.CreateCommercialPlanSuccess())
+                .withFailureNotification(CommercialPlanNotificationFactory.CreateCommercialPlanFail())
+                .build();
     }
 
     public static FilterCommercialPlanService FilterCommercialPlan() {
@@ -18,14 +29,24 @@ public class CommercialPlanServiceFactory {
         return new FilterCommercialPlanService(DbClientMSSQLFactory.SystemMaster());
     }
 
-    public static EditCommercialPlanService EditCommercialPlan() {
+    public static UpdateService EditCommercialPlan() {
 
-        return new EditCommercialPlanService(DbClientMSSQLFactory.SystemMaster());
+        return UpdateServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.SystemMaster())
+                .withSuccessNotification(CommercialPlanNotificationFactory.UpdateCommercialPlanSuccess())
+                .withFailureNotification(CommercialPlanNotificationFactory.UpdateCommercialPlanFail())
+                .build();
     }
 
-    public static DeleteCommercialPlanService DeleteCommercialPlan() {
+    public static DeleteService DeleteCommercialPlan() {
 
-        return new DeleteCommercialPlanService(DbClientMSSQLFactory.SystemMaster());
+        return DeleteServiceBuilder.builder()
+                .withTableName(TABLE_NAME)
+                .withDbClient(DbClientMSSQLFactory.SystemMaster())
+                .withSuccessNotification(CommercialPlanNotificationFactory.DeleteCommercialPlanSuccess())
+                .withFailureNotification(CommercialPlanNotificationFactory.DeleteCommercialPlanFail())
+                .build();
     }
 
 }

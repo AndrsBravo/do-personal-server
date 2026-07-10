@@ -1,10 +1,10 @@
 package com.personal.shared.services;
 
-import com.personal.shared.entities.Base;
 import com.personal.shared.query.Query;
+import com.personal.shared.services.entities.CreateResult;
 
-public interface IDeleteService<T extends Base> {
+public interface IDeleteService {
 
-    public ServiceResult<T> delete(Query query);
+    public CreateResult delete(Query query);
 
 }

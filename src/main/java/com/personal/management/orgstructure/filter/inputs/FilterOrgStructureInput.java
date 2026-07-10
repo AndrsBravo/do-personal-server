@@ -1,6 +1,6 @@
 package com.personal.management.orgstructure.filter.inputs;
 
-import com.personal.management.shared.inputs.CountryFilterInputBase;
+import com.personal.backoffice.shared.inputs.CountryFilterInputBase;
 
 public class FilterOrgStructureInput extends CountryFilterInputBase {
 

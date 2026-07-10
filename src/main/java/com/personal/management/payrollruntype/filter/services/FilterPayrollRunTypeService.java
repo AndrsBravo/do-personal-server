@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.personal.backoffice.shared.entities.TypeEntity;
 import com.personal.backoffice.user.entities.User;
 import com.personal.management.payrollruntype.factories.PayrollRunTypeResultFactory;
-import com.personal.management.shared.entities.TypeEntity;
 import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IFilterService;
-import com.personal.shared.services.ServiceResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 import io.helidon.dbclient.DbClient;
 
