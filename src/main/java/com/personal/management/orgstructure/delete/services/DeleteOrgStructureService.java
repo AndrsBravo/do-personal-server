@@ -2,15 +2,16 @@ package com.personal.management.orgstructure.delete.services;
 
 import java.util.Optional;
 
-import com.personal.management.orgstructure.entities.OrgStructure;
-import com.personal.management.orgstructure.factories.OrgStructureResultFactory;
+import com.personal.management.orgstructure.notifications.OrgStructureNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class DeleteOrgStructureService implements IDeleteService<OrgStructure> {
+public class DeleteOrgStructureService implements IDeleteService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,35 +20,31 @@ public class DeleteOrgStructureService implements IDeleteService<OrgStructure> {
     }
 
     @Override
-    public ServiceResult<OrgStructure> delete(Query query) {
+    public ServiceResult delete(Query query) {
         if (dbClient.isEmpty()) {
-            return OrgStructureResultFactory.DeleteFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var deleteQuery = query.Delete("organization_structures").Get();
 
-        //System.out.println(deleteQuery);
-        long result = 0;
-
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createDelete(deleteQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(OrgStructureNotificationFactory.DeleteOrgStructureSuccess())
+                    .get();
         } catch (Exception e) {
-
-            return OrgStructureResultFactory.DeleteFail();
+            builder.withException(e)
+                    .withNotification(OrgStructureNotificationFactory.DeleteOrgStructureFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return OrgStructureResultFactory.DeleteFail();
-        }
-
-        return OrgStructureResultFactory.DeleteSuccess(new OrgStructure(query.getParams().get("id")));
-
+        return builder.get();
     }
 
 }

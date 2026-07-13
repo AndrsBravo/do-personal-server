@@ -28,6 +28,14 @@ public class PayrollCalculationNotificationFactory {
         return new Notification("El calculo de nomina se ha eliminado correctamente.");
     }
 
+    public static Notification FetchPayrollCalculationSuccess() {
+        return new Notification("Lista de cálculos de nomina.");
+    }
+
+    public static Notification FetchPayrollCalculationFail() {
+        return new Notification("Ha ocurrido un error mientras se consultaban los calculo de nomina.");
+    }
+
     public static Notification FetchNull() {
         return new Notification("No se han encontrado resultados.");
     }

@@ -1,9 +1,9 @@
 package com.personal.shared.services;
 
 import com.personal.shared.query.Query;
-import com.personal.shared.services.entities.CreateResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 public interface IEditService {
 
-    public CreateResult edit(Query updateQuery);
+    public ServiceResult edit(Query updateQuery);
 }

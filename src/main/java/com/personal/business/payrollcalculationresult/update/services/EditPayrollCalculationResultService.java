@@ -2,15 +2,16 @@ package com.personal.business.payrollcalculationresult.update.services;
 
 import java.util.Optional;
 
-import com.personal.business.payrollcalculationresult.entities.PayrollCalculationResult;
-import com.personal.business.payrollcalculationresult.factories.PayrollCalculationResultResultFactory;
+import com.personal.business.payrollcalculationresult.notifications.PayrollCalculationResultNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IEditService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class EditPayrollCalculationResultService implements IEditService<PayrollCalculationResult> {
+public class EditPayrollCalculationResultService implements IEditService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,36 +20,31 @@ public class EditPayrollCalculationResultService implements IEditService<Payroll
     }
 
     @Override
-    public ServiceResult<PayrollCalculationResult> edit(Query query) {
+    public ServiceResult edit(Query query) {
 
         if (dbClient.isEmpty()) {
-            return PayrollCalculationResultResultFactory.UpdateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var updateQuery = query.Update("payroll_calculations_results").Get();
-        //System.out.println("updateQuery: " + updateQuery);
-
-        long result = 0;
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createUpdate(updateQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(PayrollCalculationResultNotificationFactory.UpdatePayrollCalculationResultSuccess());
+
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al actualizar el tipo de usuario " + e.getMessage());
-            return PayrollCalculationResultResultFactory.UpdateFail();
+            builder.withException(e)
+                    .withNotification(PayrollCalculationResultNotificationFactory.UpdatePayrollCalculationResultFail());
+
         }
-
-        //System.out.println("query.getParams(): " + query.getParams().values().toString());
-        if (result == 0) {
-            return PayrollCalculationResultResultFactory.UpdateFail();
-        }
-
-        return PayrollCalculationResultResultFactory.UpdateSuccess(new PayrollCalculationResult());
-
+        return builder.get();
     }
 
 }

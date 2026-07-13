@@ -2,15 +2,16 @@ package com.personal.backoffice.user.associateclient.update.services;
 
 import java.util.Optional;
 
-import com.personal.backoffice.user.associateclient.entities.AssociateUserClient;
-import com.personal.backoffice.user.factories.UserResultFactory;
+import com.personal.backoffice.user.notifications.UserNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IEditService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class UpdateAssociatedUserClientService implements IEditService<AssociateUserClient> {
+public class UpdateAssociatedUserClientService implements IEditService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,27 +20,30 @@ public class UpdateAssociatedUserClientService implements IEditService<Associate
     }
 
     @Override
-    public ServiceResult<AssociateUserClient> edit(Query query) {
+    public ServiceResult edit(Query query) {
 
         if (dbClient.isEmpty()) {
-            return UserResultFactory.UpdateAssociatedUserClientFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var userQuery = query.Update("user_has_clients").Get();
-        //System.out.println(userQuery);
+        var builder = ServiceResultBuilder.build();
+        try {
+            var records = dbclient.execute()
+                    .createUpdate(userQuery)
+                    .params(query.getParams())
+                    .execute();
 
-        var userResult = dbclient.execute()
-                .createUpdate(userQuery)
-                .params(query.getParams())
-                .execute();
+            builder.withRecords(records)
+                    .withNotification(UserNotificationFactory.UpdateAssociatedUserClientSuccess());
 
-        //System.out.println("userResult " + userResult);
-        if (userResult == 0) {
-            return UserResultFactory.UpdateAssociatedUserClientFail();
+        } catch (Exception e) {
+            builder.withException(e)
+                    .withNotification(UserNotificationFactory.UpdateAssociatedUserClientFail());
+
         }
-        return UserResultFactory.UpdateAssociatedUserClientSuccess(new AssociateUserClient(query.getParams().get("id")));
-
+        return builder.get();
     }
 }

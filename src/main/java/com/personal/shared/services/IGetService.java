@@ -1,10 +1,10 @@
 package com.personal.shared.services;
 
 import com.personal.shared.query.Query;
-import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.GetResult;
 
 public interface IGetService<T> {
 
-    public ServiceResult<T> get(Query query);
+    public GetResult<T> get(Query query);
 
 }

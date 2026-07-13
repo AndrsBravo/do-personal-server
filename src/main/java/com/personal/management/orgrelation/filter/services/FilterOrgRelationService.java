@@ -1,35 +1,32 @@
 package com.personal.management.orgrelation.filter.services;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.personal.backoffice.user.entities.User;
 import com.personal.management.orgrelation.entities.OrgRelation;
-import com.personal.management.orgrelation.factories.OrgRelationResultFactory;
+import com.personal.management.orgrelation.notifications.OrgRelationNotificationFactory;
 import com.personal.shared.core.entities.SharedOrgHierarchy;
 import com.personal.shared.core.entities.SharedOrgStructure;
 import com.personal.shared.entities.EntityBuilder;
 import com.personal.shared.query.Query;
-import com.personal.shared.services.IFilterService;
-import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.FilterService;
+import com.personal.shared.services.entities.FetchResult;
 
 import io.helidon.dbclient.DbClient;
 
-public class FilterOrgRelationService implements IFilterService<OrgRelation> {
-
-    private final Optional<DbClient> dbClient;
+public class FilterOrgRelationService extends FilterService<OrgRelation> {
 
     public FilterOrgRelationService(Optional<DbClient> dbClient) {
-        this.dbClient = dbClient;
+        super(dbClient);
     }
 
     @Override
-    public ServiceResult<List<OrgRelation>> filter(Query query) {
+    public FetchResult<OrgRelation> filter(Query query) {
 
         if (dbClient.isEmpty()) {
-            return OrgRelationResultFactory.FetchNull();
+            return builder.NotAvailable();
         }
 
         var queryString = query.Select("organization_relations",
@@ -42,43 +39,46 @@ public class FilterOrgRelationService implements IFilterService<OrgRelation> {
                 .Equ("organization_hierarchies", "id")
                 .Get();
 
-        System.out.println(queryString);
-        var result = this.dbClient.get().execute()
-                .createQuery(queryString)
-                .params(query.getParams())
-                .execute()
-                .map((dbRow)
-                        -> EntityBuilder.Of(OrgRelation::new)
-                        .With(OrgRelation::setId, dbRow.column("id").getString())
-                        .With(OrgRelation::setStructure,
-                                EntityBuilder.Of(SharedOrgStructure::new)
-                                        .With(SharedOrgStructure::setId, dbRow.column("organization_structure").getString())
-                                        .With(SharedOrgStructure::setLevel, dbRow.column("orgs_level").get(Short.class))
-                                        .With(SharedOrgStructure::setStructure, dbRow.column("orgs_structure").getString())
-                                        .With(SharedOrgStructure::setTitle, dbRow.column("orgs_title").getString())
-                                        .With(SharedOrgStructure::setDescription, dbRow.column("orgs_description").getString())
-                                        .Get()
-                        )
-                        .With(OrgRelation::setHierarchy,
-                                EntityBuilder.Of(SharedOrgHierarchy::new)
-                                        .With(SharedOrgHierarchy::setId, dbRow.column("organization_hierarchy").getString())
-                                        .With(SharedOrgHierarchy::setLevel, dbRow.column("orgh_level").get(Short.class))
-                                        .With(SharedOrgHierarchy::setHierarchy, dbRow.column("orgh_hierarchy").getString())
-                                        .With(SharedOrgHierarchy::setTitle, dbRow.column("orgh_title").getString())
-                                        .With(SharedOrgHierarchy::setDescription, dbRow.column("orgh_description").getString())
-                                        .Get()
-                        )
-                        .With(OrgRelation::setCreatedAt, dbRow.column("created_at").get(LocalDateTime.class))
-                        .With(OrgRelation::setUpdatedAt, dbRow.column("updated_at").get(LocalDateTime.class))
-                        .With(OrgRelation::setCreatedBy, EntityBuilder.Of(User::new).With(User::setId, dbRow.column("created_by").getString()).Get())
-                        .Get()
-                )
-                .collect(Collectors.toList());
+        try {
+            var result = this.dbClient.get().execute()
+                    .createQuery(queryString)
+                    .params(query.getParams())
+                    .execute()
+                    .map((dbRow)
+                            -> EntityBuilder.Of(OrgRelation::new)
+                            .With(OrgRelation::setId, dbRow.column("id").getString())
+                            .With(OrgRelation::setStructure,
+                                    EntityBuilder.Of(SharedOrgStructure::new)
+                                            .With(SharedOrgStructure::setId, dbRow.column("organization_structure").getString())
+                                            .With(SharedOrgStructure::setLevel, dbRow.column("orgs_level").get(Short.class))
+                                            .With(SharedOrgStructure::setStructure, dbRow.column("orgs_structure").getString())
+                                            .With(SharedOrgStructure::setTitle, dbRow.column("orgs_title").getString())
+                                            .With(SharedOrgStructure::setDescription, dbRow.column("orgs_description").getString())
+                                            .Get()
+                            )
+                            .With(OrgRelation::setHierarchy,
+                                    EntityBuilder.Of(SharedOrgHierarchy::new)
+                                            .With(SharedOrgHierarchy::setId, dbRow.column("organization_hierarchy").getString())
+                                            .With(SharedOrgHierarchy::setLevel, dbRow.column("orgh_level").get(Short.class))
+                                            .With(SharedOrgHierarchy::setHierarchy, dbRow.column("orgh_hierarchy").getString())
+                                            .With(SharedOrgHierarchy::setTitle, dbRow.column("orgh_title").getString())
+                                            .With(SharedOrgHierarchy::setDescription, dbRow.column("orgh_description").getString())
+                                            .Get()
+                            )
+                            .With(OrgRelation::setCreatedAt, dbRow.column("created_at").get(LocalDateTime.class))
+                            .With(OrgRelation::setUpdatedAt, dbRow.column("updated_at").get(LocalDateTime.class))
+                            .With(OrgRelation::setCreatedBy, EntityBuilder.Of(User::new).With(User::setId, dbRow.column("created_by").getString()).Get())
+                            .Get()
+                    )
+                    .collect(Collectors.toList());
 
-        if (result.isEmpty()) {
-            return OrgRelationResultFactory.FetchNull();
+            builder.withResult(result)
+                    .withNotification(OrgRelationNotificationFactory.FetchOrgRelationSuccess());
+        } catch (Exception e) {
+            builder.withException(e).
+                    withNotification(OrgRelationNotificationFactory.FetchOrgRelationFail());
         }
 
-        return OrgRelationResultFactory.FetchResult(result);
+        return builder.get();
     }
 }

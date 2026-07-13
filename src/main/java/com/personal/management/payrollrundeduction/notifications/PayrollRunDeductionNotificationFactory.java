@@ -28,6 +28,14 @@ public class PayrollRunDeductionNotificationFactory {
         return new Notification("El deducción para calculo de nomina se ha eliminado correctamente.");
     }
 
+    public static Notification FetchPayrollRunDeductionSuccess() {
+        return new Notification("Lista de deducciones de calculo de nomina.");
+    }
+
+    public static Notification FetchPayrollRunDeductionFail() {
+        return new Notification("Ha ocurrido un error mientras se consultaban las deducciones de calculo de nomina.");
+    }
+
     public static Notification FetchNull() {
         return new Notification("No se han encontrado resultados.");
     }

@@ -28,6 +28,14 @@ public class PayrollRunBenefitNotificationFactory {
         return new Notification("El beneficio para calculo de nomina se ha eliminado correctamente.");
     }
 
+    public static Notification FetchPayrollRunBenefitSuccess() {
+        return new Notification("Lista de beneficios en calculo de nomina.");
+    }
+
+    public static Notification FetchPayrollRunBenefitFail() {
+        return new Notification("Ha ocurrido un error mientras se consultaban los beneficios en calculo de nomina.");
+    }
+
     public static Notification FetchNull() {
         return new Notification("No se han encontrado resultados.");
     }

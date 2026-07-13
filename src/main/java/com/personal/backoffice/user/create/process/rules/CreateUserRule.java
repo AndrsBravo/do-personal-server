@@ -29,7 +29,7 @@ public class CreateUserRule implements IProcessRule<CreateUserProcess> {
             return;
         }
 
-        process.addLog(pLogger.INFO("Crear usuario", "User created successfully: " + create.getResult().getId()));
+        process.addLog(pLogger.INFO("Crear usuario", "User created successfully: " + user.getId()));
 
     }
 

@@ -28,6 +28,14 @@ public class ClientNotificationFactory {
         return new Notification("El cliente ha sido eliminado correctamente");
     }
 
+    public static Notification FetchClientSuccess() {
+        return new Notification("Lista de Clientes.");
+    }
+
+    public static Notification FetchClientFail() {
+        return new Notification("Ha ocurrido un error mientras se consultaban la clientes.");
+    }
+
     public static Notification FetchNull() {
         return new Notification("No se han encontrado resultados.");
     }

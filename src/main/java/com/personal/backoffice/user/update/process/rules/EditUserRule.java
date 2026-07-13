@@ -36,7 +36,7 @@ public class EditUserRule implements IProcessRule<EditUserProcess> {
             return;
         }
 
-        process.addLog(pLogger.INFO("Modificar usuario", "Usuario editado correctamente: " + edit.getResult().getId()));
+        process.addLog(pLogger.INFO("Modificar usuario", "Usuario editado correctamente: " + user.getId()));
 
     }
 

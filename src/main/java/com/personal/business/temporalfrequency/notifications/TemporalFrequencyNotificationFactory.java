@@ -28,6 +28,14 @@ public class TemporalFrequencyNotificationFactory {
         return new Notification("La frecuencia temporal se ha eliminado correctamente.");
     }
 
+    public static Notification FetchTemporalFrequencySuccess() {
+        return new Notification("Lista de frecuencias temporales.");
+    }
+
+    public static Notification FetchTemporalFrequencyFail() {
+        return new Notification("Ha ocurrido un error mientras se consultaban las frecuencias temporales.");
+    }
+
     public static Notification FetchNull() {
         return new Notification("No se han encontrado resultados.");
     }

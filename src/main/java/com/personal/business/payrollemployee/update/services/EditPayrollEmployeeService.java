@@ -2,15 +2,16 @@ package com.personal.business.payrollemployee.update.services;
 
 import java.util.Optional;
 
-import com.personal.business.payrollemployee.entities.PayrollEmployee;
-import com.personal.business.payrollemployee.factories.PayrollEmployeeResultFactory;
+import com.personal.business.payrollemployee.notifications.PayrollEmployeeNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IEditService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class EditPayrollEmployeeService implements IEditService<PayrollEmployee> {
+public class EditPayrollEmployeeService implements IEditService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,36 +20,31 @@ public class EditPayrollEmployeeService implements IEditService<PayrollEmployee>
     }
 
     @Override
-    public ServiceResult<PayrollEmployee> edit(Query query) {
+    public ServiceResult edit(Query query) {
 
         if (dbClient.isEmpty()) {
-            return PayrollEmployeeResultFactory.UpdateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var updateQuery = query.Update("payroll_employee").Get();
-        //System.out.println("updateQuery: " + updateQuery);
-
-        long result = 0;
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createUpdate(updateQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(PayrollEmployeeNotificationFactory.UpdatePayrollEmployeeSuccess());
+
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al actualizar el tipo de usuario " + e.getMessage());
-            return PayrollEmployeeResultFactory.UpdateFail();
+            builder.withException(e)
+                    .withNotification(PayrollEmployeeNotificationFactory.UpdatePayrollEmployeeFail());
+
         }
-
-        //System.out.println("query.getParams(): " + query.getParams().values().toString());
-        if (result == 0) {
-            return PayrollEmployeeResultFactory.UpdateFail();
-        }
-
-        return PayrollEmployeeResultFactory.UpdateSuccess(new PayrollEmployee());
-
+        return builder.get();
     }
 
 }

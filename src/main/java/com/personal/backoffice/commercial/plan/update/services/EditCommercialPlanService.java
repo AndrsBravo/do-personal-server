@@ -2,15 +2,16 @@ package com.personal.backoffice.commercial.plan.update.services;
 
 import java.util.Optional;
 
-import com.personal.backoffice.commercial.plan.entities.CommercialPlan;
-import com.personal.backoffice.commercial.plan.factories.CommercialPlanResultFactory;
+import com.personal.backoffice.commercial.plan.notifications.CommercialPlanNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IEditService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class EditCommercialPlanService implements IEditService<CommercialPlan> {
+public class EditCommercialPlanService implements IEditService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,36 +20,31 @@ public class EditCommercialPlanService implements IEditService<CommercialPlan> {
     }
 
     @Override
-    public ServiceResult<CommercialPlan> edit(Query query) {
+    public ServiceResult edit(Query query) {
 
         if (dbClient.isEmpty()) {
-            return CommercialPlanResultFactory.UpdateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var updateQuery = query.Update("commercial_plan").Get();
-        //System.out.println("updateQuery: " + updateQuery);
-
-        long result = 0;
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createUpdate(updateQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(CommercialPlanNotificationFactory.UpdateCommercialPlanSuccess());
+
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al actualizar el tipo de usuario " + e.getMessage());
-            return CommercialPlanResultFactory.UpdateFail();
+            builder.withException(e)
+                    .withNotification(CommercialPlanNotificationFactory.UpdateCommercialPlanFail());
+
         }
-
-        //System.out.println("query.getParams(): " + query.getParams().values().toString());
-        if (result == 0) {
-            return CommercialPlanResultFactory.UpdateFail();
-        }
-
-        return CommercialPlanResultFactory.UpdateSuccess(new CommercialPlan());
-
+        return builder.get();
     }
 
 }

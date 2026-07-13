@@ -2,15 +2,16 @@ package com.personal.business.deductioncategory.delete.services;
 
 import java.util.Optional;
 
-import com.personal.business.deductioncategory.entities.DeductionCategory;
-import com.personal.business.deductioncategory.factories.DeductionCategoryResultFactory;
+import com.personal.business.deductioncategory.notifications.DeductionCategoryNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class DeleteDeductionCategoryService implements IDeleteService<DeductionCategory> {
+public class DeleteDeductionCategoryService implements IDeleteService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,35 +20,31 @@ public class DeleteDeductionCategoryService implements IDeleteService<DeductionC
     }
 
     @Override
-    public ServiceResult<DeductionCategory> delete(Query query) {
+    public ServiceResult delete(Query query) {
         if (dbClient.isEmpty()) {
-            return DeductionCategoryResultFactory.DeleteFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var deleteQuery = query.Delete("deductions_categories").Get();
 
-        //System.out.println(deleteQuery);
-        long result = 0;
-
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createDelete(deleteQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(DeductionCategoryNotificationFactory.DeleteDeductionCategorySuccess())
+                    .get();
         } catch (Exception e) {
-
-            return DeductionCategoryResultFactory.DeleteFail();
+            builder.withException(e)
+                    .withNotification(DeductionCategoryNotificationFactory.DeleteDeductionCategoryFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return DeductionCategoryResultFactory.DeleteFail();
-        }
-
-        return DeductionCategoryResultFactory.DeleteSuccess(new DeductionCategory(query.getParams().get("id")));
-
+        return builder.get();
     }
 
 }

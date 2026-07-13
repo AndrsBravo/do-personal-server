@@ -28,6 +28,14 @@ public class EmployeeNotificationFactory {
         return new Notification("El empleado se ha eliminado correctamente.");
     }
 
+    public static Notification FetchEmployeeSuccess() {
+        return new Notification("Lista de empleados.");
+    }
+
+    public static Notification FetchEmployeeFail() {
+        return new Notification("Ha ocurrido un error mientras se consultaban los empleados.");
+    }
+
     public static Notification FetchNull() {
         return new Notification("No se han encontrado resultados.");
     }

@@ -2,15 +2,16 @@ package com.personal.business.hierarchydeduction.delete.services;
 
 import java.util.Optional;
 
-import com.personal.business.hierarchydeduction.entities.HierarchyDeduction;
-import com.personal.business.hierarchydeduction.factories.HierarchyDeductionResultFactory;
+import com.personal.business.hierarchydeduction.notifications.HierarchyDeductionNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class DeleteHierarchyDeductionService implements IDeleteService<HierarchyDeduction> {
+public class DeleteHierarchyDeductionService implements IDeleteService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,35 +20,31 @@ public class DeleteHierarchyDeductionService implements IDeleteService<Hierarchy
     }
 
     @Override
-    public ServiceResult<HierarchyDeduction> delete(Query query) {
+    public ServiceResult delete(Query query) {
         if (dbClient.isEmpty()) {
-            return HierarchyDeductionResultFactory.DeleteFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var deleteQuery = query.Delete("hierarchies_deductions").Get();
 
-        //System.out.println(deleteQuery);
-        long result = 0;
-
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createDelete(deleteQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(HierarchyDeductionNotificationFactory.DeleteHierarchyDeductionSuccess())
+                    .get();
         } catch (Exception e) {
-
-            return HierarchyDeductionResultFactory.DeleteFail();
+            builder.withException(e)
+                    .withNotification(HierarchyDeductionNotificationFactory.DeleteHierarchyDeductionFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return HierarchyDeductionResultFactory.DeleteFail();
-        }
-
-        return HierarchyDeductionResultFactory.DeleteSuccess(new HierarchyDeduction(query.getParams().get("id")));
-
+        return builder.get();
     }
 
 }

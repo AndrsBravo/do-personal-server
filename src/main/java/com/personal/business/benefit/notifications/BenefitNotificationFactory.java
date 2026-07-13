@@ -28,6 +28,14 @@ public class BenefitNotificationFactory {
         return new Notification("El beneficio ha sido eliminado satisfactoriamente. ");
     }
 
+    public static Notification FetchBenefitSuccess() {
+        return new Notification("Lista de beneficios.");
+    }
+
+    public static Notification FetchBenefitFail() {
+        return new Notification("Ha ocurrido un error mientras se consultaban los beneficios.");
+    }
+
     public static Notification FetchNull() {
         return new Notification("No se han encontrado resultados.");
     }

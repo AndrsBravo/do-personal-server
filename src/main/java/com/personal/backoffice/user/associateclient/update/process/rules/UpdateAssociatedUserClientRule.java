@@ -35,7 +35,7 @@ public class UpdateAssociatedUserClientRule implements IProcessRule<UpdateAssoci
             return;
         }
 
-        process.addLog(pLogger.INFO("Modificar asociación Usuario y Cliente", "Asociación editada correctamente: " + update.getResult().getId()));
+        process.addLog(pLogger.INFO("Modificar asociación Usuario y Cliente", "Asociación editada correctamente: " + associatedUserClient.getId()));
 
     }
 

@@ -8,8 +8,8 @@ import com.personal.server.flyway.FlyWayMigrationFactory;
 import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.entities.CreateResult;
-import com.personal.shared.services.entities.CreateResultBuilder;
+import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
@@ -22,7 +22,7 @@ public class MigrateDataBaseService implements ICreateService {
     }
 
     @Override
-    public CreateResult create(Query query) {
+    public ServiceResult create(Query query) {
 
         var dbName = query.getParams().get("dbName");
 
@@ -37,13 +37,13 @@ public class MigrateDataBaseService implements ICreateService {
 
             var result = FlyWayMigrationFactory.migrate(dbName, migrate_location);
 
-            return CreateResultBuilder.build()
+            return ServiceResultBuilder.build()
                     .withRecords(Boolean.compare(result.success, false))
                     .withNotification(SystemNotificationsFactory.MigrateDataBaseSuccess())
                     .get();
         } catch (Exception e) {
 
-            return CreateResultBuilder.build()
+            return ServiceResultBuilder.build()
                     .withException(e)
                     .withNotification(SystemNotificationsFactory.MigrateDataBaseFail())
                     .get();

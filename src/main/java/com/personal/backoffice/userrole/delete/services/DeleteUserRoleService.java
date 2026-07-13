@@ -2,15 +2,16 @@ package com.personal.backoffice.userrole.delete.services;
 
 import java.util.Optional;
 
-import com.personal.backoffice.userrole.entities.UserRole;
-import com.personal.backoffice.userrole.factories.UserRoleResultFactory;
+import com.personal.backoffice.userrole.notifications.UserRoleNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class DeleteUserRoleService implements IDeleteService<UserRole> {
+public class DeleteUserRoleService implements IDeleteService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,35 +20,31 @@ public class DeleteUserRoleService implements IDeleteService<UserRole> {
     }
 
     @Override
-    public ServiceResult<UserRole> delete(Query query) {
+    public ServiceResult delete(Query query) {
         if (dbClient.isEmpty()) {
-            return UserRoleResultFactory.DeleteFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var deleteQuery = query.Delete("user_role").Get();
 
-        //System.out.println(deleteQuery);
-        long result = 0;
-
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createDelete(deleteQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(UserRoleNotificationFactory.DeleteUserRoleSuccess())
+                    .get();
         } catch (Exception e) {
-
-            return UserRoleResultFactory.DeleteFail();
+            builder.withException(e)
+                    .withNotification(UserRoleNotificationFactory.DeleteUserRoleFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return UserRoleResultFactory.DeleteFail();
-        }
-
-        return UserRoleResultFactory.DeleteSuccess(new UserRole(query.getParams().get("id")));
-
+        return builder.get();
     }
 
 }

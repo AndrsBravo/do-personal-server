@@ -28,6 +28,14 @@ public class UserTypeNotificationFactory {
         return new Notification("El tipo de usuario se ha eliminado correctamente.");
     }
 
+    public static Notification FetchUserTypeSuccess() {
+        return new Notification("Lista de tipos de usuarios.");
+    }
+
+    public static Notification FetchUserTypeFail() {
+        return new Notification("Ha ocurrido un error mientras se consultaban los tipos de usuarios.");
+    }
+
     public static Notification FetchNull() {
         return new Notification("No se han encontrado resultados.");
     }

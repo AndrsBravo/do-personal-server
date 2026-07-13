@@ -6,8 +6,8 @@ import com.personal.backoffice.business.notifications.BusinessNotificationFactor
 import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.entities.CreateResult;
-import com.personal.shared.services.entities.CreateResultBuilder;
+import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
@@ -20,7 +20,7 @@ public class CreateBusinessService implements ICreateService {
     }
 
     @Override
-    public CreateResult create(Query query) {
+    public ServiceResult create(Query query) {
         if (dbBusiness.isEmpty()) {
             return ServicesResultFactory.NotAvailable();
         }
@@ -37,13 +37,13 @@ public class CreateBusinessService implements ICreateService {
                     .params(query.getParams())
                     .execute();
 
-            return CreateResultBuilder.build()
+            return ServiceResultBuilder.build()
                     .withRecords(records)
                     .withNotification(BusinessNotificationFactory.CreateBusinessSuccess())
                     .get();
         } catch (Exception e) {
             //System.out.println("Hubo una excepción al crear el tipo de empresa " + e.getMessage());
-            return CreateResultBuilder.build()
+            return ServiceResultBuilder.build()
                     .withException(e)
                     .withNotification(BusinessNotificationFactory.CreateBusinessFail())
                     .get();

@@ -28,6 +28,14 @@ public class CountryNotificationFactory {
         return new Notification("El país se ha eliminado correctamente");
     }
 
+    public static Notification FetchCountrySuccess() {
+        return new Notification("Lista de países.");
+    }
+
+    public static Notification FetchCountryFail() {
+        return new Notification("Ha ocurrido un error mientras se consultaban los países.");
+    }
+
     public static Notification FetchNull() {
         return new Notification("No se han encontrado resultados: ");
     }

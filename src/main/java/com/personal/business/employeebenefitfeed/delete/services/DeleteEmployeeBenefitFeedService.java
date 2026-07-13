@@ -2,15 +2,16 @@ package com.personal.business.employeebenefitfeed.delete.services;
 
 import java.util.Optional;
 
-import com.personal.business.employeebenefitfeed.entities.EmployeeBenefitFeed;
-import com.personal.business.employeebenefitfeed.factories.EmployeeBenefitFeedResultFactory;
+import com.personal.business.employeebenefitfeed.notifications.EmployeeBenefitFeedNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class DeleteEmployeeBenefitFeedService implements IDeleteService<EmployeeBenefitFeed> {
+public class DeleteEmployeeBenefitFeedService implements IDeleteService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,35 +20,31 @@ public class DeleteEmployeeBenefitFeedService implements IDeleteService<Employee
     }
 
     @Override
-    public ServiceResult<EmployeeBenefitFeed> delete(Query query) {
+    public ServiceResult delete(Query query) {
         if (dbClient.isEmpty()) {
-            return EmployeeBenefitFeedResultFactory.DeleteFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var deleteQuery = query.Delete("employee_benefits_feeds").Get();
 
-        //System.out.println(deleteQuery);
-        long result = 0;
-
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createDelete(deleteQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(EmployeeBenefitFeedNotificationFactory.DeleteEmployeeBenefitFeedSuccess())
+                    .get();
         } catch (Exception e) {
-
-            return EmployeeBenefitFeedResultFactory.DeleteFail();
+            builder.withException(e)
+                    .withNotification(EmployeeBenefitFeedNotificationFactory.DeleteEmployeeBenefitFeedFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return EmployeeBenefitFeedResultFactory.DeleteFail();
-        }
-
-        return EmployeeBenefitFeedResultFactory.DeleteSuccess(new EmployeeBenefitFeed(query.getParams().get("id")));
-
+        return builder.get();
     }
 
 }

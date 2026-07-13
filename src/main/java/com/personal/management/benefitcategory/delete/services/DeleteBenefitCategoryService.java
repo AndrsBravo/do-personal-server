@@ -2,15 +2,16 @@ package com.personal.management.benefitcategory.delete.services;
 
 import java.util.Optional;
 
-import com.personal.management.benefitcategory.entities.BenefitCategory;
-import com.personal.management.benefitcategory.factories.BenefitCategoryResultFactory;
+import com.personal.management.benefitcategory.notifications.BenefitCategoryNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class DeleteBenefitCategoryService implements IDeleteService<BenefitCategory> {
+public class DeleteBenefitCategoryService implements IDeleteService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,35 +20,31 @@ public class DeleteBenefitCategoryService implements IDeleteService<BenefitCateg
     }
 
     @Override
-    public ServiceResult<BenefitCategory> delete(Query query) {
+    public ServiceResult delete(Query query) {
         if (dbClient.isEmpty()) {
-            return BenefitCategoryResultFactory.DeleteFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var deleteQuery = query.Delete("benefit_categories").Get();
 
-        //System.out.println(deleteQuery);
-        long result = 0;
-
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createDelete(deleteQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(BenefitCategoryNotificationFactory.DeleteBenefitCategorySuccess())
+                    .get();
         } catch (Exception e) {
-
-            return BenefitCategoryResultFactory.DeleteFail();
+            builder.withException(e)
+                    .withNotification(BenefitCategoryNotificationFactory.DeleteBenefitCategoryFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return BenefitCategoryResultFactory.DeleteFail();
-        }
-
-        return BenefitCategoryResultFactory.DeleteSuccess(new BenefitCategory(query.getParams().get("id")));
-
+        return builder.get();
     }
 
 }

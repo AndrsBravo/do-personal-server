@@ -28,6 +28,14 @@ public class HierarchyDeductionNotificationFactory {
         return new Notification("La deducción en la jerarquía se ha eliminado correctamente.");
     }
 
+    public static Notification FetchHierarchyDeductionSuccess() {
+        return new Notification("Lista de deducción de la jerarquía.");
+    }
+
+    public static Notification FetchHierarchyDeductionFail() {
+        return new Notification("Ha ocurrido un error mientras se consultaban las deducciones de la jerarquía.");
+    }
+
     public static Notification FetchNull() {
         return new Notification("No se han encontrado resultados.");
     }

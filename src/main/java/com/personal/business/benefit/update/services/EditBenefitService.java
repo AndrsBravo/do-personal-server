@@ -2,15 +2,16 @@ package com.personal.business.benefit.update.services;
 
 import java.util.Optional;
 
-import com.personal.business.benefit.entities.Benefit;
-import com.personal.business.benefit.factories.BenefitResultFactory;
+import com.personal.business.benefit.notifications.BenefitNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IEditService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class EditBenefitService implements IEditService<Benefit> {
+public class EditBenefitService implements IEditService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,36 +20,31 @@ public class EditBenefitService implements IEditService<Benefit> {
     }
 
     @Override
-    public ServiceResult<Benefit> edit(Query query) {
+    public ServiceResult edit(Query query) {
 
         if (dbClient.isEmpty()) {
-            return BenefitResultFactory.UpdateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var updateQuery = query.Update("business_benefits").Get();
-        //System.out.println("updateQuery: " + updateQuery);
-
-        long result = 0;
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createUpdate(updateQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(BenefitNotificationFactory.UpdateBenefitSuccess());
+
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al actualizar el tipo de usuario " + e.getMessage());
-            return BenefitResultFactory.UpdateFail();
+            builder.withException(e)
+                    .withNotification(BenefitNotificationFactory.UpdateBenefitFail());
+
         }
-
-        //System.out.println("query.getParams(): " + query.getParams().values().toString());
-        if (result == 0) {
-            return BenefitResultFactory.UpdateFail();
-        }
-
-        return BenefitResultFactory.UpdateSuccess(new Benefit());
-
+        return builder.get();
     }
 
 }

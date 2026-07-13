@@ -2,15 +2,16 @@ package com.personal.management.payrollrunbenefit.update.services;
 
 import java.util.Optional;
 
-import com.personal.management.payrollrunbenefit.entities.PayrollRunBenefit;
-import com.personal.management.payrollrunbenefit.factories.PayrollRunBenefitResultFactory;
+import com.personal.management.payrollrunbenefit.notifications.PayrollRunBenefitNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IEditService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class EditPayrollRunBenefitService implements IEditService<PayrollRunBenefit> {
+public class EditPayrollRunBenefitService implements IEditService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,36 +20,31 @@ public class EditPayrollRunBenefitService implements IEditService<PayrollRunBene
     }
 
     @Override
-    public ServiceResult<PayrollRunBenefit> edit(Query query) {
+    public ServiceResult edit(Query query) {
 
         if (dbClient.isEmpty()) {
-            return PayrollRunBenefitResultFactory.UpdateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var updateQuery = query.Update("payroll_runs_benefits").Get();
-        //System.out.println("updateQuery: " + updateQuery);
-
-        long result = 0;
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createUpdate(updateQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(PayrollRunBenefitNotificationFactory.UpdatePayrollRunBenefitSuccess());
+
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al actualizar el tipo de usuario " + e.getMessage());
-            return PayrollRunBenefitResultFactory.UpdateFail();
+            builder.withException(e)
+                    .withNotification(PayrollRunBenefitNotificationFactory.UpdatePayrollRunBenefitFail());
+
         }
-
-        //System.out.println("query.getParams(): " + query.getParams().values().toString());
-        if (result == 0) {
-            return PayrollRunBenefitResultFactory.UpdateFail();
-        }
-
-        return PayrollRunBenefitResultFactory.UpdateSuccess(new PayrollRunBenefit());
-
+        return builder.get();
     }
 
 }

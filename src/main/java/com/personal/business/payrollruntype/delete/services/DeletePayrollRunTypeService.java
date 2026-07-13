@@ -2,15 +2,16 @@ package com.personal.business.payrollruntype.delete.services;
 
 import java.util.Optional;
 
-import com.personal.business.payrollruntype.factories.PayrollRunTypeResultFactory;
-import com.personal.business.shared.entities.TypeEntity;
+import com.personal.business.payrollruntype.notifications.PayrollRunTypeNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class DeletePayrollRunTypeService implements IDeleteService<TypeEntity> {
+public class DeletePayrollRunTypeService implements IDeleteService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,35 +20,31 @@ public class DeletePayrollRunTypeService implements IDeleteService<TypeEntity> {
     }
 
     @Override
-    public ServiceResult<TypeEntity> delete(Query query) {
+    public ServiceResult delete(Query query) {
         if (dbClient.isEmpty()) {
-            return PayrollRunTypeResultFactory.DeleteFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var deleteQuery = query.Delete("payroll_runs_types").Get();
 
-        //System.out.println(deleteQuery);
-        long result = 0;
-
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createDelete(deleteQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(PayrollRunTypeNotificationFactory.DeletePayrollRunTypeSuccess())
+                    .get();
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al eliminar el tipo de cliente " + e.getMessage());
-            return PayrollRunTypeResultFactory.DeleteFail();
+            builder.withException(e)
+                    .withNotification(PayrollRunTypeNotificationFactory.DeletePayrollRunTypeFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return PayrollRunTypeResultFactory.DeleteFail();
-        }
-
-        return PayrollRunTypeResultFactory.DeleteSuccess(new TypeEntity(query.getParams().get("id")));
-
+        return builder.get();
     }
 
 }

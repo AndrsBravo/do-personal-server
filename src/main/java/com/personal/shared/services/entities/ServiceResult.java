@@ -1,21 +1,35 @@
 package com.personal.shared.services.entities;
 
-public class ServiceResult<T> extends CreateResult {
+import com.personal.shared.notifications.Notification;
 
-    private T result;
+public class ServiceResult {
 
-    public ServiceResult(T result) {
+    private long records;
+    private Notification notification;
+    private Exception exception;
 
-        this.result = result;
-
+    public void setNotification(Notification notification) {
+        this.notification = notification;
     }
 
-    public T getResult() {
-        return result;
+    public Notification getNotification() {
+        return notification;
     }
 
-    public void setResult(T result) {
-        this.result = result;
+    public long getRecords() {
+        return records;
+    }
+
+    public void setRecords(long records) {
+        this.records = records;
+    }
+
+    public Exception getException() {
+        return exception;
+    }
+
+    public void setException(Exception exception) {
+        this.exception = exception;
     }
 
 }

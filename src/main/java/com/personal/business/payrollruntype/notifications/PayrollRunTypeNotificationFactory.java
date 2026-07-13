@@ -28,6 +28,14 @@ public class PayrollRunTypeNotificationFactory {
         return new Notification("El tipo de calculo de nomina se ha eliminado correctamente.");
     }
 
+    public static Notification FetchPayrollRunTypeSuccess() {
+        return new Notification("Lista de tipo de calculo de nomina.");
+    }
+
+    public static Notification FetchPayrollRunTypeFail() {
+        return new Notification("Ha ocurrido un error mientras se consultaban los tipos de calculo de nomina.");
+    }
+
     public static Notification FetchNull() {
         return new Notification("No se han encontrado resultados.");
     }

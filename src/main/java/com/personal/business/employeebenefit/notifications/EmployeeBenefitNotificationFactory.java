@@ -28,6 +28,14 @@ public class EmployeeBenefitNotificationFactory {
         return new Notification("El beneficio de empleado se ha eliminado correctamente.");
     }
 
+    public static Notification FetchEmployeeBenefitSuccess() {
+        return new Notification("Lista de beneficios de empleados.");
+    }
+
+    public static Notification FetchEmployeeBenefitFail() {
+        return new Notification("Ha ocurrido un error mientras se consultaban los beneficios de empleados.");
+    }
+
     public static Notification FetchNull() {
         return new Notification("No se han encontrado resultados.");
     }

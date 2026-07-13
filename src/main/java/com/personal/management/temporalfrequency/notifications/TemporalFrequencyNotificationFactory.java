@@ -16,8 +16,24 @@ public class TemporalFrequencyNotificationFactory {
         return new Notification("Ha ocurrido un error mientras se actualizaba la frecuencia temporal ");
     }
 
+    public static Notification UpdateTemporalFrequencySuccess() {
+        return new Notification("La frecuencia temporal ha sido modificada exitosamente. ");
+    }
+
     public static Notification DeleteTemporalFrequencyFail() {
         return new Notification("Ha ocurrido un error mientras se eliminaba la frecuencia temporal ");
+    }
+
+    public static Notification DeleteTemporalFrequencySuccess() {
+        return new Notification("La frecuencia temporal ha sido eliminada satisfactoriamente. ");
+    }
+
+    public static Notification FetchTemporalFrequencySuccess() {
+        return new Notification("Lista de frecuencias temporal.");
+    }
+
+    public static Notification FetchTemporalFrequencyFail() {
+        return new Notification("Ha ocurrido un error mientras se consultaban las frecuencias temporales.");
     }
 
     public static Notification FetchNull() {

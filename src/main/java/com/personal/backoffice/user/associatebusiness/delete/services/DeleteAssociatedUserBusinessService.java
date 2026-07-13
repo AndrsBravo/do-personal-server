@@ -2,15 +2,16 @@ package com.personal.backoffice.user.associatebusiness.delete.services;
 
 import java.util.Optional;
 
-import com.personal.backoffice.user.associatebusiness.entities.AssociateUserBusiness;
-import com.personal.backoffice.user.factories.UserResultFactory;
+import com.personal.backoffice.user.notifications.UserNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class DeleteAssociatedUserBusinessService implements IDeleteService<AssociateUserBusiness> {
+public class DeleteAssociatedUserBusinessService implements IDeleteService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,37 +20,31 @@ public class DeleteAssociatedUserBusinessService implements IDeleteService<Assoc
     }
 
     @Override
-    public ServiceResult<AssociateUserBusiness> delete(Query query) {
+    public ServiceResult delete(Query query) {
         if (dbClient.isEmpty()) {
-            return UserResultFactory.DeleteAssociatedUserBusinessFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var deleteQuery = query.Delete("user_has_business").Get();
 
-        //System.out.println(deleteQuery);
-        //System.out.println("Params " + query.getParams());
-        long result = 0;
-
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createDelete(deleteQuery)
                     .params(query.getParams())
                     .execute();
-            //System.out.println("Result " + result);
 
+            builder.withRecords(records)
+                    .withNotification(UserNotificationFactory.DeleteAssociatedUserBusinessSuccess())
+                    .get();
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al eliminar la relación Usuario, Empresa " + e.getMessage());
-            return UserResultFactory.DeleteAssociatedUserBusinessFail();
+            builder.withException(e)
+                    .withNotification(UserNotificationFactory.DeleteAssociatedUserBusinessFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return UserResultFactory.DeleteAssociatedUserBusinessFail();
-        }
-
-        return UserResultFactory.DeleteAssociatedUserBusinessSuccess(new AssociateUserBusiness(query.getParams().get("id")));
-
+        return builder.get();
     }
 
 }

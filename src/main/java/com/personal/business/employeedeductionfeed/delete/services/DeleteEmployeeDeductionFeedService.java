@@ -2,15 +2,16 @@ package com.personal.business.employeedeductionfeed.delete.services;
 
 import java.util.Optional;
 
-import com.personal.business.employeedeductionfeed.entities.EmployeeDeductionFeed;
-import com.personal.business.employeedeductionfeed.factories.EmployeeDeductionFeedResultFactory;
+import com.personal.business.employeedeductionfeed.notifications.EmployeeDeductionFeedNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class DeleteEmployeeDeductionFeedService implements IDeleteService<EmployeeDeductionFeed> {
+public class DeleteEmployeeDeductionFeedService implements IDeleteService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,35 +20,31 @@ public class DeleteEmployeeDeductionFeedService implements IDeleteService<Employ
     }
 
     @Override
-    public ServiceResult<EmployeeDeductionFeed> delete(Query query) {
+    public ServiceResult delete(Query query) {
         if (dbClient.isEmpty()) {
-            return EmployeeDeductionFeedResultFactory.DeleteFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var deleteQuery = query.Delete("employee_deductions_feeds").Get();
 
-        //System.out.println(deleteQuery);
-        long result = 0;
-
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createDelete(deleteQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(EmployeeDeductionFeedNotificationFactory.DeleteEmployeeDeductionFeedSuccess())
+                    .get();
         } catch (Exception e) {
-
-            return EmployeeDeductionFeedResultFactory.DeleteFail();
+            builder.withException(e)
+                    .withNotification(EmployeeDeductionFeedNotificationFactory.DeleteEmployeeDeductionFeedFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return EmployeeDeductionFeedResultFactory.DeleteFail();
-        }
-
-        return EmployeeDeductionFeedResultFactory.DeleteSuccess(new EmployeeDeductionFeed(query.getParams().get("id")));
-
+        return builder.get();
     }
 
 }

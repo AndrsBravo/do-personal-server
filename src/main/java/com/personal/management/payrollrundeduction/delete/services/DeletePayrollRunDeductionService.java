@@ -2,15 +2,16 @@ package com.personal.management.payrollrundeduction.delete.services;
 
 import java.util.Optional;
 
-import com.personal.management.payrollrundeduction.entities.PayrollRunDeduction;
-import com.personal.management.payrollrundeduction.factories.PayrollRunDeductionResultFactory;
+import com.personal.management.payrollrundeduction.notifications.PayrollRunDeductionNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class DeletePayrollRunDeductionService implements IDeleteService<PayrollRunDeduction> {
+public class DeletePayrollRunDeductionService implements IDeleteService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,35 +20,31 @@ public class DeletePayrollRunDeductionService implements IDeleteService<PayrollR
     }
 
     @Override
-    public ServiceResult<PayrollRunDeduction> delete(Query query) {
+    public ServiceResult delete(Query query) {
         if (dbClient.isEmpty()) {
-            return PayrollRunDeductionResultFactory.DeleteFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var deleteQuery = query.Delete("payroll_runs_deductions").Get();
 
-        //System.out.println(deleteQuery);
-        long result = 0;
-
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createDelete(deleteQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(PayrollRunDeductionNotificationFactory.DeletePayrollRunDeductionSuccess())
+                    .get();
         } catch (Exception e) {
-
-            return PayrollRunDeductionResultFactory.DeleteFail();
+            builder.withException(e)
+                    .withNotification(PayrollRunDeductionNotificationFactory.DeletePayrollRunDeductionFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return PayrollRunDeductionResultFactory.DeleteFail();
-        }
-
-        return PayrollRunDeductionResultFactory.DeleteSuccess(new PayrollRunDeduction(query.getParams().get("id")));
-
+        return builder.get();
     }
 
 }

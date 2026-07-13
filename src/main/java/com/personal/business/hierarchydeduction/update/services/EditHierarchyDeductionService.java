@@ -2,15 +2,16 @@ package com.personal.business.hierarchydeduction.update.services;
 
 import java.util.Optional;
 
-import com.personal.business.hierarchydeduction.entities.HierarchyDeduction;
-import com.personal.business.hierarchydeduction.factories.HierarchyDeductionResultFactory;
+import com.personal.business.hierarchydeduction.notifications.HierarchyDeductionNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IEditService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class EditHierarchyDeductionService implements IEditService<HierarchyDeduction> {
+public class EditHierarchyDeductionService implements IEditService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,36 +20,31 @@ public class EditHierarchyDeductionService implements IEditService<HierarchyDedu
     }
 
     @Override
-    public ServiceResult<HierarchyDeduction> edit(Query query) {
+    public ServiceResult edit(Query query) {
 
         if (dbClient.isEmpty()) {
-            return HierarchyDeductionResultFactory.UpdateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var updateQuery = query.Update("hierarchies_deductions").Get();
-        //System.out.println("updateQuery: " + updateQuery);
-
-        long result = 0;
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createUpdate(updateQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(HierarchyDeductionNotificationFactory.UpdateHierarchyDeductionSuccess());
+
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al actualizar el tipo de usuario " + e.getMessage());
-            return HierarchyDeductionResultFactory.UpdateFail();
+            builder.withException(e)
+                    .withNotification(HierarchyDeductionNotificationFactory.UpdateHierarchyDeductionFail());
+
         }
-
-        //System.out.println("query.getParams(): " + query.getParams().values().toString());
-        if (result == 0) {
-            return HierarchyDeductionResultFactory.UpdateFail();
-        }
-
-        return HierarchyDeductionResultFactory.UpdateSuccess(new HierarchyDeduction());
-
+        return builder.get();
     }
 
 }

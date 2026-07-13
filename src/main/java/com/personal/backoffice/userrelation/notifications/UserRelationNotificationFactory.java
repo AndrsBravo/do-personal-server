@@ -28,6 +28,14 @@ public class UserRelationNotificationFactory {
         return new Notification("La relación de usuario se ha eliminado correctamente ");
     }
 
+    public static Notification FetchUserRelationSuccess() {
+        return new Notification("Lista de relaciones de usuarios.");
+    }
+
+    public static Notification FetchUserRelationFail() {
+        return new Notification("Ha ocurrido un error mientras se consultaban las relaciones de usuarios.");
+    }
+
     public static Notification FetchNull() {
         return new Notification("No se han encontrado resultados.");
     }

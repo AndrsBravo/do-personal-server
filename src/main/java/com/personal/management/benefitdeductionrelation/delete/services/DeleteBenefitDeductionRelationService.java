@@ -2,15 +2,16 @@ package com.personal.management.benefitdeductionrelation.delete.services;
 
 import java.util.Optional;
 
-import com.personal.management.benefitdeductionrelation.entities.BenefitDeductionRelation;
-import com.personal.management.benefitdeductionrelation.factories.BenefitDeductionRelationResultFactory;
+import com.personal.management.benefitdeductionrelation.notifications.BenefitDeductionRelationNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class DeleteBenefitDeductionRelationService implements IDeleteService<BenefitDeductionRelation> {
+public class DeleteBenefitDeductionRelationService implements IDeleteService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,35 +20,31 @@ public class DeleteBenefitDeductionRelationService implements IDeleteService<Ben
     }
 
     @Override
-    public ServiceResult<BenefitDeductionRelation> delete(Query query) {
+    public ServiceResult delete(Query query) {
         if (dbClient.isEmpty()) {
-            return BenefitDeductionRelationResultFactory.DeleteFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var deleteQuery = query.Delete("benefits_deductions_base").Get();
 
-        //System.out.println(deleteQuery);
-        long result = 0;
-
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createDelete(deleteQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(BenefitDeductionRelationNotificationFactory.DeleteBenefitDeductionRelationSuccess())
+                    .get();
         } catch (Exception e) {
-
-            return BenefitDeductionRelationResultFactory.DeleteFail();
+            builder.withException(e)
+                    .withNotification(BenefitDeductionRelationNotificationFactory.DeleteBenefitDeductionRelationFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return BenefitDeductionRelationResultFactory.DeleteFail();
-        }
-
-        return BenefitDeductionRelationResultFactory.DeleteSuccess(new BenefitDeductionRelation(query.getParams().get("id")));
-
+        return builder.get();
     }
 
 }

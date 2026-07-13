@@ -28,4 +28,12 @@ public class UserNotificationFactory {
         return new Notification("No existen usuarios con los criterios de búsqueda: " + filter);
     }
 
+    public static Notification FetchUserSuccess() {
+        return new Notification("Lista de usuarios");
+    }
+
+    public static Notification FetchUserFail() {
+        return new Notification("Ha ocurrido un error mientras se consultaban los usuarios");
+    }
+
 }

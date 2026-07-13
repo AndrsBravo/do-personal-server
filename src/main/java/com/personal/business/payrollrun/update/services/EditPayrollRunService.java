@@ -2,15 +2,16 @@ package com.personal.business.payrollrun.update.services;
 
 import java.util.Optional;
 
-import com.personal.business.payrollrun.entities.PayrollRun;
-import com.personal.business.payrollrun.factories.PayrollRunResultFactory;
+import com.personal.business.payrollrun.notifications.PayrollRunNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IEditService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class EditPayrollRunService implements IEditService<PayrollRun> {
+public class EditPayrollRunService implements IEditService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,36 +20,31 @@ public class EditPayrollRunService implements IEditService<PayrollRun> {
     }
 
     @Override
-    public ServiceResult<PayrollRun> edit(Query query) {
+    public ServiceResult edit(Query query) {
 
         if (dbClient.isEmpty()) {
-            return PayrollRunResultFactory.UpdateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var updateQuery = query.Update("payroll_runs").Get();
-        //System.out.println("updateQuery: " + updateQuery);
-
-        long result = 0;
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createUpdate(updateQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(PayrollRunNotificationFactory.UpdatePayrollRunSuccess());
+
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al actualizar el tipo de usuario " + e.getMessage());
-            return PayrollRunResultFactory.UpdateFail();
+            builder.withException(e)
+                    .withNotification(PayrollRunNotificationFactory.UpdatePayrollRunFail());
+
         }
-
-        //System.out.println("query.getParams(): " + query.getParams().values().toString());
-        if (result == 0) {
-            return PayrollRunResultFactory.UpdateFail();
-        }
-
-        return PayrollRunResultFactory.UpdateSuccess(new PayrollRun());
-
+        return builder.get();
     }
 
 }

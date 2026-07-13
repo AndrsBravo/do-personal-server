@@ -2,15 +2,16 @@ package com.personal.backoffice.commercial.plandetail.delete.services;
 
 import java.util.Optional;
 
-import com.personal.backoffice.commercial.plandetail.entities.CommercialPlanDetail;
-import com.personal.backoffice.commercial.plandetail.factories.CommercialPlanDetailResultFactory;
+import com.personal.backoffice.commercial.plandetail.notifications.CommercialPlanDetailNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class DeleteCommercialPlanDetailService implements IDeleteService<CommercialPlanDetail> {
+public class DeleteCommercialPlanDetailService implements IDeleteService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,35 +20,31 @@ public class DeleteCommercialPlanDetailService implements IDeleteService<Commerc
     }
 
     @Override
-    public ServiceResult<CommercialPlanDetail> delete(Query query) {
+    public ServiceResult delete(Query query) {
         if (dbClient.isEmpty()) {
-            return CommercialPlanDetailResultFactory.DeleteFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var deleteQuery = query.Delete("commercial_plan_details").Get();
 
-        //System.out.println(deleteQuery);
-        long result = 0;
-
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createDelete(deleteQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(CommercialPlanDetailNotificationFactory.DeleteCommercialPlanDetailSuccess())
+                    .get();
         } catch (Exception e) {
-
-            return CommercialPlanDetailResultFactory.DeleteFail();
+            builder.withException(e)
+                    .withNotification(CommercialPlanDetailNotificationFactory.DeleteCommercialPlanDetailFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return CommercialPlanDetailResultFactory.DeleteFail();
-        }
-
-        return CommercialPlanDetailResultFactory.DeleteSuccess(new CommercialPlanDetail(query.getParams().get("id")));
-
+        return builder.get();
     }
 
 }

@@ -2,15 +2,16 @@ package com.personal.management.payrolldeduction.delete.services;
 
 import java.util.Optional;
 
-import com.personal.management.payrolldeduction.entities.PayrollDeduction;
-import com.personal.management.payrolldeduction.factories.PayrollDeductionResultFactory;
+import com.personal.management.payrolldeduction.notifications.PayrollDeductionNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class DeletePayrollDeductionService implements IDeleteService<PayrollDeduction> {
+public class DeletePayrollDeductionService implements IDeleteService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,35 +20,31 @@ public class DeletePayrollDeductionService implements IDeleteService<PayrollDedu
     }
 
     @Override
-    public ServiceResult<PayrollDeduction> delete(Query query) {
+    public ServiceResult delete(Query query) {
         if (dbClient.isEmpty()) {
-            return PayrollDeductionResultFactory.DeleteFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var deleteQuery = query.Delete("payroll_deductions").Get();
 
-        //System.out.println(deleteQuery);
-        long result = 0;
-
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createDelete(deleteQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(PayrollDeductionNotificationFactory.DeletePayrollDeductionSuccess())
+                    .get();
         } catch (Exception e) {
-
-            return PayrollDeductionResultFactory.DeleteFail();
+            builder.withException(e)
+                    .withNotification(PayrollDeductionNotificationFactory.DeletePayrollDeductionFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return PayrollDeductionResultFactory.DeleteFail();
-        }
-
-        return PayrollDeductionResultFactory.DeleteSuccess(new PayrollDeduction(query.getParams().get("id")));
-
+        return builder.get();
     }
 
 }

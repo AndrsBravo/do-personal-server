@@ -28,6 +28,14 @@ public class FinanceCategoryNotificationFactory {
         return new Notification("La categoría financiera se ha eliminado correctamente.");
     }
 
+    public static Notification FetchFinanceCategorySuccess() {
+        return new Notification("Lista de categorías financieras.");
+    }
+
+    public static Notification FetchFinanceCategoryFail() {
+        return new Notification("Ha ocurrido un error mientras se consultaban las categorías financieras.");
+    }
+
     public static Notification FetchNull() {
         return new Notification("No se han encontrado resultados.");
     }

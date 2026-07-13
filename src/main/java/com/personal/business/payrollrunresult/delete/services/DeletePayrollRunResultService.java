@@ -2,15 +2,16 @@ package com.personal.business.payrollrunresult.delete.services;
 
 import java.util.Optional;
 
-import com.personal.business.payrollrunresult.entities.PayrollRunResult;
-import com.personal.business.payrollrunresult.factories.PayrollRunResultResultFactory;
+import com.personal.business.payrollrunresult.notifications.PayrollRunResultNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class DeletePayrollRunResultService implements IDeleteService<PayrollRunResult> {
+public class DeletePayrollRunResultService implements IDeleteService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,35 +20,31 @@ public class DeletePayrollRunResultService implements IDeleteService<PayrollRunR
     }
 
     @Override
-    public ServiceResult<PayrollRunResult> delete(Query query) {
+    public ServiceResult delete(Query query) {
         if (dbClient.isEmpty()) {
-            return PayrollRunResultResultFactory.DeleteFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var deleteQuery = query.Delete("payroll_runs_results").Get();
 
-        //System.out.println(deleteQuery);
-        long result = 0;
-
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createDelete(deleteQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(PayrollRunResultNotificationFactory.DeletePayrollRunResultSuccess())
+                    .get();
         } catch (Exception e) {
-
-            return PayrollRunResultResultFactory.DeleteFail();
+            builder.withException(e)
+                    .withNotification(PayrollRunResultNotificationFactory.DeletePayrollRunResultFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return PayrollRunResultResultFactory.DeleteFail();
-        }
-
-        return PayrollRunResultResultFactory.DeleteSuccess(new PayrollRunResult(query.getParams().get("id")));
-
+        return builder.get();
     }
 
 }

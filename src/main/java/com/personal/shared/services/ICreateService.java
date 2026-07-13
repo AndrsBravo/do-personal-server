@@ -1,10 +1,10 @@
 package com.personal.shared.services;
 
 import com.personal.shared.query.Query;
-import com.personal.shared.services.entities.CreateResult;
+import com.personal.shared.services.entities.ServiceResult;
 
 public interface ICreateService {
 
-    public CreateResult create(Query query);
+    public ServiceResult create(Query query);
 
 }

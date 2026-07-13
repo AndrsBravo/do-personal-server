@@ -3,15 +3,16 @@ package com.personal.backoffice.country.update.services;
 import java.util.Optional;
 
 import com.personal.backoffice.country.entities.Country;
-import com.personal.backoffice.country.factories.CountryResultFactory;
+import com.personal.backoffice.country.notifications.CountryNotificationFactory;
 import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IEditService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class EditCountryService implements IEditService<Country> {
+public class EditCountryService implements IEditService {
 
     private final Optional<DbClient> dbClient;
 
@@ -20,7 +21,7 @@ public class EditCountryService implements IEditService<Country> {
     }
 
     @Override
-    public ServiceResult<Country> edit(Query query) {
+    public ServiceResult edit(Query query) {
 
         if (dbClient.isEmpty()) {
             return ServicesResultFactory.<Country>DbNotAvailable();
@@ -29,27 +30,22 @@ public class EditCountryService implements IEditService<Country> {
         var dbclient = dbClient.get();
 
         var updateQuery = query.Update("countries").Get();
-        //System.out.println("updateQuery: " + updateQuery);
-
-        long result = 0;
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createUpdate(updateQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(CountryNotificationFactory.UpdateCountrySuccess());
+
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al actualizar el tipo de cliente " + e.getMessage());
-            return CountryResultFactory.UpdateFail(e.getMessage());
+            builder.withException(e)
+                    .withNotification(CountryNotificationFactory.UpdateCountryFail());
+
         }
-
-        //System.out.println("query.getParams(): " + query.getParams().values().toString());
-        if (result == 0) {
-            return CountryResultFactory.UpdateFail("No se pudo actualizar el país.");
-        }
-
-        return CountryResultFactory.UpdateSuccess(new Country());
-
+        return builder.get();
     }
 
 }

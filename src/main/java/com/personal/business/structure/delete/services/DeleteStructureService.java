@@ -2,15 +2,16 @@ package com.personal.business.structure.delete.services;
 
 import java.util.Optional;
 
-import com.personal.business.structure.entities.Structure;
-import com.personal.business.structure.factories.StructureResultFactory;
+import com.personal.business.structure.notifications.StructureNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class DeleteStructureService implements IDeleteService<Structure> {
+public class DeleteStructureService implements IDeleteService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,35 +20,31 @@ public class DeleteStructureService implements IDeleteService<Structure> {
     }
 
     @Override
-    public ServiceResult<Structure> delete(Query query) {
+    public ServiceResult delete(Query query) {
         if (dbClient.isEmpty()) {
-            return StructureResultFactory.DeleteFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var deleteQuery = query.Delete("business_structures").Get();
 
-        //System.out.println(deleteQuery);
-        long result = 0;
-
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createDelete(deleteQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(StructureNotificationFactory.DeleteStructureSuccess())
+                    .get();
         } catch (Exception e) {
-
-            return StructureResultFactory.DeleteFail();
+            builder.withException(e)
+                    .withNotification(StructureNotificationFactory.DeleteStructureFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return StructureResultFactory.DeleteFail();
-        }
-
-        return StructureResultFactory.DeleteSuccess(new Structure(query.getParams().get("id")));
-
+        return builder.get();
     }
 
 }

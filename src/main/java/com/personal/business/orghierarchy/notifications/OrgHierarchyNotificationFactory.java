@@ -28,6 +28,14 @@ public class OrgHierarchyNotificationFactory {
         return new Notification("La jerarquía organizacional se ha eliminado correctamente.");
     }
 
+    public static Notification FetchOrgHierarchySuccess() {
+        return new Notification("Lista de jerarquías organizacional.");
+    }
+
+    public static Notification FetchOrgHierarchyFail() {
+        return new Notification("Ha ocurrido un error mientras se consultaban las jerarquías organizacionales.");
+    }
+
     public static Notification FetchNull() {
         return new Notification("No se han encontrado resultados.");
     }

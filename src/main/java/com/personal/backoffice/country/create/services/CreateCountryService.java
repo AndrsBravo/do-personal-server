@@ -2,14 +2,12 @@ package com.personal.backoffice.country.create.services;
 
 import java.util.Optional;
 
-import com.personal.backoffice.country.entities.Country;
-import com.personal.backoffice.country.factories.CountryResultFactory;
 import com.personal.backoffice.country.notifications.CountryNotificationFactory;
 import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.entities.CreateResult;
-import com.personal.shared.services.entities.CreateResultBuilder;
+import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
@@ -22,7 +20,7 @@ public class CreateCountryService implements ICreateService {
     }
 
     @Override
-    public CreateResult create(Query query) {
+    public ServiceResult create(Query query) {
         if (dbClient.isEmpty()) {
             return ServicesResultFactory.NotAvailable();
         }
@@ -38,19 +36,17 @@ public class CreateCountryService implements ICreateService {
                     .params(query.getParams())
                     .execute();
 
-            return CreateResultBuilder.build()
+            return ServiceResultBuilder.build()
                     .withRecords(records)
                     .withNotification(CountryNotificationFactory.CreateCountrySuccess())
                     .get();
 
         } catch (Exception e) {
-            System.out.println("Hubo una excepción al crear el país " + e.getCause().getMessage());
 
-            return CreateResultBuilder.build()
+            return ServiceResultBuilder.build()
                     .withException(e)
-                    .withNotification(CountryNotificationFactory.CreateCountryFail(e.getMessage()))
+                    .withNotification(CountryNotificationFactory.CreateCountryFail())
                     .get();
-
         }
 
     }

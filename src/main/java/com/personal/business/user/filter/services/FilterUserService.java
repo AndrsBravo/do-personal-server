@@ -1,50 +1,46 @@
 package com.personal.business.user.filter.services;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.personal.business.user.entities.User;
-import com.personal.business.user.factories.UserResultFactory;
-import com.personal.shared.factories.ServicesResultFactory;
+import com.personal.business.user.notifications.UserNotificationFactory;
 import com.personal.shared.query.Query;
-import com.personal.shared.services.IFilterService;
-import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.FilterService;
+import com.personal.shared.services.entities.FetchResult;
 
 import io.helidon.dbclient.DbClient;
 
-public class FilterUserService implements IFilterService<User> {
-
-    private final Optional<DbClient> dbClient;
+public class FilterUserService extends FilterService<User> {
 
     public FilterUserService(Optional<DbClient> dbClient) {
-        this.dbClient = dbClient;
+        super(dbClient);
     }
 
     @Override
-    public ServiceResult<List<User>> filter(Query query) {
+    public FetchResult<User> filter(Query query) {
 
         if (dbClient.isEmpty()) {
-            return ServicesResultFactory.<List<User>>DbNotAvailable();
+            return builder.NotAvailable();
         }
 
-        var userQuery = query.Select("users", "id")
-                .Get();
+        var userQuery = query.Select("users", "id").Get();
 
-        //System.out.println(userQuery);
-        var result = this.dbClient.get().execute()
-                .createQuery(userQuery)
-                .params(query.getParams())
-                .execute()
-                .map(
-                        (dbRow) -> new User(dbRow.column("id").getString())
-                )
-                .collect(Collectors.toList());
+        try {
 
-        if (result.isEmpty()) {
-            return UserResultFactory.FetchEmpty(query.getKeyPair());
+            var result = this.dbClient.get().execute()
+                    .createQuery(userQuery)
+                    .params(query.getParams())
+                    .execute()
+                    .map(
+                            (dbRow) -> new User(dbRow.column("id").getString()))
+                    .collect(Collectors.toList());
+            builder.withResult(result)
+                    .withNotification(UserNotificationFactory.FetchUserSuccess());
+        } catch (Exception e) {
+            builder.withException(e).
+                    withNotification(UserNotificationFactory.FetchUserFail());
         }
-
-        return UserResultFactory.FetchResult(result);
+        return builder.get();
     }
 }

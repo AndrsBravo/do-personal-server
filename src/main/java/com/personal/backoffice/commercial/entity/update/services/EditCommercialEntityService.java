@@ -2,15 +2,16 @@ package com.personal.backoffice.commercial.entity.update.services;
 
 import java.util.Optional;
 
-import com.personal.backoffice.commercial.entity.entities.CommercialEntity;
-import com.personal.backoffice.commercial.entity.factories.CommercialEntityResultFactory;
+import com.personal.backoffice.commercial.entity.notifications.CommercialEntityNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IEditService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class EditCommercialEntityService implements IEditService<CommercialEntity> {
+public class EditCommercialEntityService implements IEditService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,36 +20,31 @@ public class EditCommercialEntityService implements IEditService<CommercialEntit
     }
 
     @Override
-    public ServiceResult<CommercialEntity> edit(Query query) {
+    public ServiceResult edit(Query query) {
 
         if (dbClient.isEmpty()) {
-            return CommercialEntityResultFactory.UpdateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var updateQuery = query.Update("commercial_entities").Get();
-        //System.out.println("updateQuery: " + updateQuery);
-
-        long result = 0;
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createUpdate(updateQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(CommercialEntityNotificationFactory.UpdateCommercialEntitySuccess());
+
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al actualizar el tipo de usuario " + e.getMessage());
-            return CommercialEntityResultFactory.UpdateFail();
+            builder.withException(e)
+                    .withNotification(CommercialEntityNotificationFactory.UpdateCommercialEntityFail());
+
         }
-
-        //System.out.println("query.getParams(): " + query.getParams().values().toString());
-        if (result == 0) {
-            return CommercialEntityResultFactory.UpdateFail();
-        }
-
-        return CommercialEntityResultFactory.UpdateSuccess(new CommercialEntity());
-
+        return builder.get();
     }
 
 }

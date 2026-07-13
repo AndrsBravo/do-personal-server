@@ -6,8 +6,8 @@ import com.personal.backoffice.user.notifications.UserNotificationFactory;
 import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.entities.CreateResult;
-import com.personal.shared.services.entities.CreateResultBuilder;
+import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
@@ -20,7 +20,7 @@ public class CreateUserCredentialsService implements ICreateService {
     }
 
     @Override
-    public CreateResult create(Query query) {
+    public ServiceResult create(Query query) {
 
         var oldCreadentialsQuery = "INSERT INTO credentials (id,user_id,password,salt,created_at,updated_at,created_by) VALUES (:id,:user_id,:password,:salt,:created_at,:updated_at,:created_by)";
 
@@ -38,13 +38,13 @@ public class CreateUserCredentialsService implements ICreateService {
                     .createInsert(credentialsQuery)
                     .params(query.getParams())
                     .execute();
-            return CreateResultBuilder.build()
+            return ServiceResultBuilder.build()
                     .withRecords(records)
                     .withNotification(UserNotificationFactory.CreateUserCredentialsSuccess())
                     .get();
         } catch (Exception e) {
 
-            return CreateResultBuilder.build()
+            return ServiceResultBuilder.build()
                     .withException(e)
                     .withNotification(UserNotificationFactory.CreateUserCredentialsFail())
                     .get();

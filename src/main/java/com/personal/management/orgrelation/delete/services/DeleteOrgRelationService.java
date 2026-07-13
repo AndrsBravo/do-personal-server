@@ -2,15 +2,16 @@ package com.personal.management.orgrelation.delete.services;
 
 import java.util.Optional;
 
-import com.personal.management.orgrelation.entities.OrgRelation;
-import com.personal.management.orgrelation.factories.OrgRelationResultFactory;
+import com.personal.management.orgrelation.notifications.OrgRelationNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class DeleteOrgRelationService implements IDeleteService<OrgRelation> {
+public class DeleteOrgRelationService implements IDeleteService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,35 +20,31 @@ public class DeleteOrgRelationService implements IDeleteService<OrgRelation> {
     }
 
     @Override
-    public ServiceResult<OrgRelation> delete(Query query) {
+    public ServiceResult delete(Query query) {
         if (dbClient.isEmpty()) {
-            return OrgRelationResultFactory.DeleteFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var deleteQuery = query.Delete("organization_relations").Get();
 
-        //System.out.println(deleteQuery);
-        long result = 0;
-
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createDelete(deleteQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(OrgRelationNotificationFactory.DeleteOrgRelationSuccess())
+                    .get();
         } catch (Exception e) {
-
-            return OrgRelationResultFactory.DeleteFail();
+            builder.withException(e)
+                    .withNotification(OrgRelationNotificationFactory.DeleteOrgRelationFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return OrgRelationResultFactory.DeleteFail();
-        }
-
-        return OrgRelationResultFactory.DeleteSuccess(new OrgRelation(query.getParams().get("id")));
-
+        return builder.get();
     }
 
 }

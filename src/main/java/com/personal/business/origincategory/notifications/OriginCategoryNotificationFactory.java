@@ -28,6 +28,14 @@ public class OriginCategoryNotificationFactory {
         return new Notification("El origen de la categoría se ha eliminado correctamente.");
     }
 
+    public static Notification FetchOriginCategorySuccess() {
+        return new Notification("Lista de categorías de origen.");
+    }
+
+    public static Notification FetchOriginCategoryFail() {
+        return new Notification("Ha ocurrido un error mientras se consultaban las categorías de origen.");
+    }
+
     public static Notification FetchNull() {
         return new Notification("No se han encontrado resultados.");
     }

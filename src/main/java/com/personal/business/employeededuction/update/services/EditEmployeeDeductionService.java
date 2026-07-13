@@ -2,15 +2,16 @@ package com.personal.business.employeededuction.update.services;
 
 import java.util.Optional;
 
-import com.personal.business.employeededuction.entities.EmployeeDeduction;
-import com.personal.business.employeededuction.factories.EmployeeDeductionResultFactory;
+import com.personal.business.employeededuction.notifications.EmployeeDeductionNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IEditService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class EditEmployeeDeductionService implements IEditService<EmployeeDeduction> {
+public class EditEmployeeDeductionService implements IEditService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,36 +20,31 @@ public class EditEmployeeDeductionService implements IEditService<EmployeeDeduct
     }
 
     @Override
-    public ServiceResult<EmployeeDeduction> edit(Query query) {
+    public ServiceResult edit(Query query) {
 
         if (dbClient.isEmpty()) {
-            return EmployeeDeductionResultFactory.UpdateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var updateQuery = query.Update("employee_deductions").Get();
-        //System.out.println("updateQuery: " + updateQuery);
-
-        long result = 0;
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createUpdate(updateQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(EmployeeDeductionNotificationFactory.UpdateEmployeeDeductionSuccess());
+
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al actualizar el tipo de usuario " + e.getMessage());
-            return EmployeeDeductionResultFactory.UpdateFail();
+            builder.withException(e)
+                    .withNotification(EmployeeDeductionNotificationFactory.UpdateEmployeeDeductionFail());
+
         }
-
-        //System.out.println("query.getParams(): " + query.getParams().values().toString());
-        if (result == 0) {
-            return EmployeeDeductionResultFactory.UpdateFail();
-        }
-
-        return EmployeeDeductionResultFactory.UpdateSuccess(new EmployeeDeduction());
-
+        return builder.get();
     }
 
 }

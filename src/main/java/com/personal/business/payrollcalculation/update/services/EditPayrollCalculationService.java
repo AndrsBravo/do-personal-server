@@ -2,15 +2,16 @@ package com.personal.business.payrollcalculation.update.services;
 
 import java.util.Optional;
 
-import com.personal.business.payrollcalculation.entities.PayrollCalculation;
-import com.personal.business.payrollcalculation.factories.PayrollCalculationResultFactory;
+import com.personal.business.payrollcalculation.notifications.PayrollCalculationNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IEditService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class EditPayrollCalculationService implements IEditService<PayrollCalculation> {
+public class EditPayrollCalculationService implements IEditService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,36 +20,31 @@ public class EditPayrollCalculationService implements IEditService<PayrollCalcul
     }
 
     @Override
-    public ServiceResult<PayrollCalculation> edit(Query query) {
+    public ServiceResult edit(Query query) {
 
         if (dbClient.isEmpty()) {
-            return PayrollCalculationResultFactory.UpdateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var updateQuery = query.Update("payroll_calculations").Get();
-        //System.out.println("updateQuery: " + updateQuery);
-
-        long result = 0;
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createUpdate(updateQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(PayrollCalculationNotificationFactory.UpdatePayrollCalculationSuccess());
+
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al actualizar el tipo de usuario " + e.getMessage());
-            return PayrollCalculationResultFactory.UpdateFail();
+            builder.withException(e)
+                    .withNotification(PayrollCalculationNotificationFactory.UpdatePayrollCalculationFail());
+
         }
-
-        //System.out.println("query.getParams(): " + query.getParams().values().toString());
-        if (result == 0) {
-            return PayrollCalculationResultFactory.UpdateFail();
-        }
-
-        return PayrollCalculationResultFactory.UpdateSuccess(new PayrollCalculation());
-
+        return builder.get();
     }
 
 }

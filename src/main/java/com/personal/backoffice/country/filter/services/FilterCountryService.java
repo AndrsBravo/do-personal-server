@@ -1,61 +1,59 @@
 package com.personal.backoffice.country.filter.services;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.personal.backoffice.country.entities.Country;
-import com.personal.backoffice.country.factories.CountryResultFactory;
+import com.personal.backoffice.country.notifications.CountryNotificationFactory;
 import com.personal.backoffice.user.entities.User;
 import com.personal.shared.entities.EntityBuilder;
-import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
-import com.personal.shared.services.IFilterService;
-import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.FilterService;
+import com.personal.shared.services.entities.FetchResult;
 
 import io.helidon.dbclient.DbClient;
 
-public class FilterCountryService implements IFilterService<Country> {
-
-    private final Optional<DbClient> dbClient;
+public class FilterCountryService extends FilterService<Country> {
 
     public FilterCountryService(Optional<DbClient> dbClient) {
-        this.dbClient = dbClient;
+        super(dbClient);
     }
 
     @Override
-    public ServiceResult<List<Country>> filter(Query query) {
+    public FetchResult<Country> filter(Query query) {
 
         if (dbClient.isEmpty()) {
-            return ServicesResultFactory.<List<Country>>DbNotAvailable();
+            return builder.NotAvailable();
         }
 
         var queryString = query.Select("countries",
                 "id", "co_code", "co_name", "co_updated_at", "co_created_at", "co_created_by")
                 .Get();
 
-        //System.out.println(queryString);
-        var result = this.dbClient.get().execute()
-                .createQuery(queryString)
-                .params(query.getParams())
-                .execute()
-                .map((dbRow)
-                        -> EntityBuilder.Of(Country::new)
-                        .With(Country::setId, dbRow.column("id").getString())
-                        .With(Country::setCode, dbRow.column("co_code").getString())
-                        .With(Country::setName, dbRow.column("co_name").getString())
-                        .With(Country::setCreatedAt, dbRow.column("co_created_at").get(LocalDateTime.class))
-                        .With(Country::setUpdatedAt, dbRow.column("co_updated_at").get(LocalDateTime.class))
-                        .With(Country::setCreatedBy, new User(dbRow.column("co_created_by").getString()))
-                        .Get()
-                )
-                .collect(Collectors.toList());
+        try {
+            var result = this.dbClient.get().execute()
+                    .createQuery(queryString)
+                    .params(query.getParams())
+                    .execute()
+                    .map((dbRow)
+                            -> EntityBuilder.Of(Country::new)
+                            .With(Country::setId, dbRow.column("id").getString())
+                            .With(Country::setCode, dbRow.column("co_code").getString())
+                            .With(Country::setName, dbRow.column("co_name").getString())
+                            .With(Country::setCreatedAt, dbRow.column("co_created_at").get(LocalDateTime.class))
+                            .With(Country::setUpdatedAt, dbRow.column("co_updated_at").get(LocalDateTime.class))
+                            .With(Country::setCreatedBy, new User(dbRow.column("co_created_by").getString()))
+                            .Get()
+                    )
+                    .collect(Collectors.toList());
 
-        if (result.isEmpty()) {
-            return CountryResultFactory.FetchNull(query.getKeyPair());
+            builder.withResult(result)
+                    .withNotification(CountryNotificationFactory.FetchCountrySuccess());
+        } catch (Exception e) {
+            builder.withException(e).
+                    withNotification(CountryNotificationFactory.FetchCountryFail());
         }
-
-        return CountryResultFactory.FetchResult(result);
+        return builder.get();
     }
 }

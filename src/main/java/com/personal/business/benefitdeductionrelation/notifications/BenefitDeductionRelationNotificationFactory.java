@@ -28,6 +28,14 @@ public class BenefitDeductionRelationNotificationFactory {
         return new Notification("La relación deducción beneficio se ha eliminado correctamente ");
     }
 
+    public static Notification FetchBenefitDeductionRelationSuccess() {
+        return new Notification("Lista de beneficios y deducciones relacionados.");
+    }
+
+    public static Notification FetchBenefitDeductionRelationFail() {
+        return new Notification("Ha ocurrido un error mientras se consultaban los beneficios y deducciones relacionados.");
+    }
+
     public static Notification FetchNull() {
         return new Notification("No se han encontrado resultados.");
     }

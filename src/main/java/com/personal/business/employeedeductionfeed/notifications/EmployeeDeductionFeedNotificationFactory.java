@@ -28,6 +28,14 @@ public class EmployeeDeductionFeedNotificationFactory {
         return new Notification("El valor de la deducción de empleado se ha eliminado correctamente.");
     }
 
+    public static Notification FetchEmployeeDeductionFeedSuccess() {
+        return new Notification("Lista de valor de la deducción de empleados.");
+    }
+
+    public static Notification FetchEmployeeDeductionFeedFail() {
+        return new Notification("Ha ocurrido un error mientras se consultaban los valores de deducción de empleados.");
+    }
+
     public static Notification FetchNull() {
         return new Notification("No se han encontrado resultados.");
     }

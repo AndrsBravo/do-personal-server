@@ -2,13 +2,13 @@ package com.personal.shared.factories;
 
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
-import com.personal.shared.services.entities.CreateResult;
-import com.personal.shared.services.entities.CreateResultBuilder;
+import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 public class DeleteService extends ServiceBase implements IDeleteService {
 
     @Override
-    public CreateResult delete(Query query) {
+    public ServiceResult delete(Query query) {
         if (dbClient.isEmpty()) {
             return ServicesResultFactory.NotAvailable();
         }
@@ -16,7 +16,7 @@ public class DeleteService extends ServiceBase implements IDeleteService {
         var dbclient = dbClient.get();
 
         var deleteQuery = query.Delete(this.tableName).Get();
-        var result = CreateResultBuilder.build();
+        var result = ServiceResultBuilder.build();
         try {
 
             var records = dbclient.execute()

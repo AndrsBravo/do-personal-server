@@ -2,15 +2,16 @@ package com.personal.backoffice.client.update.services;
 
 import java.util.Optional;
 
-import com.personal.backoffice.client.entities.Client;
-import com.personal.backoffice.client.factories.ClientResultFactory;
+import com.personal.backoffice.client.notifications.ClientNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IEditService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class EditClientService implements IEditService<Client> {
+public class EditClientService implements IEditService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,36 +20,31 @@ public class EditClientService implements IEditService<Client> {
     }
 
     @Override
-    public ServiceResult<Client> edit(Query query) {
+    public ServiceResult edit(Query query) {
 
         if (dbClient.isEmpty()) {
-            return ClientResultFactory.UpdateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var updateQuery = query.Update("clients").Get();
-        //System.out.println("updateQuery: " + updateQuery);
-
-        long result = 0;
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createUpdate(updateQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(ClientNotificationFactory.CreateClientSuccess());
+
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al actualizar el tipo de cliente " + e.getMessage());
-            return ClientResultFactory.UpdateFail();
+            builder.withException(e)
+                    .withNotification(ClientNotificationFactory.CreateClientFail());
+
         }
-
-        //System.out.println("query.getParams(): " + query.getParams().values().toString());
-        if (result == 0) {
-            return ClientResultFactory.UpdateFail();
-        }
-
-        return ClientResultFactory.UpdateSuccess(new Client());
-
+        return builder.get();
     }
 
 }

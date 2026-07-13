@@ -28,6 +28,14 @@ public class ClientTypeNotificationFactory {
         return new Notification("El tipo de cliente ha sido eliminado exitosamente. ");
     }
 
+    public static Notification FetchClientTypeSuccess() {
+        return new Notification("Lista de tipos de clientes. ");
+    }
+
+    public static Notification FetchClientTypeFail() {
+        return new Notification("Ha ocurrido un error al consultar los tipos de clientes. ");
+    }
+
     public static Notification FetchNull() {
         return new Notification("No se han encontrado resultados.");
     }

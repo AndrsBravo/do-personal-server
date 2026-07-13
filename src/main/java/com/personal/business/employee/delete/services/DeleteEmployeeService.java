@@ -2,15 +2,16 @@ package com.personal.business.employee.delete.services;
 
 import java.util.Optional;
 
-import com.personal.business.employee.entities.Employee;
-import com.personal.business.employee.factories.EmployeeResultFactory;
+import com.personal.business.employee.notifications.EmployeeNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class DeleteEmployeeService implements IDeleteService<Employee> {
+public class DeleteEmployeeService implements IDeleteService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,35 +20,31 @@ public class DeleteEmployeeService implements IDeleteService<Employee> {
     }
 
     @Override
-    public ServiceResult<Employee> delete(Query query) {
+    public ServiceResult delete(Query query) {
         if (dbClient.isEmpty()) {
-            return EmployeeResultFactory.DeleteFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var deleteQuery = query.Delete("employees").Get();
 
-        //System.out.println(deleteQuery);
-        long result = 0;
-
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createDelete(deleteQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(EmployeeNotificationFactory.DeleteEmployeeSuccess())
+                    .get();
         } catch (Exception e) {
-
-            return EmployeeResultFactory.DeleteFail();
+            builder.withException(e)
+                    .withNotification(EmployeeNotificationFactory.DeleteEmployeeFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return EmployeeResultFactory.DeleteFail();
-        }
-
-        return EmployeeResultFactory.DeleteSuccess(new Employee(query.getParams().get("id")));
-
+        return builder.get();
     }
 
 }

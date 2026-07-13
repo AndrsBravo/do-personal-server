@@ -28,6 +28,14 @@ public class OrgRelationNotificationFactory {
         return new Notification("La relación organizacional se ha eliminado correctamente.");
     }
 
+    public static Notification FetchOrgRelationSuccess() {
+        return new Notification("Lista de relaciones organizacionales.");
+    }
+
+    public static Notification FetchOrgRelationFail() {
+        return new Notification("Ha ocurrido un error mientras se consultaban las relaciones organizacionales.");
+    }
+
     public static Notification FetchNull() {
         return new Notification("No se han encontrado resultados.");
     }

@@ -28,6 +28,14 @@ public class OrgStructureNotificationFactory {
         return new Notification("La estructura organizacional se ha eliminado correctamente.");
     }
 
+    public static Notification FetchOrgStructureSuccess() {
+        return new Notification("Lista de estructura organizacional.");
+    }
+
+    public static Notification FetchOrgStructureFail() {
+        return new Notification("Ha ocurrido un error mientras se consultaban las estructuras organizacionales.");
+    }
+
     public static Notification FetchNull() {
         return new Notification("No se han encontrado resultados.");
     }

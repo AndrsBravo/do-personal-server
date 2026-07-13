@@ -2,13 +2,13 @@ package com.personal.shared.factories;
 
 import com.personal.shared.query.Query;
 import com.personal.shared.services.ICreateService;
-import com.personal.shared.services.entities.CreateResult;
-import com.personal.shared.services.entities.CreateResultBuilder;
+import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 public class CreateService extends ServiceBase implements ICreateService {
 
     @Override
-    public CreateResult create(Query query) {
+    public ServiceResult create(Query query) {
         if (dbClient.isEmpty()) {
             return ServicesResultFactory.NotAvailable();
         }
@@ -16,7 +16,7 @@ public class CreateService extends ServiceBase implements ICreateService {
         var dbclient = dbClient.get();
 
         var insertQuery = query.InsertInto(this.tableName).Get();
-        var result = CreateResultBuilder.build();
+        var result = ServiceResultBuilder.build();
         try {
 
             var records = dbclient.execute()

@@ -2,15 +2,16 @@ package com.personal.management.deduction.delete.services;
 
 import java.util.Optional;
 
-import com.personal.management.deduction.entities.Deduction;
-import com.personal.management.deduction.factories.DeductionResultFactory;
+import com.personal.management.deduction.notifications.DeductionNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class DeleteDeductionService implements IDeleteService<Deduction> {
+public class DeleteDeductionService implements IDeleteService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,35 +20,31 @@ public class DeleteDeductionService implements IDeleteService<Deduction> {
     }
 
     @Override
-    public ServiceResult<Deduction> delete(Query query) {
+    public ServiceResult delete(Query query) {
         if (dbClient.isEmpty()) {
-            return DeductionResultFactory.DeleteFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var deleteQuery = query.Delete("business_deductions").Get();
 
-        //System.out.println(deleteQuery);
-        long result = 0;
-
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createDelete(deleteQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(DeductionNotificationFactory.DeleteDeductionSuccess())
+                    .get();
         } catch (Exception e) {
-
-            return DeductionResultFactory.DeleteFail();
+            builder.withException(e)
+                    .withNotification(DeductionNotificationFactory.DeleteDeductionFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return DeductionResultFactory.DeleteFail();
-        }
-
-        return DeductionResultFactory.DeleteSuccess(new Deduction(query.getParams().get("id")));
-
+        return builder.get();
     }
 
 }

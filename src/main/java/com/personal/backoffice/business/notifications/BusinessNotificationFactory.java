@@ -28,6 +28,14 @@ public class BusinessNotificationFactory {
         return new Notification("La empresa se ha eliminado correctamente ");
     }
 
+    public static Notification FetchBusinessSuccess() {
+        return new Notification("Lista de empresas.");
+    }
+
+    public static Notification FetchBusinessFail() {
+        return new Notification("Ha ocurrido un error mientras se consultaban las empresas.");
+    }
+
     public static Notification FetchNull() {
         return new Notification("No se han encontrado resultados.");
     }

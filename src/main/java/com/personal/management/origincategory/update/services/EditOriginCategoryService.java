@@ -2,15 +2,16 @@ package com.personal.management.origincategory.update.services;
 
 import java.util.Optional;
 
-import com.personal.management.origincategory.entities.OriginCategory;
-import com.personal.management.origincategory.factories.OriginCategoryResultFactory;
+import com.personal.management.origincategory.notifications.OriginCategoryNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IEditService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class EditOriginCategoryService implements IEditService<OriginCategory> {
+public class EditOriginCategoryService implements IEditService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,36 +20,31 @@ public class EditOriginCategoryService implements IEditService<OriginCategory> {
     }
 
     @Override
-    public ServiceResult<OriginCategory> edit(Query query) {
+    public ServiceResult edit(Query query) {
 
         if (dbClient.isEmpty()) {
-            return OriginCategoryResultFactory.UpdateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var updateQuery = query.Update("origin_categories").Get();
-        //System.out.println("updateQuery: " + updateQuery);
-
-        long result = 0;
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createUpdate(updateQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(OriginCategoryNotificationFactory.UpdateOriginCategorySuccess());
+
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al actualizar el tipo de usuario " + e.getMessage());
-            return OriginCategoryResultFactory.UpdateFail();
+            builder.withException(e)
+                    .withNotification(OriginCategoryNotificationFactory.UpdateOriginCategoryFail());
+
         }
-
-        //System.out.println("query.getParams(): " + query.getParams().values().toString());
-        if (result == 0) {
-            return OriginCategoryResultFactory.UpdateFail();
-        }
-
-        return OriginCategoryResultFactory.UpdateSuccess(new OriginCategory());
-
+        return builder.get();
     }
 
 }

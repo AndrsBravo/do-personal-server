@@ -2,15 +2,16 @@ package com.personal.backoffice.user.associatebusiness.update.services;
 
 import java.util.Optional;
 
-import com.personal.backoffice.user.associatebusiness.entities.AssociateUserBusiness;
-import com.personal.backoffice.user.factories.UserResultFactory;
+import com.personal.backoffice.user.notifications.UserNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IEditService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class UpdateAssociatedUserBusinessService implements IEditService<AssociateUserBusiness> {
+public class UpdateAssociatedUserBusinessService implements IEditService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,27 +20,30 @@ public class UpdateAssociatedUserBusinessService implements IEditService<Associa
     }
 
     @Override
-    public ServiceResult<AssociateUserBusiness> edit(Query query) {
+    public ServiceResult edit(Query query) {
 
         if (dbClient.isEmpty()) {
-            return UserResultFactory.UpdateAssociatedUserBusinessFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var userQuery = query.Update("user_has_business").Get();
-        //System.out.println(userQuery);
+        var builder = ServiceResultBuilder.build();
+        try {
+            var records = dbclient.execute()
+                    .createUpdate(userQuery)
+                    .params(query.getParams())
+                    .execute();
 
-        var userResult = dbclient.execute()
-                .createUpdate(userQuery)
-                .params(query.getParams())
-                .execute();
+            builder.withRecords(records)
+                    .withNotification(UserNotificationFactory.UpdateAssociatedUserBusinessSuccess());
 
-        //System.out.println("userResult " + userResult);
-        if (userResult == 0) {
-            return UserResultFactory.UpdateAssociatedUserBusinessFail();
+        } catch (Exception e) {
+            builder.withException(e)
+                    .withNotification(UserNotificationFactory.UpdateAssociatedUserBusinessFail());
+
         }
-        return UserResultFactory.UpdateAssociatedUserBusinessSuccess(new AssociateUserBusiness(query.getParams().get("id")));
-
+        return builder.get();
     }
 }

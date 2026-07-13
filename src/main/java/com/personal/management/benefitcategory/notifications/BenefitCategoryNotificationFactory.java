@@ -28,6 +28,14 @@ public class BenefitCategoryNotificationFactory {
         return new Notification("La categoría de beneficio se ha eliminado correctamente ");
     }
 
+    public static Notification FetchBenefitCategorySuccess() {
+        return new Notification("Lista de categorías de beneficios.");
+    }
+
+    public static Notification FetchBenefitCategoryFail() {
+        return new Notification("Ha ocurrido un error mientras se consultaban las categorías de beneficios.");
+    }
+
     public static Notification FetchNull() {
         return new Notification("No se han encontrado resultados.");
     }

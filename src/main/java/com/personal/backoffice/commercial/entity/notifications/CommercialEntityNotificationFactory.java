@@ -28,6 +28,14 @@ public class CommercialEntityNotificationFactory {
         return new Notification("La entidad ha sido eliminada exitosamente. ");
     }
 
+    public static Notification FetchCommercialEntitySuccess() {
+        return new Notification("Lista de empresas.");
+    }
+
+    public static Notification FetchCommercialEntityFail() {
+        return new Notification("Ha ocurrido un error mientras se consultaban las entidades comerciales.");
+    }
+
     public static Notification FetchNull() {
         return new Notification("No se han encontrado resultados.");
     }

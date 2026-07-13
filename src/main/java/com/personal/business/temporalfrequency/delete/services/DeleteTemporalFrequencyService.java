@@ -2,15 +2,16 @@ package com.personal.business.temporalfrequency.delete.services;
 
 import java.util.Optional;
 
-import com.personal.business.temporalfrequency.entities.TemporalFrequency;
-import com.personal.business.temporalfrequency.factories.TemporalFrequencyResultFactory;
+import com.personal.business.temporalfrequency.notifications.TemporalFrequencyNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class DeleteTemporalFrequencyService implements IDeleteService<TemporalFrequency> {
+public class DeleteTemporalFrequencyService implements IDeleteService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,35 +20,31 @@ public class DeleteTemporalFrequencyService implements IDeleteService<TemporalFr
     }
 
     @Override
-    public ServiceResult<TemporalFrequency> delete(Query query) {
+    public ServiceResult delete(Query query) {
         if (dbClient.isEmpty()) {
-            return TemporalFrequencyResultFactory.DeleteFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var deleteQuery = query.Delete("temporal_frequencies").Get();
 
-        //System.out.println(deleteQuery);
-        long result = 0;
-
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createDelete(deleteQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(TemporalFrequencyNotificationFactory.DeleteTemporalFrequencySuccess())
+                    .get();
         } catch (Exception e) {
-
-            return TemporalFrequencyResultFactory.DeleteFail();
+            builder.withException(e)
+                    .withNotification(TemporalFrequencyNotificationFactory.DeleteTemporalFrequencyFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return TemporalFrequencyResultFactory.DeleteFail();
-        }
-
-        return TemporalFrequencyResultFactory.DeleteSuccess(new TemporalFrequency(query.getParams().get("id")));
-
+        return builder.get();
     }
 
 }

@@ -2,15 +2,16 @@ package com.personal.backoffice.commercial.entity.delete.services;
 
 import java.util.Optional;
 
-import com.personal.backoffice.commercial.entity.entities.CommercialEntity;
-import com.personal.backoffice.commercial.entity.factories.CommercialEntityResultFactory;
+import com.personal.backoffice.commercial.entity.notifications.CommercialEntityNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class DeleteCommercialEntityService implements IDeleteService<CommercialEntity> {
+public class DeleteCommercialEntityService implements IDeleteService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,35 +20,31 @@ public class DeleteCommercialEntityService implements IDeleteService<CommercialE
     }
 
     @Override
-    public ServiceResult<CommercialEntity> delete(Query query) {
+    public ServiceResult delete(Query query) {
         if (dbClient.isEmpty()) {
-            return CommercialEntityResultFactory.DeleteFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var deleteQuery = query.Delete("commercial_entities").Get();
 
-        //System.out.println(deleteQuery);
-        long result = 0;
-
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createDelete(deleteQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(CommercialEntityNotificationFactory.DeleteCommercialEntitySuccess())
+                    .get();
         } catch (Exception e) {
-
-            return CommercialEntityResultFactory.DeleteFail();
+            builder.withException(e)
+                    .withNotification(CommercialEntityNotificationFactory.DeleteCommercialEntityFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return CommercialEntityResultFactory.DeleteFail();
-        }
-
-        return CommercialEntityResultFactory.DeleteSuccess(new CommercialEntity(query.getParams().get("id")));
-
+        return builder.get();
     }
 
 }

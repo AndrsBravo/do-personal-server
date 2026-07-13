@@ -2,13 +2,13 @@ package com.personal.shared.factories;
 
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IEditService;
-import com.personal.shared.services.entities.CreateResult;
-import com.personal.shared.services.entities.CreateResultBuilder;
+import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 public class UpdateService extends ServiceBase implements IEditService {
 
     @Override
-    public CreateResult edit(Query query) {
+    public ServiceResult edit(Query query) {
         if (dbClient.isEmpty()) {
             return ServicesResultFactory.NotAvailable();
         }
@@ -16,7 +16,7 @@ public class UpdateService extends ServiceBase implements IEditService {
         var dbclient = dbClient.get();
 
         var updateQuery = query.Update(this.tableName).Get();
-        var result = CreateResultBuilder.build();
+        var result = ServiceResultBuilder.build();
         try {
 
             var records = dbclient.execute()

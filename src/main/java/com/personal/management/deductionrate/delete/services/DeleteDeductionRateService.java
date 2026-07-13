@@ -2,15 +2,16 @@ package com.personal.management.deductionrate.delete.services;
 
 import java.util.Optional;
 
-import com.personal.management.deductionrate.entities.DeductionRate;
-import com.personal.management.deductionrate.factories.DeductionRateResultFactory;
+import com.personal.management.deductionrate.notifications.DeductionRateNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class DeleteDeductionRateService implements IDeleteService<DeductionRate> {
+public class DeleteDeductionRateService implements IDeleteService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,35 +20,31 @@ public class DeleteDeductionRateService implements IDeleteService<DeductionRate>
     }
 
     @Override
-    public ServiceResult<DeductionRate> delete(Query query) {
+    public ServiceResult delete(Query query) {
         if (dbClient.isEmpty()) {
-            return DeductionRateResultFactory.DeleteFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var deleteQuery = query.Delete("business_deductions_rates").Get();
 
-        //System.out.println(deleteQuery);
-        long result = 0;
-
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createDelete(deleteQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(DeductionRateNotificationFactory.DeleteDeductionRateSuccess())
+                    .get();
         } catch (Exception e) {
-
-            return DeductionRateResultFactory.DeleteFail();
+            builder.withException(e)
+                    .withNotification(DeductionRateNotificationFactory.DeleteDeductionRateFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return DeductionRateResultFactory.DeleteFail();
-        }
-
-        return DeductionRateResultFactory.DeleteSuccess(new DeductionRate(query.getParams().get("id")));
-
+        return builder.get();
     }
 
 }

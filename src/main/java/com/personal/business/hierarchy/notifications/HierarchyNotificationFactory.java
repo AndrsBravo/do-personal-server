@@ -28,6 +28,14 @@ public class HierarchyNotificationFactory {
         return new Notification("La jerarquía se ha eliminado correctamente.");
     }
 
+    public static Notification FetchHierarchySuccess() {
+        return new Notification("Lista de jerarquías.");
+    }
+
+    public static Notification FetchHierarchyFail() {
+        return new Notification("Ha ocurrido un error mientras se consultaban las jerarquías.");
+    }
+
     public static Notification FetchNull() {
         return new Notification("No se han encontrado resultados.");
     }

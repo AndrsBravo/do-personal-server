@@ -28,6 +28,14 @@ public class HierarchyBenefitNotificationFactory {
         return new Notification("El beneficio en la jerarquía se ha eliminado correctamente.");
     }
 
+    public static Notification FetchHierarchyBenefitSuccess() {
+        return new Notification("Lista de beneficios de la jerarquía.");
+    }
+
+    public static Notification FetchHierarchyBenefitFail() {
+        return new Notification("Ha ocurrido un error mientras se consultaban los beneficios de la jerarquía.");
+    }
+
     public static Notification FetchNull() {
         return new Notification("No se han encontrado resultados.");
     }

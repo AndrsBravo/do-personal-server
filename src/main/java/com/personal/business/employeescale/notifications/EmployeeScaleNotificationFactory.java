@@ -28,6 +28,14 @@ public class EmployeeScaleNotificationFactory {
         return new Notification("La escala de empleado se ha eliminado correctamente.");
     }
 
+    public static Notification FetchEmployeeScaleSuccess() {
+        return new Notification("Lista de escalas de empleados.");
+    }
+
+    public static Notification FetchEmployeeScaleFail() {
+        return new Notification("Ha ocurrido un error mientras se consultaban las escalas de empleados.");
+    }
+
     public static Notification FetchNull() {
         return new Notification("No se han encontrado resultados.");
     }

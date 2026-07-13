@@ -2,15 +2,16 @@ package com.personal.business.financecategory.delete.services;
 
 import java.util.Optional;
 
-import com.personal.business.financecategory.entities.FinanceCategory;
-import com.personal.business.financecategory.factories.FinanceCategoryResultFactory;
+import com.personal.business.financecategory.notifications.FinanceCategoryNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class DeleteFinanceCategoryService implements IDeleteService<FinanceCategory> {
+public class DeleteFinanceCategoryService implements IDeleteService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,35 +20,31 @@ public class DeleteFinanceCategoryService implements IDeleteService<FinanceCateg
     }
 
     @Override
-    public ServiceResult<FinanceCategory> delete(Query query) {
+    public ServiceResult delete(Query query) {
         if (dbClient.isEmpty()) {
-            return FinanceCategoryResultFactory.DeleteFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var deleteQuery = query.Delete("finance_categories").Get();
 
-        //System.out.println(deleteQuery);
-        long result = 0;
-
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createDelete(deleteQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(FinanceCategoryNotificationFactory.DeleteFinanceCategorySuccess())
+                    .get();
         } catch (Exception e) {
-
-            return FinanceCategoryResultFactory.DeleteFail();
+            builder.withException(e)
+                    .withNotification(FinanceCategoryNotificationFactory.DeleteFinanceCategoryFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return FinanceCategoryResultFactory.DeleteFail();
-        }
-
-        return FinanceCategoryResultFactory.DeleteSuccess(new FinanceCategory(query.getParams().get("id")));
-
+        return builder.get();
     }
 
 }

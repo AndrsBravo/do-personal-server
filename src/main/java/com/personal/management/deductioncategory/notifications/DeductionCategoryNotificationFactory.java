@@ -28,6 +28,14 @@ public class DeductionCategoryNotificationFactory {
         return new Notification("La categoría deducción se ha eliminado correctamente.");
     }
 
+    public static Notification FetchDeductionCategorySuccess() {
+        return new Notification("Lista de categorías de deducciones.");
+    }
+
+    public static Notification FetchDeductionCategoryFail() {
+        return new Notification("Ha ocurrido un error mientras se consultaban las categorías de deducciones.");
+    }
+
     public static Notification FetchNull() {
         return new Notification("No se han encontrado resultados.");
     }

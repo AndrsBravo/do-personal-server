@@ -2,15 +2,16 @@ package com.personal.management.payrollrundeduction.update.services;
 
 import java.util.Optional;
 
-import com.personal.management.payrollrundeduction.entities.PayrollRunDeduction;
-import com.personal.management.payrollrundeduction.factories.PayrollRunDeductionResultFactory;
+import com.personal.management.payrollrundeduction.notifications.PayrollRunDeductionNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IEditService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class EditPayrollRunDeductionService implements IEditService<PayrollRunDeduction> {
+public class EditPayrollRunDeductionService implements IEditService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,36 +20,31 @@ public class EditPayrollRunDeductionService implements IEditService<PayrollRunDe
     }
 
     @Override
-    public ServiceResult<PayrollRunDeduction> edit(Query query) {
+    public ServiceResult edit(Query query) {
 
         if (dbClient.isEmpty()) {
-            return PayrollRunDeductionResultFactory.UpdateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var updateQuery = query.Update("payroll_runs_deductions").Get();
-        //System.out.println("updateQuery: " + updateQuery);
-
-        long result = 0;
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createUpdate(updateQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(PayrollRunDeductionNotificationFactory.UpdatePayrollRunDeductionSuccess());
+
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al actualizar el tipo de usuario " + e.getMessage());
-            return PayrollRunDeductionResultFactory.UpdateFail();
+            builder.withException(e)
+                    .withNotification(PayrollRunDeductionNotificationFactory.UpdatePayrollRunDeductionFail());
+
         }
-
-        //System.out.println("query.getParams(): " + query.getParams().values().toString());
-        if (result == 0) {
-            return PayrollRunDeductionResultFactory.UpdateFail();
-        }
-
-        return PayrollRunDeductionResultFactory.UpdateSuccess(new PayrollRunDeduction());
-
+        return builder.get();
     }
 
 }

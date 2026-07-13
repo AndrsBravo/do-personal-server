@@ -2,15 +2,16 @@ package com.personal.business.hierarchybenefit.delete.services;
 
 import java.util.Optional;
 
-import com.personal.business.hierarchybenefit.entities.HierarchyBenefit;
-import com.personal.business.hierarchybenefit.factories.HierarchyBenefitResultFactory;
+import com.personal.business.hierarchybenefit.notifications.HierarchyBenefitNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class DeleteHierarchyBenefitService implements IDeleteService<HierarchyBenefit> {
+public class DeleteHierarchyBenefitService implements IDeleteService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,35 +20,31 @@ public class DeleteHierarchyBenefitService implements IDeleteService<HierarchyBe
     }
 
     @Override
-    public ServiceResult<HierarchyBenefit> delete(Query query) {
+    public ServiceResult delete(Query query) {
         if (dbClient.isEmpty()) {
-            return HierarchyBenefitResultFactory.DeleteFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var deleteQuery = query.Delete("hierarchies_benefits").Get();
 
-        //System.out.println(deleteQuery);
-        long result = 0;
-
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createDelete(deleteQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(HierarchyBenefitNotificationFactory.DeleteHierarchyBenefitSuccess())
+                    .get();
         } catch (Exception e) {
-
-            return HierarchyBenefitResultFactory.DeleteFail();
+            builder.withException(e)
+                    .withNotification(HierarchyBenefitNotificationFactory.DeleteHierarchyBenefitFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return HierarchyBenefitResultFactory.DeleteFail();
-        }
-
-        return HierarchyBenefitResultFactory.DeleteSuccess(new HierarchyBenefit(query.getParams().get("id")));
-
+        return builder.get();
     }
 
 }

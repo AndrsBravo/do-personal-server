@@ -2,15 +2,16 @@ package com.personal.backoffice.usertype.delete.services;
 
 import java.util.Optional;
 
-import com.personal.backoffice.usertype.factories.UserTypeResultFactory;
-import com.personal.shared.entities.TypeEntityBase;
+import com.personal.backoffice.usertype.notifications.UserTypeNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class DeleteUserTypeService implements IDeleteService<TypeEntityBase> {
+public class DeleteUserTypeService implements IDeleteService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,35 +20,31 @@ public class DeleteUserTypeService implements IDeleteService<TypeEntityBase> {
     }
 
     @Override
-    public ServiceResult<TypeEntityBase> delete(Query query) {
+    public ServiceResult delete(Query query) {
         if (dbClient.isEmpty()) {
-            return UserTypeResultFactory.DeleteFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var deleteQuery = query.Delete("user_types").Get();
 
-        //System.out.println(deleteQuery);
-        long result = 0;
-
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createDelete(deleteQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(UserTypeNotificationFactory.DeleteUserTypeSuccess())
+                    .get();
         } catch (Exception e) {
-
-            return UserTypeResultFactory.DeleteFail();
+            builder.withException(e)
+                    .withNotification(UserTypeNotificationFactory.DeleteUserTypeFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return UserTypeResultFactory.DeleteFail();
-        }
-
-        return UserTypeResultFactory.DeleteSuccess(new TypeEntityBase(query.getParams().get("id")));
-
+        return builder.get();
     }
 
 }

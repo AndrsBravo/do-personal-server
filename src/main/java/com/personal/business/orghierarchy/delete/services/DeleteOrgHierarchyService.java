@@ -2,15 +2,16 @@ package com.personal.business.orghierarchy.delete.services;
 
 import java.util.Optional;
 
-import com.personal.business.orghierarchy.entities.OrgHierarchy;
-import com.personal.business.orghierarchy.factories.OrgHierarchyResultFactory;
+import com.personal.business.orghierarchy.notifications.OrgHierarchyNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class DeleteOrgHierarchyService implements IDeleteService<OrgHierarchy> {
+public class DeleteOrgHierarchyService implements IDeleteService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,35 +20,31 @@ public class DeleteOrgHierarchyService implements IDeleteService<OrgHierarchy> {
     }
 
     @Override
-    public ServiceResult<OrgHierarchy> delete(Query query) {
+    public ServiceResult delete(Query query) {
         if (dbClient.isEmpty()) {
-            return OrgHierarchyResultFactory.DeleteFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var deleteQuery = query.Delete("organization_hierarchies").Get();
 
-        //System.out.println(deleteQuery);
-        long result = 0;
-
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createDelete(deleteQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(OrgHierarchyNotificationFactory.DeleteOrgHierarchySuccess())
+                    .get();
         } catch (Exception e) {
-
-            return OrgHierarchyResultFactory.DeleteFail();
+            builder.withException(e)
+                    .withNotification(OrgHierarchyNotificationFactory.DeleteOrgHierarchyFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return OrgHierarchyResultFactory.DeleteFail();
-        }
-
-        return OrgHierarchyResultFactory.DeleteSuccess(new OrgHierarchy(query.getParams().get("id")));
-
+        return builder.get();
     }
 
 }

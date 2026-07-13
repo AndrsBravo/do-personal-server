@@ -28,6 +28,14 @@ public class UserRoleNotificationFactory {
         return new Notification("El role de usuario se ha eliminado exitosamente.");
     }
 
+    public static Notification FetchUserRoleSuccess() {
+        return new Notification("Lista de roles de usuarios.");
+    }
+
+    public static Notification FetchUserRoleFail() {
+        return new Notification("Ha ocurrido un error mientras se consultaban los roles de usuarios.");
+    }
+
     public static Notification FetchNull() {
         return new Notification("No se han encontrado resultados.");
     }

@@ -28,6 +28,14 @@ public class PayrollEmployeeNotificationFactory {
         return new Notification("El empleado se ha eliminado de la nomina exitosamente.");
     }
 
+    public static Notification FetchPayrollEmployeeSuccess() {
+        return new Notification("Lista de empleados de nomina.");
+    }
+
+    public static Notification FetchPayrollEmployeeFail() {
+        return new Notification("Ha ocurrido un error mientras se consultaban los empleados de la nomina.");
+    }
+
     public static Notification FetchNull() {
         return new Notification("No se han encontrado resultados.");
     }

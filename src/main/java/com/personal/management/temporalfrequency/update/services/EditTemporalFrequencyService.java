@@ -2,15 +2,16 @@ package com.personal.management.temporalfrequency.update.services;
 
 import java.util.Optional;
 
-import com.personal.management.temporalfrequency.entities.TemporalFrequency;
-import com.personal.management.temporalfrequency.factories.TemporalFrequencyResultFactory;
+import com.personal.management.temporalfrequency.notifications.TemporalFrequencyNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IEditService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class EditTemporalFrequencyService implements IEditService<TemporalFrequency> {
+public class EditTemporalFrequencyService implements IEditService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,36 +20,31 @@ public class EditTemporalFrequencyService implements IEditService<TemporalFreque
     }
 
     @Override
-    public ServiceResult<TemporalFrequency> edit(Query query) {
+    public ServiceResult edit(Query query) {
 
         if (dbClient.isEmpty()) {
-            return TemporalFrequencyResultFactory.UpdateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var updateQuery = query.Update("temporal_frequencies").Get();
-        //System.out.println("updateQuery: " + updateQuery);
-
-        long result = 0;
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createUpdate(updateQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(TemporalFrequencyNotificationFactory.UpdateTemporalFrequencySuccess())
+                    .get();
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al actualizar el tipo de usuario " + e.getMessage());
-            return TemporalFrequencyResultFactory.UpdateFail();
+            builder.withException(e)
+                    .withNotification(TemporalFrequencyNotificationFactory.UpdateTemporalFrequencyFail())
+                    .get();
         }
-
-        //System.out.println("query.getParams(): " + query.getParams().values().toString());
-        if (result == 0) {
-            return TemporalFrequencyResultFactory.UpdateFail();
-        }
-
-        return TemporalFrequencyResultFactory.UpdateSuccess(new TemporalFrequency());
-
+        return builder.get();
     }
 
 }

@@ -28,6 +28,14 @@ public class CommercialPlanNotificationFactory {
         return new Notification("El plan comercial se ha eliminado exitosamente. ");
     }
 
+    public static Notification FetchCommercialPlanSuccess() {
+        return new Notification("Lista de Planes Comerciales.");
+    }
+
+    public static Notification FetchCommercialPlanFail() {
+        return new Notification("Ha ocurrido un error mientras se consultaban los planes comerciales.");
+    }
+
     public static Notification FetchNull() {
         return new Notification("No se han encontrado resultados.");
     }

@@ -2,15 +2,16 @@ package com.personal.backoffice.userrelation.delete.services;
 
 import java.util.Optional;
 
-import com.personal.backoffice.userrelation.entities.UserRelation;
-import com.personal.backoffice.userrelation.factories.UserRelationResultFactory;
+import com.personal.backoffice.userrelation.notifications.UserRelationNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class DeleteUserRelationService implements IDeleteService<UserRelation> {
+public class DeleteUserRelationService implements IDeleteService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,35 +20,31 @@ public class DeleteUserRelationService implements IDeleteService<UserRelation> {
     }
 
     @Override
-    public ServiceResult<UserRelation> delete(Query query) {
+    public ServiceResult delete(Query query) {
         if (dbClient.isEmpty()) {
-            return UserRelationResultFactory.DeleteFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var deleteQuery = query.Delete("user_relation").Get();
 
-        //System.out.println(deleteQuery);
-        long result = 0;
-
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createDelete(deleteQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(UserRelationNotificationFactory.DeleteUserRelationSuccess())
+                    .get();
         } catch (Exception e) {
-
-            return UserRelationResultFactory.DeleteFail();
+            builder.withException(e)
+                    .withNotification(UserRelationNotificationFactory.DeleteUserRelationFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return UserRelationResultFactory.DeleteFail();
-        }
-
-        return UserRelationResultFactory.DeleteSuccess(new UserRelation(query.getParams().get("id")));
-
+        return builder.get();
     }
 
 }

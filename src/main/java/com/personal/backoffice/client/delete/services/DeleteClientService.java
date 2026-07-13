@@ -2,15 +2,16 @@ package com.personal.backoffice.client.delete.services;
 
 import java.util.Optional;
 
-import com.personal.backoffice.client.entities.Client;
-import com.personal.backoffice.client.factories.ClientResultFactory;
+import com.personal.backoffice.client.notifications.ClientNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class DeleteClientService implements IDeleteService<Client> {
+public class DeleteClientService implements IDeleteService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,35 +20,31 @@ public class DeleteClientService implements IDeleteService<Client> {
     }
 
     @Override
-    public ServiceResult<Client> delete(Query query) {
+    public ServiceResult delete(Query query) {
         if (dbClient.isEmpty()) {
-            return ClientResultFactory.DeleteFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var deleteQuery = query.Delete("clients").Get();
 
-        //System.out.println(deleteQuery);
-        long result = 0;
-
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createDelete(deleteQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(ClientNotificationFactory.DeleteClientSuccess())
+                    .get();
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al eliminar el tipo de cliente " + e.getMessage());
-            return ClientResultFactory.DeleteFail();
+            builder.withException(e)
+                    .withNotification(ClientNotificationFactory.DeleteClientFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return ClientResultFactory.DeleteFail();
-        }
-
-        return ClientResultFactory.DeleteSuccess(new Client(query.getParams().get("id")));
-
+        return builder.get();
     }
 
 }

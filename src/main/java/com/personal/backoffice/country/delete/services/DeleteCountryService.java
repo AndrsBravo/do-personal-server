@@ -2,16 +2,16 @@ package com.personal.backoffice.country.delete.services;
 
 import java.util.Optional;
 
-import com.personal.backoffice.country.entities.Country;
-import com.personal.backoffice.country.factories.CountryResultFactory;
+import com.personal.backoffice.country.notifications.CountryNotificationFactory;
 import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IDeleteService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class DeleteCountryService implements IDeleteService<Country> {
+public class DeleteCountryService implements IDeleteService {
 
     private final Optional<DbClient> dbClient;
 
@@ -20,35 +20,31 @@ public class DeleteCountryService implements IDeleteService<Country> {
     }
 
     @Override
-    public ServiceResult<Country> delete(Query query) {
+    public ServiceResult delete(Query query) {
         if (dbClient.isEmpty()) {
-            return ServicesResultFactory.<Country>DbNotAvailable();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var deleteQuery = query.Delete("countries").Get();
 
-        //System.out.println(deleteQuery);
-        long result = 0;
-
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createDelete(deleteQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(CountryNotificationFactory.DeleteCountrySuccess())
+                    .get();
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al eliminar el tipo de cliente " + e.getMessage());
-            return CountryResultFactory.DeleteFail(e.getMessage());
+            builder.withException(e)
+                    .withNotification(CountryNotificationFactory.DeleteCountryFail())
+                    .get();
         }
-
-        if (result == 0) {
-            return CountryResultFactory.DeleteFail("No se pudo eliminar el país.");
-        }
-
-        return CountryResultFactory.DeleteSuccess(new Country(query.getParams().get("id")));
-
+        return builder.get();
     }
 
 }

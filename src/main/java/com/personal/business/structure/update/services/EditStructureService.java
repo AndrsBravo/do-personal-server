@@ -2,15 +2,16 @@ package com.personal.business.structure.update.services;
 
 import java.util.Optional;
 
-import com.personal.business.structure.entities.Structure;
-import com.personal.business.structure.factories.StructureResultFactory;
+import com.personal.business.structure.notifications.StructureNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IEditService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class EditStructureService implements IEditService<Structure> {
+public class EditStructureService implements IEditService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,36 +20,31 @@ public class EditStructureService implements IEditService<Structure> {
     }
 
     @Override
-    public ServiceResult<Structure> edit(Query query) {
+    public ServiceResult edit(Query query) {
 
         if (dbClient.isEmpty()) {
-            return StructureResultFactory.UpdateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var updateQuery = query.Update("business_structures").Get();
-        //System.out.println("updateQuery: " + updateQuery);
-
-        long result = 0;
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createUpdate(updateQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(StructureNotificationFactory.UpdateStructureSuccess());
+
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al actualizar el tipo de usuario " + e.getMessage());
-            return StructureResultFactory.UpdateFail();
+            builder.withException(e)
+                    .withNotification(StructureNotificationFactory.UpdateStructureFail());
+
         }
-
-        //System.out.println("query.getParams(): " + query.getParams().values().toString());
-        if (result == 0) {
-            return StructureResultFactory.UpdateFail();
-        }
-
-        return StructureResultFactory.UpdateSuccess(new Structure());
-
+        return builder.get();
     }
 
 }

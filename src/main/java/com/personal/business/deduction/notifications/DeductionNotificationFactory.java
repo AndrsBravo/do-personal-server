@@ -28,6 +28,14 @@ public class DeductionNotificationFactory {
         return new Notification("La deducción se ha eliminado correctamente.");
     }
 
+    public static Notification FetchDeductionSuccess() {
+        return new Notification("Lista de deducciones.");
+    }
+
+    public static Notification FetchDeductionFail() {
+        return new Notification("Ha ocurrido un error mientras se consultaban las deducciones.");
+    }
+
     public static Notification FetchNull() {
         return new Notification("No se han encontrado resultados.");
     }

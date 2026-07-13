@@ -2,15 +2,16 @@ package com.personal.management.benefitdeductionrelation.update.services;
 
 import java.util.Optional;
 
-import com.personal.management.benefitdeductionrelation.entities.BenefitDeductionRelation;
-import com.personal.management.benefitdeductionrelation.factories.BenefitDeductionRelationResultFactory;
+import com.personal.management.benefitdeductionrelation.notifications.BenefitDeductionRelationNotificationFactory;
+import com.personal.shared.factories.ServicesResultFactory;
 import com.personal.shared.query.Query;
 import com.personal.shared.services.IEditService;
 import com.personal.shared.services.entities.ServiceResult;
+import com.personal.shared.services.entities.ServiceResultBuilder;
 
 import io.helidon.dbclient.DbClient;
 
-public class EditBenefitDeductionRelationService implements IEditService<BenefitDeductionRelation> {
+public class EditBenefitDeductionRelationService implements IEditService {
 
     private final Optional<DbClient> dbClient;
 
@@ -19,36 +20,31 @@ public class EditBenefitDeductionRelationService implements IEditService<Benefit
     }
 
     @Override
-    public ServiceResult<BenefitDeductionRelation> edit(Query query) {
+    public ServiceResult edit(Query query) {
 
         if (dbClient.isEmpty()) {
-            return BenefitDeductionRelationResultFactory.UpdateFail();
+            return ServicesResultFactory.NotAvailable();
         }
 
         var dbclient = dbClient.get();
 
         var updateQuery = query.Update("benefits_deductions_base").Get();
-        //System.out.println("updateQuery: " + updateQuery);
-
-        long result = 0;
+        var builder = ServiceResultBuilder.build();
         try {
-            result = dbclient.execute()
+            var records = dbclient.execute()
                     .createUpdate(updateQuery)
                     .params(query.getParams())
                     .execute();
 
+            builder.withRecords(records)
+                    .withNotification(BenefitDeductionRelationNotificationFactory.UpdateBenefitDeductionRelationSuccess());
+
         } catch (Exception e) {
-            //System.out.println("Hubo una excepción al actualizar el tipo de usuario " + e.getMessage());
-            return BenefitDeductionRelationResultFactory.UpdateFail();
+            builder.withException(e)
+                    .withNotification(BenefitDeductionRelationNotificationFactory.UpdateBenefitDeductionRelationFail());
+
         }
-
-        //System.out.println("query.getParams(): " + query.getParams().values().toString());
-        if (result == 0) {
-            return BenefitDeductionRelationResultFactory.UpdateFail();
-        }
-
-        return BenefitDeductionRelationResultFactory.UpdateSuccess(new BenefitDeductionRelation());
-
+        return builder.get();
     }
 
 }
